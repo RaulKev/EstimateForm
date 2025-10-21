@@ -7,10 +7,10 @@ enum Gender {
     FEMALE = 2,
 }
 
-enum Fuels {
-    GASOLINE = 'Gasolina/Diesel',
-    GAS = 'GAS',
-    ELECTRIC = 'Vehículo Eléctrico',
+export enum FuelsType {
+    GASOLINE = 1,
+    GAS = 2,
+    ELECTRIC = 3,
 }
 
 export enum CarInsurances {
@@ -18,7 +18,7 @@ export enum CarInsurances {
     PLUS = 'Plus',
     AUTO_EXCESO = 'AutoExceso',
 }
-enum Gas {
+export enum Gas {
     GLP = 'GLP',
     GNV = 'GNV',
 }
@@ -41,7 +41,7 @@ export interface Car {
     modelId: number;
     year: number;
     isNew?: boolean;
-    fuelType?: Fuels;
+    fuelType?: FuelsType;
     gasType?: Gas;
     installationType?: InstallatationType;
     isPersonalUse: boolean;
@@ -62,4 +62,19 @@ export interface Customer {
     lastname?: string;
     gender?: Gender;
     birthDate?: string;
+}
+
+export interface CarModels {
+    idModelo: number;
+    modelo: string;
+}
+
+export interface CarListResponse {
+    marca: string;
+    modelos: CarModels[];
+}
+
+export interface FuelType {
+    id: number;
+    name: string;
 }

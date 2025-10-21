@@ -8,20 +8,20 @@ import {
 } from '@/components/ui/select';
 
 interface SelectData {
-    items: (number | string)[];
+    items: string[];
     fn: (value: string) => void;
 }
 
-export function SelectCarYear({ items, fn }: SelectData) {
+export function SelectCarBrand({ items, fn }: SelectData) {
     return (
         <Select onValueChange={(e) => fn(e)}>
             <SelectTrigger className='w-[180px]'>
-                <SelectValue placeholder='Año' />
+                <SelectValue placeholder='Marca' />
             </SelectTrigger>
-            <SelectContent className="max-h-40 overflow-y-auto">
+            <SelectContent>
                 <SelectGroup>
                     {items.map((item, i) => (
-                        <SelectItem key={i} value={item.toString()}>{item}</SelectItem>
+                        <SelectItem key={i} value={item}>{item}</SelectItem>
                     ))}
                 </SelectGroup>
             </SelectContent>
