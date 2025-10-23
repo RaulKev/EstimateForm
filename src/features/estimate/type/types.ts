@@ -1,19 +1,19 @@
-export enum Documents {
+export const enum Documents {
     ID = 1,
     PASSPORT = 2,
 }
-enum Gender {
+export const enum Gender {
     MALE = 1,
     FEMALE = 2,
 }
 
-export enum FuelsType {
+export const enum FuelsType {
     GASOLINE = 1,
     GAS = 2,
     ELECTRIC = 3,
 }
 
-export enum CarInsurances {
+export const enum CarInsurances {
     BASE = 'Base',
     PLUS = 'Plus',
     AUTO_EXCESO = 'AutoExceso',
@@ -23,12 +23,12 @@ export enum Gas {
     GNV = 'GNV',
 }
 
-export enum ReplacementsCar {
+export const enum ReplacementsCar {
     UBER = 'Uber',
     RENT_A_CAR = 'Rent a car',
     NONE = 'No',
 }
-enum InstallatationType {
+export const enum InstallatationType {
     ADAPTED = 'Adaptado',
     TO_BUILD = 'De fábrica',
 }
@@ -38,6 +38,7 @@ export interface RequestUnit {
     car: Car;
 }
 export interface Car {
+    brand?: string;
     modelId: number;
     year: number;
     isNew?: boolean;
