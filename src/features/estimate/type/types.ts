@@ -18,7 +18,7 @@ export const enum CarInsurances {
     PLUS = 'Plus',
     AUTO_EXCESO = 'AutoExceso',
 }
-export enum Gas {
+export const enum Gas {
     GLP = 'GLP',
     GNV = 'GNV',
 }
@@ -51,7 +51,7 @@ export interface Car {
 }
 interface Term {
     insuranceType: CarInsurances;
-    vehicleAssitance: boolean;
+    vehicleAssistance: boolean;
     replacementCar: ReplacementsCar;
 }
 export interface Customer {

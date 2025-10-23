@@ -58,7 +58,7 @@ export const LawInsuranceForm = ({ form }: PlansAccordionProps) => {
                                 <RadioGroup
                                     name={field.name}
                                     value={field.value}
-                                    onValueChange={field.onChange}
+                                    onValueChange={(value) => field.onChange(value)}
                                     aria-invalid={isInvalid}
                                     className='grid grid-cols-2 gap-4'>
                                     {PLANS.map((plan) => {
