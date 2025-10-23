@@ -15,6 +15,7 @@ import { FieldGroup } from '@/components/ui/field';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import type { CSSProperties } from 'react';
+import { generateInsurance } from '../services/car-estimate.service';
 
 export const EstimateForm = () => {
     const form = useForm<EstimateFormData>({
@@ -27,22 +28,24 @@ export const EstimateForm = () => {
         formState: { isValid, isSubmitting },
     } = form;
 
-    const onSubmit = (data: EstimateFormData) => {
+    const onSubmit = async (data: EstimateFormData) => {
         form.reset();
-        toast('You submitted the following values:', {
-            description: (
-                <pre className='bg-indigo-50 text-code-foreground mt-2 w-[320px] overflow-x-auto rounded-md p-4'>
-                    <code>{JSON.stringify(data, null, 2)}</code>
-                </pre>
-            ),
-            position: 'bottom-right',
-            classNames: {
-                content: 'flex flex-col gap-2',
-            },
-            style: {
-                '--border-radius': 'calc(var(--radius)  + 4px)',
-            } as CSSProperties,
-        });
+        const response = await generateInsurance(data);
+        console.log(response);
+        // toast('You submitted the following values:', {
+        //     description: (
+        //         <pre className='bg-indigo-50 text-code-foreground mt-2 w-[320px] overflow-x-auto rounded-md p-4'>
+        //             <code>{JSON.stringify(data, null, 2)}</code>
+        //         </pre>
+        //     ),
+        //     position: 'bottom-right',
+        //     classNames: {
+        //         content: 'flex flex-col gap-2',
+        //     },
+        //     style: {
+        //         '--border-radius': 'calc(var(--radius)  + 4px)',
+        //     } as CSSProperties,
+        // });
     };
 
     const canSubmit = isValid && !isSubmitting;
