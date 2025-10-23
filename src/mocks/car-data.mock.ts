@@ -53,7 +53,7 @@ export const carsList: CarListResponse[] = [
   },
 ];
 
-export const fuelTypes: FuelType[] = [
+export const fuelTypes: FuelType[ ] = [
   {
     id: 1,
     name: "Gasolina / Diesel",

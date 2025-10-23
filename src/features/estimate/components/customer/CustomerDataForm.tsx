@@ -121,9 +121,11 @@ export const CustomerDataForm = ({ form }: CustomDataFormProps) => {
                                 mask={
                                     documentType === Documents.ID
                                         ? '###-#######-#'
-                                        : ' '
+                                        : ''
                                 }
                                 id={field.name}
+                                value={field.value}
+                                onChange={(value) => field.onChange(value)}
                                 placeholder={
                                     documentType === Documents.ID
                                         ? '000-0000000-0'
@@ -133,7 +135,7 @@ export const CustomerDataForm = ({ form }: CustomDataFormProps) => {
                                 }
                                 className=' bg-[#F8FAFC]'
                                 aria-invalid={fieldState.invalid}
-                                {...field}
+                                
                             />
                             {fieldState.invalid && (
                                 <FieldError errors={[fieldState.error]} />

@@ -208,9 +208,8 @@ export function CarForm({ form }: CarFormProps) {
                                         : ''
                                 }
                                 onValueChange={(value) => {
-                                   const valueNumber = Number(value);
+                                    const valueNumber = Number(value);
                                     field.onChange(Number(valueNumber));
-                                   
                                 }}
                             />
                         </Field>
@@ -263,39 +262,6 @@ export function CarForm({ form }: CarFormProps) {
                     )}
                 />
             </div>
-            {/* 
-                        <Field>
-                            <div className='flex flex-col items-center justify-center gap-4'>
-                                <FieldLabel>
-                                    ¿Cuánto cuesta tu vehículo?
-                                </FieldLabel>
-                                <div className='relative w-full'>
-                                    {data.car.worth > 0 && (
-                                        <span className='absolute left-4 top-1/2 -translate-y-1/2 text-orange-500 font-semibold'>
-                                            RD$
-                                        </span>
-                                    )}
-                                    <Input
-                                        type='text'
-                                        placeholder='Ingresa el valor'
-                                        value={data.car.worth || ''}
-                                        onChange={handleValueChange}
-                                        className={`text-center ${
-                                            data.car.worth > 0
-                                                ? 'text-orange-500 font-semibold'
-                                                : ''
-                                        }`}
-                                    />
-                                </div>
-                                <p className='text-sm text-gray-600 text-center'>
-                                    Aseguramos vehículos desde <br />
-                                    RD$200,000 hasta RD$7,000,000
-                                </p>
-                            </div>
-                        </Field>
-                    </FieldGroup>
-                </FieldSet>
-            </FieldGroup> */}
         </>
     );
 }
