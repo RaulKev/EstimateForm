@@ -8,14 +8,10 @@ interface CarFormProps {
     gasEnabled: boolean;
 }
 export const GasAndInstallToggel = ({ form, gasEnabled }: CarFormProps) => {
-    const btnBase =
-        'py-2.5 px-5 rounded-md border-none transition-colors w-full';
-    const onCls = 'bg-[#072b73] text-white';
-    const offCls = 'bg-gray-300 text-gray-700';
+
     return (
         <>
             <div className='col-span-1'>
-                {/* =============== Tipo de gas =============== */}
                 <Controller
                     control={form.control}
                     name='car.gasType'
@@ -30,12 +26,14 @@ export const GasAndInstallToggel = ({ form, gasEnabled }: CarFormProps) => {
                                     disabled={!gasEnabled}
                                     aria-pressed={field.value === Gas.GLP}
                                     onClick={() => field.onChange(Gas.GLP)}
-                                    className={`${btnBase} ${
-                                        field.value === Gas.GLP ? onCls : offCls
-                                    } ${
+                                    className={`py-2.5 px-5 rounded-md border-none transition-colors w-full ${
+                                        field.value === Gas.GLP
+                                            ? 'bg-indigo-500 text-white hover:opacity-95'
+                                            : 'bg-gray-300 text-gray-700 hover:bg-gray-400'
+                                    }${
                                         !gasEnabled
                                             ? 'opacity-50 pointer-events-none'
-                                            : ''
+                                            : ' '
                                     }`}>
                                     GLP
                                 </Button>
@@ -45,8 +43,10 @@ export const GasAndInstallToggel = ({ form, gasEnabled }: CarFormProps) => {
                                     disabled={!gasEnabled}
                                     aria-pressed={field.value === Gas.GNV}
                                     onClick={() => field.onChange(Gas.GNV)}
-                                    className={`${btnBase} ${
-                                        field.value === Gas.GNV ? onCls : offCls
+                                    className={`py-2.5 px-5 rounded-md border-none transition-colors w-full ${
+                                        field.value === Gas.GNV
+                                            ? 'bg-indigo-500 text-white hover:opacity-95'
+                                            : 'bg-gray-300 text-gray-700 hover:bg-gray-400'
                                     } ${
                                         !gasEnabled
                                             ? 'opacity-50 pointer-events-none'
@@ -64,7 +64,6 @@ export const GasAndInstallToggel = ({ form, gasEnabled }: CarFormProps) => {
                 />
             </div>
             <div>
-                {/* =========== Tipo de instalación =========== */}
                 <Controller
                     control={form.control}
                     name='car.installationType'
@@ -77,20 +76,13 @@ export const GasAndInstallToggel = ({ form, gasEnabled }: CarFormProps) => {
                                 <Button
                                     type='button'
                                     disabled={!gasEnabled}
-                                    aria-pressed={
+                                    aria-pressed={field.value === InstallatationType.ADAPTED}
+                                    onClick={() => field.onChange( InstallatationType.ADAPTED )}
+                                    className={`py-2.5 px-5 rounded-md border-none transition-colors w-full ${
                                         field.value ===
                                         InstallatationType.ADAPTED
-                                    }
-                                    onClick={() =>
-                                        field.onChange(
-                                            InstallatationType.ADAPTED
-                                        )
-                                    }
-                                    className={`${btnBase} ${
-                                        field.value ===
-                                        InstallatationType.ADAPTED
-                                            ? onCls
-                                            : offCls
+                                            ? 'bg-indigo-500 text-white hover:opacity-95'
+                                            : 'bg-gray-300 text-gray-700 hover:bg-gray-400'
                                     } ${
                                         !gasEnabled
                                             ? 'opacity-50 pointer-events-none'
@@ -111,11 +103,11 @@ export const GasAndInstallToggel = ({ form, gasEnabled }: CarFormProps) => {
                                             InstallatationType.TO_BUILD
                                         )
                                     }
-                                    className={`${btnBase} ${
+                                    className={`py-2.5 px-5 rounded-md border-none transition-colors w-full ${
                                         field.value ===
                                         InstallatationType.TO_BUILD
-                                            ? onCls
-                                            : offCls
+                                            ? 'bg-indigo-500 text-white hover:opacity-95'
+                                            : 'bg-gray-300 text-gray-700 hover:bg-gray-400'
                                     } ${
                                         !gasEnabled
                                             ? 'opacity-50 pointer-events-none'

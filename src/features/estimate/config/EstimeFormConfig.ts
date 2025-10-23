@@ -2,11 +2,13 @@ import * as yup from 'yup';
 import {
     CarInsurances,
     Documents,
+    FuelsType,
+    Gas,
     Gender,
+    InstallatationType,
     ReplacementsCar,
     type Car,
     type Customer,
-    type RequestUnit,
 } from '../type/types';
 
 // 1) Tipado correcto para addMethod
@@ -50,17 +52,17 @@ export const initialValuesCustomer: Customer = {
 };
 export const initialValuesCar: Car = {
     brand: '',
-    modelId: 0, // requerido por el schema (min 1 al enviar)
+    modelId: 0, 
     year: currentYear,
     isNew: true,
-    fuelType: undefined, // requerido por el schema; empieza sin seleccionar
+    fuelType: undefined, 
     gasType: undefined,
     installationType: undefined,
     isPersonalUse: true,
     worth: 0,
     terms: {
         insuranceType: CarInsurances.BASE,
-        vehicleAssitance: false,
+        vehicleAssistance: false,
         replacementCar: ReplacementsCar.NONE,
     },
 };
@@ -68,7 +70,7 @@ export const initialValues = {
     customer: initialValuesCustomer,
     car: initialValuesCar,
 };
-export const schemaEstimate: yup.ObjectSchema<RequestUnit> = yup.object({
+export const schemaEstimate = yup.object({
     customer: yup.object({
         email: yup
             .string()
@@ -141,6 +143,7 @@ export const schemaEstimate: yup.ObjectSchema<RequestUnit> = yup.object({
     }),
 
     car: yup.object({
+        brand: yup.string().defined().default(''),
         modelId: yup.number().when('brand', {
             is: (brand: string) => !!brand && brand.length > 0,
             then: (schema) => schema.min(1, 'Seleccione un modelo válido.'),
@@ -153,6 +156,32 @@ export const schemaEstimate: yup.ObjectSchema<RequestUnit> = yup.object({
                     .min(1980, 'Seleccione un año válido.')
                     .max(currentYear, 'El año no es valido'),
             otherwise: (schema) => schema.optional().transform(() => 0),
+        }),
+        isNew: yup.boolean().defined().default(true),
+        fuelType: yup
+            .mixed<FuelsType>()
+            .transform((v) => (typeof v === 'string' ? Number(v) : v))
+            .oneOf([FuelsType.GAS, FuelsType.GASOLINE, FuelsType.ELECTRIC])
+            .required('Selecciona un tipo de combustible.'),
+        gasType: yup.mixed<Gas>().when('fuelType', {
+            is: FuelsType.GAS,
+            then: (schema) =>
+                schema
+                    .oneOf([Gas.GLP, Gas.GNV])
+                    .required('Selecciona el tipo de gas'),
+            otherwise: (schema) => schema.optional().nullable(),
+        }),
+
+        installationType: yup.mixed<InstallatationType>().when('fuelType', {
+            is: FuelsType.GAS,
+            then: (schema) =>
+                schema
+                    .oneOf([
+                        InstallatationType.ADAPTED,
+                        InstallatationType.TO_BUILD,
+                    ])
+                    .required('Selecciona el tipo de instalación'),
+            otherwise: (schema) => schema.optional().nullable(),
         }),
         isPersonalUse: yup.boolean(),
         worth: yup
@@ -167,19 +196,29 @@ export const schemaEstimate: yup.ObjectSchema<RequestUnit> = yup.object({
                 `El valor máximo es RD$${MAX_WORTH.toLocaleString('es-DO')}`
             )
             .required('El valor del vehículo es requerido'),
-        terms: yup.object({
-            insuranceType: yup
-                .mixed<CarInsurances>()
-                .oneOf(
-                    [
+        terms: yup
+            .object({
+                insuranceType: yup
+                    .mixed<CarInsurances>()
+                    .oneOf([
                         CarInsurances.BASE,
                         CarInsurances.PLUS,
                         CarInsurances.AUTO_EXCESO,
-                    ],
-                    'Selecciona un plan'
-                )
-                .required('Selecciona un plan'),
-        }),
+                    ])
+                    .default(CarInsurances.BASE),
+
+                vehicleAssistance: yup.boolean().default(false),
+
+                replacementCar: yup
+                    .mixed<ReplacementsCar>()
+                    .oneOf([
+                        ReplacementsCar.UBER,
+                        ReplacementsCar.RENT_A_CAR,
+                        ReplacementsCar.NONE,
+                    ])
+                    .default(ReplacementsCar.NONE),
+            })
+            .required(),
     }),
 });
 export type EstimateFormData = yup.InferType<typeof schemaEstimate>;
