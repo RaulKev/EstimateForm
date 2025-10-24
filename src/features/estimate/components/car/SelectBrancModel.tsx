@@ -6,7 +6,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import type { CarModels } from '../type/types';
+import type { CarModels } from '../../type/types';
 
 interface SelectData {
     items: CarModels[];

@@ -1,5 +1,5 @@
-import { EstimateForm } from '../components/EstimateForm';
+import { EstimateFlow } from '../components/EstimateFlow';
 
 export const EstimagePage = () => {
-    return <EstimateForm />;
+    return <EstimateFlow />;
 };

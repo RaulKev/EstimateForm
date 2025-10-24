@@ -15,7 +15,7 @@ type AssistantFormProps = {
 
 export const AssistantForm = ({ form }: AssistantFormProps) => {
     return (
-        <div className='grid grid-cols-2 gap-4'>
+        <div className='flex flex-col justify-center gap-4'>
             <div className='flex items-start'>
                 <Controller
                     control={form.control}
