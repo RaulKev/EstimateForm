@@ -11,14 +11,12 @@ import {
     type Customer,
 } from '../type/types';
 
-// 1) Tipado correcto para addMethod
 declare module 'yup' {
     interface StringSchema {
         phoneMasked(pattern: RegExp, message?: string): StringSchema;
     }
 }
 
-// 2) Implementación consistente con el tipado
 yup.addMethod<yup.StringSchema>(
     yup.string,
     'phoneMasked',
@@ -33,7 +31,7 @@ yup.addMethod<yup.StringSchema>(
 );
 
 // Patrones de ejemplo (ajusta a tu país/regla)
-const rdCedulaDigits = /^\d{11}$/; // 11 dígitos
+const rdCedulaDigits = /^\d{11}$/;
 const rdPhone = /^\d{10}$/;
 const passportRegex = /^[A-Z0-9]{6,15}$/i;
 const currentYear = new Date().getFullYear();
@@ -52,13 +50,13 @@ export const initialValuesCustomer: Customer = {
 };
 export const initialValuesCar: Car = {
     brand: '',
-    modelId: 0, 
+    modelId: 0,
     year: currentYear,
-    isNew: true,
-    fuelType: undefined, 
+    isNew: false,
+    fuelType: undefined,
     gasType: undefined,
     installationType: undefined,
-    isPersonalUse: true,
+    isPersonalUse: false,
     worth: 0,
     terms: {
         insuranceType: CarInsurances.BASE,
@@ -70,11 +68,11 @@ export const initialValues = {
     customer: initialValuesCustomer,
     car: initialValuesCar,
 };
-export const schemaEstimate = yup.object({
+export const schemaEstimate = yup.object().shape({
     customer: yup.object({
         email: yup
             .string()
-            .email('Correo electronico no valido.')
+            .email('Correo electronico no válido.')
             .required('Correo electronico requerido.'),
         phone: yup
             .string()
@@ -83,16 +81,16 @@ export const schemaEstimate = yup.object({
         documentType: yup
             .mixed<Documents>()
             .oneOf([Documents.ID, Documents.PASSPORT])
-            .required('Selecciona el tipo de documento'),
+            .required('Selecciona el tipo de documento.'),
         documentNumber: yup
             .string()
-            .required('Ingrese el número de documento')
+            .required('Ingresa el número de documento.')
             .when('documentType', {
                 is: Documents.ID,
                 then: (schema) =>
                     schema.test(
                         'cedula-rd',
-                        'Cédula inválida (debe tener 11 dígitos)',
+                        'Cédula inválida (debe tener 11 dígitos).',
                         function (value) {
                             if (!value) return false;
                             const raw = value.replace(/\D/g, '');
@@ -102,14 +100,14 @@ export const schemaEstimate = yup.object({
                 otherwise: (schema) =>
                     schema.matches(
                         passportRegex,
-                        'Pasaporte inválido (6-15 caracteres alfanuméricos)'
+                        'Pasaporte inválido (6-15 caracteres alfanuméricos).'
                     ),
             }),
         name: yup.string().when('documentType', {
             is: Documents.PASSPORT,
             then: (schema) =>
                 schema
-                    .required('Nombres requeridos')
+                    .required('Nombres requeridos.')
                     .min(2, 'Mínimo 2 caracteres'),
             otherwise: (schema) => schema.optional(),
         }),
@@ -118,7 +116,7 @@ export const schemaEstimate = yup.object({
             is: Documents.PASSPORT,
             then: (schema) =>
                 schema
-                    .required('Apellidos requeridos')
+                    .required('Apellidos requeridos.')
                     .min(2, 'Mínimo 2 caracteres'),
             otherwise: (schema) => schema.optional(),
         }),
@@ -127,7 +125,7 @@ export const schemaEstimate = yup.object({
             is: Documents.PASSPORT,
             then: (schema) =>
                 schema
-                    .required('Fecha de nacimiento requerida')
+                    .required('Fecha de nacimiento requerida.')
                     .matches(/^\d{4}-\d{2}-\d{2}$/, 'Fecha inválida'),
             otherwise: (schema) => schema.optional(),
         }),
@@ -146,7 +144,7 @@ export const schemaEstimate = yup.object({
         brand: yup.string().defined().default(''),
         modelId: yup.number().when('brand', {
             is: (brand: string) => !!brand && brand.length > 0,
-            then: (schema) => schema.min(1, 'Seleccione un modelo válido.'),
+            then: (schema) => schema.min(1, 'Selecciona un modelo válido.'),
             otherwise: (schema) => schema.optional().transform(() => 0),
         }),
         year: yup.number().when('brand', {
@@ -157,7 +155,7 @@ export const schemaEstimate = yup.object({
                     .max(currentYear, 'El año no es valido'),
             otherwise: (schema) => schema.optional().transform(() => 0),
         }),
-        isNew: yup.boolean().defined().default(true),
+        isNew: yup.boolean().defined().default(false),
         fuelType: yup
             .mixed<FuelsType>()
             .transform((v) => (typeof v === 'string' ? Number(v) : v))
@@ -168,7 +166,7 @@ export const schemaEstimate = yup.object({
             then: (schema) =>
                 schema
                     .oneOf([Gas.GLP, Gas.GNV])
-                    .required('Selecciona el tipo de gas'),
+                    .required('Selecciona el tipo de gas.'),
             otherwise: (schema) => schema.optional().nullable(),
         }),
 
@@ -180,22 +178,23 @@ export const schemaEstimate = yup.object({
                         InstallatationType.ADAPTED,
                         InstallatationType.TO_BUILD,
                     ])
-                    .required('Selecciona el tipo de instalación'),
+                    .required('Selecciona el tipo de instalación.'),
             otherwise: (schema) => schema.optional().nullable(),
         }),
-        isPersonalUse: yup.boolean(),
+        isPersonalUse: yup.boolean().default(false),
         worth: yup
             .number()
-            .typeError('Ingresa un monto valido')
+            .transform((v, o) => (o === '' || o == null ? undefined : v))
+            .typeError('Ingresa un monto válido.')
             .min(
                 MIN_WORTH,
-                `El valor mínimo es RD$${MIN_WORTH.toLocaleString('es-DO')}`
+                `El valor mínimo es RD$ ${MIN_WORTH.toLocaleString('es-DO')}`
             )
             .max(
                 MAX_WORTH,
-                `El valor máximo es RD$${MAX_WORTH.toLocaleString('es-DO')}`
+                `El valor máximo es RD$ ${MAX_WORTH.toLocaleString('es-DO')}`
             )
-            .required('El valor del vehículo es requerido'),
+            .required('El valor del vehículo es requerido.'),
         terms: yup
             .object({
                 insuranceType: yup

@@ -60,18 +60,18 @@ export const LawInsuranceForm = ({ form }: PlansAccordionProps) => {
                                     value={field.value}
                                     onValueChange={(value) => field.onChange(value)}
                                     aria-invalid={isInvalid}
-                                    className='grid grid-cols-2 gap-4'>
+                                    className='flex flex-col gap-4'>
                                     {PLANS.map((plan) => {
-                                        const inputId = `insurance-${plan.id}`; // id único por opción
+                                        const inputId = `insurance-${plan.id}`;
                                         return (
                                             <div
                                                 key={plan.id}
-                                                className='relative rounded-lg border-blue-700 border bg-card p-4 transition-all hover:shadow-sm'>
+                                                className='relative rounded-lg border-blue-500 border bg-card p-4 transition-all hover:shadow-sm'>
                                                 <div className='absolute right-3 top-3'>
                                                     <RadioGroupItem
                                                         id={inputId}
                                                         value={String(plan.id)}
-                                                        className='text-blue-700'
+                                                        className='text-blue-500'
                                                     />
                                                 </div>
                                                 <Field>
