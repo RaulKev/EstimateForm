@@ -44,10 +44,10 @@ export interface Insurance {
 }
 
 export const insuranceResponse: Insurance = {
-  id: '123456789',
+  id: '',
   companyId: '123456789',
   quoteNumber: 123456789,
-  policyNumber: '123456789',
+  policyNumber: '',
   product: 'Auto',
   status: 'Active',
   customer: {

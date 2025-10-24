@@ -34,7 +34,7 @@ export const GasAndInstallToggel = ({ form, gasEnabled }: CarFormProps) => {
                                         !gasEnabled
                                             ? 'opacity-50 pointer-events-none'
                                             : ' '
-                                    }`}>
+                                    } cursor-pointer`}>
                                     GLP
                                 </Button>
 
@@ -51,7 +51,7 @@ export const GasAndInstallToggel = ({ form, gasEnabled }: CarFormProps) => {
                                         !gasEnabled
                                             ? 'opacity-50 pointer-events-none'
                                             : ''
-                                    }`}>
+                                    } cursor-pointer`}>
                                     GNV
                                 </Button>
                             </div>
@@ -87,7 +87,7 @@ export const GasAndInstallToggel = ({ form, gasEnabled }: CarFormProps) => {
                                         !gasEnabled
                                             ? 'opacity-50 pointer-events-none'
                                             : ''
-                                    }`}>
+                                    } cursor-pointer`}>
                                     Adaptado
                                 </Button>
 
@@ -112,7 +112,7 @@ export const GasAndInstallToggel = ({ form, gasEnabled }: CarFormProps) => {
                                         !gasEnabled
                                             ? 'opacity-50 pointer-events-none'
                                             : ''
-                                    }`}>
+                                    } cursor-pointer`}>
                                     De fábrica
                                 </Button>
                             </div>

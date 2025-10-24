@@ -1,6 +1,5 @@
 import { Input } from '@/components/ui/input';
 import { Documents } from '../../type/types';
-import { MaskedInput } from './MaskedInput';
 import { PersonalPassportForm } from './PersonalPassportForm';
 import { Controller, type UseFormReturn } from 'react-hook-form';
 import type { EstimateFormData } from '../../config/EstimeFormConfig';
@@ -13,6 +12,8 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
+import { useCallback } from 'react';
+import { MaskedInput } from './MaskedInput';
 
 interface CustomDataFormProps {
     form: UseFormReturn<EstimateFormData>;
@@ -21,6 +22,29 @@ interface CustomDataFormProps {
 export const CustomerDataForm = ({ form }: CustomDataFormProps) => {
     const documentType = form.watch('customer.documentType');
     const isPassport = documentType === Documents.PASSPORT;
+
+    const handleChangeDocumentType = useCallback(
+        (value: string, fieldOnChange: (v: number | undefined) => void) => {
+            const numValue = value === ' ' ? undefined : Number(value);
+            fieldOnChange(numValue);
+            form.setValue('customer.documentNumber', '');
+            form.clearErrors('customer.documentNumber');
+            if (numValue === Documents.ID) {
+                form.setValue('customer.name', '');
+                form.setValue('customer.lastname', '');
+                form.setValue('customer.birthDate', '');
+                form.setValue('customer.gender', undefined);
+                form.clearErrors([
+                    'customer.name',
+                    'customer.lastname',
+                    'customer.birthDate',
+                    'customer.gender',
+                ]);
+            }
+        },
+        [form]
+    );
+
     return (
         <>
             <div className='grid grid-cols-2 gap-4 '>
@@ -60,7 +84,8 @@ export const CustomerDataForm = ({ form }: CustomDataFormProps) => {
                                 placeholder='(809)-565-5673'
                                 className=' bg-[#F8FAFC]'
                                 aria-invalid={fieldState.invalid}
-                                {...field}
+                                value={field.value || ''}
+                                onChange={(value) => field.onChange(value)}
                             />
                             {fieldState.invalid && (
                                 <FieldError errors={[fieldState.error]} />
@@ -84,8 +109,9 @@ export const CustomerDataForm = ({ form }: CustomDataFormProps) => {
                                         : ''
                                 }
                                 onValueChange={(value) =>
-                                    field.onChange(
-                                        value === '' ? undefined : Number(value)
+                                    handleChangeDocumentType(
+                                        value,
+                                        field.onChange
                                     )
                                 }>
                                 <SelectTrigger
@@ -135,7 +161,7 @@ export const CustomerDataForm = ({ form }: CustomDataFormProps) => {
                                 }
                                 className=' bg-[#F8FAFC]'
                                 aria-invalid={fieldState.invalid}
-                                
+                                disabled={!documentType}
                             />
                             {fieldState.invalid && (
                                 <FieldError errors={[fieldState.error]} />

@@ -36,7 +36,7 @@ export function CarForm({ form }: CarFormProps) {
     const cars = useMemo(() => carsList.map((c) => c.marca), [carsList]);
     const brand = form.watch('car.brand');
     const fuelType = form.watch('car.fuelType');
-    const worth = form.watch('car.worth');
+    // const worth = form.watch('car.worth');
     const gasEnabled = fuelType === FuelsType.GAS;
     const MIN_WORTH = 200_000;
     const MAX_WORTH = 7_000_000;
@@ -210,6 +210,17 @@ export function CarForm({ form }: CarFormProps) {
                                 onValueChange={(value) => {
                                     const valueNumber = Number(value);
                                     field.onChange(Number(valueNumber));
+                                    if (valueNumber !== FuelsType.GAS) {
+                                        form.setValue('car.gasType', undefined);
+                                        form.setValue(
+                                            'car.installationType',
+                                            undefined
+                                        );
+                                        form.clearErrors([
+                                            'car.gasType',
+                                            'car.installationType',
+                                        ]);
+                                    }
                                 }}
                             />
                         </Field>
@@ -233,13 +244,10 @@ export function CarForm({ form }: CarFormProps) {
                                     placeholder='0.00'
                                     value={field.value || ''}
                                     onChange={(value) => field.onChange(value)}
-                                    className={` ${
-                                        worth
-                                            ? 'text-orange-500 font-semibold'
-                                            : ''
-                                    } mb-2`}
+                                    className='mb-2'
                                     aria-invalid={fieldState.invalid}
                                 />
+
                                 {fieldState.invalid ? (
                                     <FieldError errors={[fieldState.error]} />
                                 ) : (
