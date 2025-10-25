@@ -9,7 +9,7 @@ type DocButtonCardsProps = {
 
 export function SelectdocumentType({ value, onChange }: DocButtonCardsProps) {
     const base =
-        'h-40 w-full rounded-md shadow-lg transition hover:shadow-2xl shadow-blue-100';
+        'h-30 w-full rounded-md shadow-lg transition hover:shadow-2xl shadow-blue-100';
     return (
         <div
             role='radiogroup'

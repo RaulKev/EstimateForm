@@ -1,34 +1,34 @@
-export enum Documents {
+export const enum Documents {
     ID = 1,
     PASSPORT = 2,
 }
-enum Gender {
+export const enum Gender {
     MALE = 1,
     FEMALE = 2,
 }
 
-enum Fuels {
-    GASOLINE = 'Gasolina/Diesel',
-    GAS = 'GAS',
-    ELECTRIC = 'Vehículo Eléctrico',
+export const enum FuelsType {
+    GASOLINE = 1,
+    GAS = 2,
+    ELECTRIC = 3,
 }
 
-export enum CarInsurances {
+export const enum CarInsurances {
     BASE = 'Base',
     PLUS = 'Plus',
     AUTO_EXCESO = 'AutoExceso',
 }
-enum Gas {
+export const enum Gas {
     GLP = 'GLP',
     GNV = 'GNV',
 }
 
-export enum ReplacementsCar {
+export const enum ReplacementsCar {
     UBER = 'Uber',
     RENT_A_CAR = 'Rent a car',
     NONE = 'No',
 }
-enum InstallatationType {
+export const enum InstallatationType {
     ADAPTED = 'Adaptado',
     TO_BUILD = 'De fábrica',
 }
@@ -38,10 +38,11 @@ export interface RequestUnit {
     car: Car;
 }
 export interface Car {
+    brand?: string;
     modelId: number;
     year: number;
     isNew?: boolean;
-    fuelType?: Fuels;
+    fuelType?: FuelsType;
     gasType?: Gas;
     installationType?: InstallatationType;
     isPersonalUse: boolean;
@@ -50,7 +51,7 @@ export interface Car {
 }
 interface Term {
     insuranceType: CarInsurances;
-    vehicleAssitance: boolean;
+    vehicleAssistance: boolean;
     replacementCar: ReplacementsCar;
 }
 export interface Customer {
@@ -62,4 +63,19 @@ export interface Customer {
     lastname?: string;
     gender?: Gender;
     birthDate?: string;
+}
+
+export interface CarModels {
+    idModelo: number;
+    modelo: string;
+}
+
+export interface CarListResponse {
+    marca: string;
+    modelos: CarModels[];
+}
+
+export interface FuelType {
+    id: number;
+    name: string;
 }
