@@ -1,49 +1,45 @@
 import { createRoot } from "react-dom/client";
-import { EstimateForm } from "./components/EstimateForm";
-// import styles from '../../index.css?inline'
+import styles from "../../index.css?inline";
 import "../../index.css";
-import { StrictMode } from "react";
-// import { StrictMode } from "react";
+import App from "@/App";
+import { ShadowRootContext } from "@/components/ui/select";
 
 function getStoreToken(element: HTMLElement) {
   const token = element.getAttribute("data-store-token");
   if (!token) {
     throw new Error("Missing store token");
   }
-  console.log(token);
   return token;
 }
 
 function initializaWidget() {
   try {
     const widgetContainer = document.getElementById("kover");
-
     if (!widgetContainer) {
       return;
     }
 
     const shadowRoot = widgetContainer.attachShadow({ mode: "open" });
     const shadowWidgetContent = document.createElement("div");
-    const linkElement = document.createElement("link");
+    const widgetPortalContainer = document.createElement("div");
+    widgetPortalContainer.id = "widget-container";
+    shadowRoot.appendChild(widgetPortalContainer);
 
-    linkElement.rel = "stylesheet";
-    linkElement.href = "http://localhost:62143/index.css";
-    linkElement.setAttribute("data-origin", "estimate-widget");
-    // shadowRoot.id = 'root'
-    // linkElement.setAttribute("data-origin", "estimate-widget");
-    // linkElement.textContent = styles;
-    shadowRoot.appendChild(linkElement);
+    const styleElement = document.createElement("style");
+
+    styleElement.setAttribute('type', 'text/css');
+    styleElement.textContent = styles;
+
+    shadowRoot.appendChild(styleElement);
+    shadowRoot.appendChild(shadowWidgetContent);
 
     const token = getStoreToken(widgetContainer);
     const root = createRoot(shadowWidgetContent);
     root.render(
-      <StrictMode>
-        <EstimateForm storeToken={token} />
-      </StrictMode>
+      <ShadowRootContext.Provider value={shadowRoot}>
+        <App storeToken={token} />
+      </ShadowRootContext.Provider>
     );
-
-    // document.head.appendChild(linkElement);
-    shadowRoot.appendChild(shadowWidgetContent);
   } catch (error) {
     console.error(error, 'Error while initializing widget');
   }

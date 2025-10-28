@@ -2,11 +2,13 @@ import path from "path";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
+import { visualizer } from 'rollup-plugin-visualizer';
 
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [react(), tailwindcss(), visualizer({filename: './stats.html', open: true, gzipSize: true})],
   build: {
+    minify: 'esbuild',
+    sourcemap: false,
     lib: {
       entry: path.resolve(
         __dirname,
@@ -15,18 +17,8 @@ export default defineConfig({
       name: "EstimateFormWidget",
       fileName: (format) => `EstimateFormWidget.${format}.js`,
       formats: ["umd"],
-      cssFileName: 'index',
     },
-    // cssCodeSplit: false
-    // rollupOptions: {
-    //   external: ["react", "react-dom"],
-    //   output: {
-    //     globals: {
-    //       react: "React",
-    //       "react-dom": "ReactDOM",
-    //     },
-    //   },
-    // },
+    cssCodeSplit: false,
   },
   define: {
     'process.env': {},
