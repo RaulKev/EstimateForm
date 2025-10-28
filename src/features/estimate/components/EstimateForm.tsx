@@ -13,7 +13,6 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { FieldGroup } from '@/components/ui/field';
 import { Button } from '@/components/ui/button';
-import { toast } from 'sonner';
 
 import {
     generateInsurance,
@@ -22,12 +21,20 @@ import {
 import type { Insurance } from '@/mocks/request.mock';
 import { Documents } from '../type/types';
 import { useMemo, useState } from 'react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { XCircle } from 'lucide-react';
 
 interface EstimateFormProps {
     onSuccess: (data: Insurance) => void;
+    setGlobalSuccessMessage: (msg: string | null) => void;
 }
-export const EstimateForm = ({ onSuccess }: EstimateFormProps) => {
+
+export const EstimateForm = ({
+    onSuccess,
+    setGlobalSuccessMessage,
+}: EstimateFormProps) => {
     const [isCedulaVerified, setIsCedulaVerified] = useState(false);
+    const [errorAlert, setErrorAlert] = useState<string | null>(null);
     const form = useForm<EstimateFormData>({
         resolver: yupResolver(schemaEstimate),
         defaultValues: initialValues,
@@ -40,9 +47,11 @@ export const EstimateForm = ({ onSuccess }: EstimateFormProps) => {
 
     const documentType = form.watch('customer.documentType');
     const documentNumber = form.watch('customer.documentNumber');
+    const isPersonalUse = form.watch('car.isPersonalUse');
     const isCedula = documentType === Documents.ID;
 
     const onSubmit = async (data: EstimateFormData) => {
+        console.log(data);
         try {
             // Llamar al servicio que hace fetch a la API
             const response = await generateQuota(data);
@@ -50,10 +59,10 @@ export const EstimateForm = ({ onSuccess }: EstimateFormProps) => {
             console.log('Insurance created:', response);
 
             // Mostrar toast de éxito
-            toast.success('¡Cotización exitosa!', {
-                description: `Tu número de cotización es: ${response.data.quoteNumber}`,
-                position: 'top-right',
-            });
+            // setear el mensaje global de éxito
+            setGlobalSuccessMessage(
+                `Cotización exitosa. Tu número de cotización es: #${response.data.quoteNumber}`
+            );
 
             // Pasar los datos al siguiente paso (Emitir)
             onSuccess(response.data);
@@ -64,26 +73,28 @@ export const EstimateForm = ({ onSuccess }: EstimateFormProps) => {
                     ? error.message
                     : 'Ocurrió un error inesperado. Por favor intenta nuevamente.';
             console.log(errorMessage);
-            toast.error('Error en la cotización', {
-                description: errorMessage,
-                position: 'top-right',
-                action: {
-                    label: 'Reintentar',
-                    onClick: () => form.handleSubmit(onSubmit)(),
-                },
-            });
+            setErrorAlert(errorMessage);
         }
     };
 
     const canSubmit = useMemo(() => {
         if (!isValid) return false;
         if (isSubmitting) return false;
+        if (!isPersonalUse) return false;
         if (isCedula) {
             const cleanNumber = documentNumber?.replace(/\D/g, '') || '';
             return cleanNumber.length === 11 && isCedulaVerified;
         }
+
         return true;
-    }, [isValid, isSubmitting, isCedula, documentNumber, isCedulaVerified]);
+    }, [
+        isValid,
+        isSubmitting,
+        isCedula,
+        documentNumber,
+        isCedulaVerified,
+        isPersonalUse,
+    ]);
 
     return (
         <>
@@ -129,6 +140,24 @@ export const EstimateForm = ({ onSuccess }: EstimateFormProps) => {
                             </h4>
                             <ReplaceCar form={form} />
                         </div>
+                        {errorAlert && (
+                            <Alert
+                                variant='destructive'
+                                className='mb-6 relative border-red-500'>
+                                <XCircle className='h-4 w-4 text-red-600' />
+                                <AlertTitle>Error en la cotización</AlertTitle>
+                                <AlertDescription>
+                                    {errorAlert}
+                                </AlertDescription>
+
+                                <button
+                                    type='button'
+                                    onClick={() => setErrorAlert(null)}
+                                    className='absolute top-3 right-3 text-gray-500 hover:text-gray-700'>
+                                    ✕
+                                </button>
+                            </Alert>
+                        )}
                         <Button
                             type='submit'
                             disabled={!canSubmit}
