@@ -8,16 +8,16 @@ export const enum Gender {
 }
 
 export const enum FuelsType {
-    GASOLINE = 1,
-    GAS = 2,
-    ELECTRIC = 3,
+    GASOLINE = 'Gasolina / Diesel',
+    GAS = 'Gas',
+    ELECTRIC = 'Vehículo Electrico',
 }
-
 export const enum CarInsurances {
     BASE = 'Base',
     PLUS = 'Plus',
     AUTO_EXCESO = 'AutoExceso',
 }
+
 export const enum Gas {
     GLP = 'GLP',
     GNV = 'GNV',
@@ -30,7 +30,7 @@ export const enum ReplacementsCar {
 }
 export const enum InstallatationType {
     ADAPTED = 'Adaptado',
-    TO_BUILD = 'De fábrica',
+    TO_BUILD = 'De Fábrica',
 }
 
 export interface RequestUnit {
@@ -49,21 +49,24 @@ export interface Car {
     worth: number;
     terms: Term;
 }
+
 interface Term {
     insuranceType: CarInsurances;
     vehicleAssistance: boolean;
     replacementCar: ReplacementsCar;
 }
+
 export interface Customer {
     email: string;
     phone: string;
     documentType?: Documents;
     documentNumber: string;
-    name?: string;
+    firstName?: string;
     lastname?: string;
     gender?: Gender;
     birthDate?: string;
 }
+
 
 export interface CarModels {
     idModelo: number;

@@ -1,6 +1,6 @@
 import { IdCard, Globe } from 'lucide-react';
-import { Documents } from '../../type/types';
 import clsx from 'clsx';
+import { Documents } from '../../type/types';
 
 type DocButtonCardsProps = {
     value?: Documents;
