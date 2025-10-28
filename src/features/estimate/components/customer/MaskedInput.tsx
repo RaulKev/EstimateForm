@@ -5,33 +5,36 @@ import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 type MaskedInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
     mask: string | string[];
     value?: string | number;
-    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onChange?: (value: string) => void;
+    saveUnmasked?: boolean;
 };
 
 export const MaskedInput = forwardRef<HTMLInputElement, MaskedInputProps>(
-    ({ mask, onChange, value, ...rest }, forwardedRef) => {
+    ({ mask, onChange, value,saveUnmasked , ...rest }, forwardedRef) => {
         const inputRef = useRef<HTMLInputElement>(null);
+        const maskInstanceRef = useRef<MaskInput | null>(null);
 
         useImperativeHandle(forwardedRef, () => inputRef.current!);
 
         useEffect(() => {
             if (!inputRef.current) return;
 
-            const maskInstance = new MaskInput(inputRef.current, {
+             maskInstanceRef.current = new MaskInput(inputRef.current, {
                 mask,
-                onMaska: () => {
-                    // Notificar a react-hook-form del cambio
+                onMaska: (detail) => {
                     if (onChange && inputRef.current) {
-                        onChange({
-                            target: inputRef.current,
-                            currentTarget: inputRef.current,
-                        } as React.ChangeEvent<HTMLInputElement>);
+                        // ✅ Si saveUnmasked es true, guardar sin formato
+                        const valueToSave = saveUnmasked 
+                            ? detail.unmasked // "8095551234"
+                            : detail.masked;  // "(809)-555-1234"
+                        
+                        onChange(valueToSave);
                     }
                 },
             });
 
-            return () => maskInstance.destroy();
-        }, [mask, onChange]);
+            return () => maskInstanceRef.current?.destroy();
+        }, [mask, onChange, saveUnmasked]);
 
         useEffect(() => {
             if (!inputRef.current) return;

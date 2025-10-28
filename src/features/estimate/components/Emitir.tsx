@@ -3,19 +3,17 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import type { Insurance } from '@/mocks/request.mock';
 
 interface EmitirProps {
-    insuranceData: Insurance;
     onBack: () => void;
     onEmit: () => void;
 }
 
-export default function Emitir({ insuranceData, onBack, onEmit }: EmitirProps) {
+export default function Emitir({ onBack, onEmit }: EmitirProps) {
     const [kmMes, setKmMes] = React.useState<number>(0);
 
     // Obtener datos de la cotización
-    const premium = insuranceData.terms.premium || 1000;
+    const premium = 1000;
     const precioPorKm = 23.15;
 
     const formatDOP = (n: number) =>
@@ -196,12 +194,12 @@ export default function Emitir({ insuranceData, onBack, onEmit }: EmitirProps) {
                 <div className='mt-10 flex items-center justify-between'>
                     <Button
                         variant='secondary'
-                        className='px-6'
+                        className='px-6 h-11 cursor-pointer'
                         onClick={onBack}>
                         ATRÁS
                     </Button>
                     <Button
-                        className='h-11 px-10 bg-orange-500 hover:bg-orange-600 text-base font-semibold'
+                        className='h-11 px-10 bg-orange-500 hover:bg-orange-600 text-base font-semibold cursor-pointer'
                         onClick={onEmit}>
                         EMITIR
                     </Button>

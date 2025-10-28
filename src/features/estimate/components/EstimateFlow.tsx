@@ -36,7 +36,6 @@ export const EstimateFlow = () => {
 
             {currentStep === 'emit' && insuranceData && (
                 <Emitir
-                    insuranceData={insuranceData}
                     onBack={handleBack}
                     onEmit={handleEmit}
                 />
