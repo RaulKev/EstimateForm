@@ -16,7 +16,6 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
 import {
-    generateInsurance,
     generateQuota,
 } from '../services/car-estimate.service';
 import type { Insurance } from '@/mocks/request.mock';
