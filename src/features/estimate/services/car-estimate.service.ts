@@ -174,8 +174,7 @@ export async function generateQuota(
                 errorData?.message || `Error HTTP ${response.status}`
             );
         }
-        const insurance: InsuranceApiResponse = await response.json();
-        return insurance;
+        return await response.json();
     } catch (error) {
         console.error('Error generating insurance:', error);
         if (error instanceof TypeError) {
