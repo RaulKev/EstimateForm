@@ -1,32 +1,35 @@
-import { insuranceResponse, type Insurance } from "@/mocks/request.mock";
-import { useEffect, useState } from "react";
-import { EstimateForm } from "./EstimateForm";
-import Emitir from "./Emitir";
-import { checkStatusPayment, getUrlPayment, type InsurancePaymentStatusResponse } from "../services/insurance.service";
-import { Validacion } from "./validacion";
+import type { Insurance } from '@/mocks/request.mock';
+import { use, useEffect, useState } from 'react';
+import { EstimateForm } from './EstimateForm';
+import Emitir from './Emitir';
+import {
+    checkStatusPayment,
+    getUrlPayment,
+    type InsurancePaymentStatusResponse,
+} from '../services/insurance.service';
+import { Validacion } from './validacion';
 
-type FlowStep = "estimate" | "emit" | "emited";
-
+type FlowStep = 'estimate' | 'emit' | 'emited';
 interface FlowProps {
-  storeToken?: string;
+    storeToken?: string;
 }
 
 export const EstimateFlow = ({ storeToken }: FlowProps) => {
-  const [currentStep, setCurrentStep] = useState<FlowStep>("estimate");//estimate
+  const [currentStep, setCurrentStep] = useState<FlowStep>("estimate");
   const [insuranceData, setInsuranceData] = useState<Insurance | null>(null);
   const [paymentData, setPayment] = useState<InsurancePaymentStatusResponse | null>(null);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState<boolean>(false);
   const [paymentErrorMessage, setPaymentErrorMessage] = useState<string>('');
   const [validatingPayment, setValidatingPayment] = useState<boolean>(false);
-
-  const handleEstimateSuccess = (data: Insurance) => {
-    setInsuranceData(data);
-    setCurrentStep("emit");
-  };
-
-  const handleBack = () => {
-    setCurrentStep("estimate");
-  };
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  
+    const handleEstimateSuccess = (data: Insurance) => {
+        setInsuranceData(data);
+        setCurrentStep('emit');
+    };
+    const handleBack = () => {
+        setCurrentStep('estimate');
+    };
 
   const handleEmit = async (insuranceId: string) => {
     setIsCheckoutOpen(true);
@@ -84,15 +87,15 @@ export const EstimateFlow = ({ storeToken }: FlowProps) => {
   return (
     <>
       {currentStep === "estimate" && (
-        <EstimateForm onSuccess={handleEstimateSuccess} />
+        <EstimateForm onSuccess={handleEstimateSuccess} setGlobalSuccessMessage={setSuccessMessage} />
       )}
       {currentStep === "emit" && insuranceData && (
         <Emitir
-          insuranceData={insuranceData}
           onBack={handleBack}
           isCheckoutOpen={isCheckoutOpen}
           paymentErrorMessage={paymentErrorMessage}
           validatingPayment={validatingPayment}
+          successMessage={successMessage}
           onEmit={() => handleEmit(insuranceData.id)}
         />
       )}

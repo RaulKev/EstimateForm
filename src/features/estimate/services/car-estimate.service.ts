@@ -160,7 +160,8 @@ export async function generateQuota(
                 paymentMethod: API_DEFAULTS.paymentDefaults.paymentMethod,
             },
         };
-
+        console.log('Generated Request Data:', JSON.stringify(requestData, null, 2));
+        console.log('Request Data:', requestData);
         const response = await fetch('http://localhost:3000/api/insurances', {
             method: 'POST',
             headers: {
@@ -168,6 +169,7 @@ export async function generateQuota(
             },
             body: JSON.stringify(requestData),
         });
+
         if (!response.ok) {
             const errorData = await response.json().catch(() => null);
             throw new Error(
