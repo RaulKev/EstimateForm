@@ -1,8 +1,8 @@
+//Datos en duro necesarios para generar el número de cotización.
+// Estos valores se reemplazarán con datos reales más adelante.
 export const API_DEFAULTS = {
-    companyId: '68fbf86399f1ecfe2c04f542',
     product: 'auto-insurance',
-
-    // Datos del cliente que se pedirán más adelante
+    
     customerDefaults: {
         occupation: 'Vendedor o Comerciante', // O 'A definir'
         address: {
@@ -15,7 +15,6 @@ export const API_DEFAULTS = {
         },
     },
 
-    // Datos del vehículo que se pedirán más adelante
     vehicleDefaults: {
         plate: 'G320734',
         color: 'BLANCO',
@@ -24,8 +23,6 @@ export const API_DEFAULTS = {
         chassis: '123123',
         engine: '25874',
     },
-
-    // Términos de pago (se definirán más adelante)
     paymentDefaults: {
         paymentFraction: 'M', // Mensual por defecto
         paymentMethod: 't/c', // Tarjeta de crédito por defecto
