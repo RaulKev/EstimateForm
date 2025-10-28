@@ -43,7 +43,7 @@ export const initialValuesCustomer: Customer = {
     phone: '',
     documentType: undefined,
     documentNumber: '',
-    name: '',
+    firstName: '',
     lastname: '',
     gender: undefined,
     birthDate: '',
@@ -103,7 +103,7 @@ export const schemaEstimate = yup.object().shape({
                         'Pasaporte inválido (6-15 caracteres alfanuméricos).'
                     ),
             }),
-        name: yup.string().when('documentType', {
+        firstName: yup.string().when('documentType', {
             is: Documents.PASSPORT,
             then: (schema) =>
                 schema
@@ -158,7 +158,6 @@ export const schemaEstimate = yup.object().shape({
         isNew: yup.boolean().defined().default(false),
         fuelType: yup
             .mixed<FuelsType>()
-            .transform((v) => (typeof v === 'string' ? Number(v) : v))
             .oneOf([FuelsType.GAS, FuelsType.GASOLINE, FuelsType.ELECTRIC])
             .required('Selecciona un tipo de combustible.'),
         gasType: yup.mixed<Gas>().when('fuelType', {

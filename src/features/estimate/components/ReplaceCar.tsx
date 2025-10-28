@@ -41,7 +41,6 @@ type ReplaceCarProps = {
 export const ReplaceCar = ({ form }: ReplaceCarProps) => {
     return (
         <>
-        
             <div className='space-y-6 animate-in fade-in-50 duration-500'>
                 <Controller
                     control={form.control}
@@ -68,21 +67,25 @@ export const ReplaceCar = ({ form }: ReplaceCarProps) => {
                                                     className='text-blue-700'
                                                 />
                                             </div>
-                                            <Field>
-                                                <FieldContent>
-                                                    <FieldLabel
-                                                        htmlFor={inputId}
-                                                        className='text-md'>
-                                                        {replace.title}
-                                                    </FieldLabel>
-                                                    <div className='text-sm text-muted-foreground'>
-                                                        {replace.price}
-                                                    </div>
-                                                    <FieldDescription className='text-[15px] leading-relaxed'>
-                                                        {replace.summary}
-                                                    </FieldDescription>
-                                                </FieldContent>
-                                            </Field>
+                                            <label
+                                                htmlFor={inputId}
+                                                className='cursor-pointer'>
+                                                <Field>
+                                                    <FieldContent>
+                                                        <FieldLabel
+                                                            htmlFor={inputId}
+                                                            className='text-md'>
+                                                            {replace.title}
+                                                        </FieldLabel>
+                                                        <div className='text-sm text-muted-foreground'>
+                                                            {replace.price}
+                                                        </div>
+                                                        <FieldDescription className='text-[15px] leading-relaxed'>
+                                                            {replace.summary}
+                                                        </FieldDescription>
+                                                    </FieldContent>
+                                                </Field>
+                                            </label>
                                         </div>
                                     );
                                 })}
