@@ -22,14 +22,13 @@ export const PersonalPassportForm = ({ form }: PersonalPassportFormProps) => {
             <div className='grid gap-4 sm:grid-cols-2'>
                 <Controller
                     control={form.control}
-                    name='customer.firstName'
+                    name='customer.name'
                     render={({ field, fieldState }) => (
                         <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor='customer.firstName'>
+                            <FieldLabel htmlFor='customer.name'>
                                 Nombres
                             </FieldLabel>
                             <Input
-                                id='customer.firstName'
                                 placeholder='John'
                                 {...field}
                                 aria-invalid={fieldState.invalid}
@@ -47,7 +46,7 @@ export const PersonalPassportForm = ({ form }: PersonalPassportFormProps) => {
                     name='customer.lastname'
                     render={({ field, fieldState }) => (
                         <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor='customer.lastName'>
+                            <FieldLabel htmlFor='customer.lastname'>
                                 Apellidos
                             </FieldLabel>
                             <Input

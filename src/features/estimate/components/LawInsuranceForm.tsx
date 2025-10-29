@@ -44,6 +44,7 @@ interface PlansAccordionProps {
     form: UseFormReturn<EstimateFormData>;
 }
 export const LawInsuranceForm = ({ form }: PlansAccordionProps) => {
+
     return (
         <>
             <div className='space-y-6 animate-in fade-in-50 duration-500'>
@@ -57,9 +58,7 @@ export const LawInsuranceForm = ({ form }: PlansAccordionProps) => {
                                 <RadioGroup
                                     name={field.name}
                                     value={field.value}
-                                    onValueChange={(value) =>
-                                        field.onChange(value)
-                                    }
+                                    onValueChange={(value) => field.onChange(value)}
                                     aria-invalid={isInvalid}
                                     className='flex flex-col gap-4'>
                                     {PLANS.map((plan) => {
@@ -67,7 +66,7 @@ export const LawInsuranceForm = ({ form }: PlansAccordionProps) => {
                                         return (
                                             <div
                                                 key={plan.id}
-                                                className='relative rounded-lg border-blue-500 border bg-card p-4 hover:bg-gray-50 transition-colors'>
+                                                className='relative rounded-lg border-blue-500 border bg-card p-4 transition-all hover:shadow-sm'>
                                                 <div className='absolute right-3 top-3'>
                                                     <RadioGroupItem
                                                         id={inputId}
@@ -75,27 +74,21 @@ export const LawInsuranceForm = ({ form }: PlansAccordionProps) => {
                                                         className='text-blue-500'
                                                     />
                                                 </div>
-                                                <label
-                                                    htmlFor={inputId}
-                                                    className='cursor-pointer'>
-                                                    <Field>
-                                                        <FieldContent>
-                                                            <FieldLabel
-                                                                htmlFor={
-                                                                    inputId
-                                                                }
-                                                                className='text-md'>
-                                                                {plan.title}
-                                                            </FieldLabel>
-                                                            <div className='text-sm text-muted-foreground'>
-                                                                {plan.price}
-                                                            </div>
-                                                            <FieldDescription className='text-[15px] leading-relaxed'>
-                                                                {plan.summary}
-                                                            </FieldDescription>
-                                                        </FieldContent>
-                                                    </Field>
-                                                </label>
+                                                <Field>
+                                                    <FieldContent>
+                                                        <FieldLabel
+                                                            htmlFor={inputId}
+                                                            className='text-md'>
+                                                            {plan.title}
+                                                        </FieldLabel>
+                                                        <div className='text-sm text-muted-foreground'>
+                                                            {plan.price}
+                                                        </div>
+                                                        <FieldDescription className='text-[15px] leading-relaxed'>
+                                                            {plan.summary}
+                                                        </FieldDescription>
+                                                    </FieldContent>
+                                                </Field>
                                             </div>
                                         );
                                     })}

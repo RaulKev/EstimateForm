@@ -14,6 +14,7 @@ import {
 } from '../../type/types';
 import { getCars } from '../../services/car-estimate.service';
 import { SelectCarBrand } from './SelectBrandCar';
+import { fuelTypes } from '@/mocks/car-data.mock';
 import { SelectFuelType } from './SelectFuelType';
 import { Controller, type UseFormReturn } from 'react-hook-form';
 import type { EstimateFormData } from '../../config/EstimeFormConfig';
@@ -35,6 +36,7 @@ export function CarForm({ form }: CarFormProps) {
     const cars = useMemo(() => carsList.map((c) => c.marca), [carsList]);
     const brand = form.watch('car.brand');
     const fuelType = form.watch('car.fuelType');
+    // const worth = form.watch('car.worth');
     const gasEnabled = fuelType === FuelsType.GAS;
     const MIN_WORTH = 200_000;
     const MAX_WORTH = 7_000_000;
@@ -43,6 +45,7 @@ export function CarForm({ form }: CarFormProps) {
             carsList.find((car) => car.marca === brand)?.modelos ?? [];
         if (!models) return [];
         setModels(models);
+        // Limpiar modelo cuando cambias marca
         form.setValue('car.modelId', 0);
         form.clearErrors('car.modelId');
     };
@@ -128,72 +131,61 @@ export function CarForm({ form }: CarFormProps) {
                         control={form.control}
                         name='car.isNew'
                         render={({ field, fieldState }) => (
-                            <label
-                                htmlFor='car.isNew'
-                                className='cursor-pointer'>
-                                <Field
-                                    orientation='horizontal'
-                                    data-invalid={fieldState.invalid}
-                                    className='flex flex-row items-center justify-between rounded-lg border p-4 bg-card hover:bg-gray-50 transition-colors'>
-                                    <FieldContent>
-                                        <FieldLabel htmlFor='car.isNew'>
-                                            Vehiculo nuevo
-                                        </FieldLabel>
-                                        <FieldDescription>
-                                            ¿Tu auto es nuevo?
-                                        </FieldDescription>
-                                    </FieldContent>
-                                    <Switch
-                                        id='car.isNew'
-                                        name={field.name}
-                                        checked={field.value}
-                                        onCheckedChange={field.onChange}
-                                        aria-invalid={fieldState.invalid}
-                                        className='bg-indigo-500'
-                                    />
-                                    {fieldState.invalid && (
-                                        <FieldError
-                                            errors={[fieldState.error]}
-                                        />
-                                    )}
-                                </Field>
-                            </label>
+                            <Field
+                                orientation='horizontal'
+                                data-invalid={fieldState.invalid}
+                                className='flex flex-row items-center justify-between rounded-lg border p-4 bg-card'>
+                                <FieldContent>
+                                    <FieldLabel htmlFor='form-rhf-complex-emailNotifications'>
+                                        Vehiculo nuevo
+                                    </FieldLabel>
+                                    <FieldDescription>
+                                        ¿Tu auto es nuevo?
+                                    </FieldDescription>
+                                </FieldContent>
+                                <Switch
+                                    id='car.isNew'
+                                    name={field.name}
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                    aria-invalid={fieldState.invalid}
+                                    className='bg-indigo-500'
+                                />
+                                {fieldState.invalid && (
+                                    <FieldError errors={[fieldState.error]} />
+                                )}
+                            </Field>
                         )}
                     />
                     <Controller
                         control={form.control}
                         name='car.isPersonalUse'
                         render={({ field, fieldState }) => (
-                            <label
-                                htmlFor='car.isPersonalUse'
-                                className='cursor-pointer'>
-                                <Field
-                                    orientation='horizontal'
-                                    data-invalid={fieldState.invalid}
-                                    className='flex flex-row items-center justify-between rounded-lg border p-4 bg-card hover:bg-gray-50 transition-colors'>
-                                    <FieldContent>
-                                        <FieldLabel htmlFor='form-rhf-complex-emailNotifications'>
-                                            Uso Personal
-                                        </FieldLabel>
-                                        <FieldDescription>
-                                            Confirma que es de uso particular
-                                        </FieldDescription>
-                                    </FieldContent>
-                                    <Switch
-                                        id='car.isPersonalUse'
-                                        name={field.name}
-                                        checked={field.value}
-                                        onCheckedChange={field.onChange}
-                                        aria-invalid={fieldState.invalid}
-                                        className='bg-indigo-500'
-                                    />
-                                    {fieldState.invalid && (
-                                        <FieldError
-                                            errors={[fieldState.error]}
-                                        />
-                                    )}
-                                </Field>
-                            </label>
+                            <Field
+                                orientation='horizontal'
+                                data-invalid={fieldState.invalid}
+                                className='flex flex-row items-center justify-between rounded-lg border p-4 bg-card'>
+                                <FieldContent>
+                                    <FieldLabel htmlFor='form-rhf-complex-emailNotifications'>
+                                        Uso Personal
+                                    </FieldLabel>
+                                    <FieldDescription>
+                                        Confirma que es de uso particular, no de
+                                        uso comercial ni es un auto deportivo
+                                    </FieldDescription>
+                                </FieldContent>
+                                <Switch
+                                    id='car.isPersonalUse'
+                                    name={field.name}
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                    aria-invalid={fieldState.invalid}
+                                    className='bg-indigo-500'
+                                />
+                                {fieldState.invalid && (
+                                    <FieldError errors={[fieldState.error]} />
+                                )}
+                            </Field>
                         )}
                     />
                 </div>
@@ -208,11 +200,17 @@ export function CarForm({ form }: CarFormProps) {
                                 Tipo de combustible
                             </FieldLabel>
                             <SelectFuelType
+                                items={fuelTypes}
                                 name={field.name}
-                                value={field.value || ''}
+                                value={
+                                    field.value !== undefined
+                                        ? String(field.value)
+                                        : ''
+                                }
                                 onValueChange={(value) => {
-                                    field.onChange(value);
-                                    if (value !== FuelsType.GAS) {
+                                    const valueNumber = Number(value);
+                                    field.onChange(Number(valueNumber));
+                                    if (valueNumber !== FuelsType.GAS) {
                                         form.setValue('car.gasType', undefined);
                                         form.setValue(
                                             'car.installationType',
@@ -225,9 +223,6 @@ export function CarForm({ form }: CarFormProps) {
                                     }
                                 }}
                             />
-                            {fieldState.invalid && (
-                                <FieldError errors={[fieldState.error]} />
-                            )}
                         </Field>
                     )}
                 />

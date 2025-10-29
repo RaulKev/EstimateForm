@@ -67,12 +67,3 @@ export const fuelTypes: FuelType[ ] = [
     name: "Vehículo Eléctrico",
   }
 ];
-
-export const insurancePayment = {
-  data: {
-    numeroPoliza: "123",
-    pago: {
-      pagado: false
-    }
-  }
-}

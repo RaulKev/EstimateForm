@@ -47,7 +47,6 @@ function SelectTrigger({
     );
 }
 
-const ShadowRootContext = React.createContext<ShadowRoot | null>(null);
 function SelectContent({
     className,
     children,
@@ -55,9 +54,8 @@ function SelectContent({
     align = 'center',
     ...props
 }: React.ComponentProps<typeof SelectPrimitive.Content>) {
-    const shadowRoot = React.useContext(ShadowRootContext);
     return (
-        <SelectPrimitive.Portal container={shadowRoot?.querySelector('#widget-container') as HTMLElement || undefined}>
+        <SelectPrimitive.Portal>
             <SelectPrimitive.Content
                 data-slot='select-content'
                 className={cn(
@@ -184,5 +182,4 @@ export {
     SelectSeparator,
     SelectTrigger,
     SelectValue,
-    ShadowRootContext,
 };

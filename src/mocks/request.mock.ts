@@ -26,10 +26,9 @@ export interface Customer {
 }
 
 export interface Insurance {
-
   id: string;  // ID es requerido en el modelo de dominio después de ser creado
   companyId: string;
-  quoteNumber: number;
+  quoteNumber?: number;
   policyNumber?: string;
   product: string;
   status: string;
@@ -47,7 +46,7 @@ export interface Insurance {
 export const insuranceResponse: Insurance = {
   id: '',
   companyId: '123456789',
-  quoteNumber: 0,
+  quoteNumber: 123456789,
   policyNumber: '',
   product: 'Auto',
   status: 'Active',
@@ -113,8 +112,3 @@ export const insuranceResponse: Insurance = {
   createdAt: new Date(),
   updatedAt: new Date(),
 };
-
-export interface InsuranceApiResponse {
-  success: boolean;
-  data: Insurance;
-}
