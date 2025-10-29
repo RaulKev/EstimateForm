@@ -6,7 +6,7 @@ interface IHttpClient {
 class HttpClient implements IHttpClient {
   private baseUrl: string;
   constructor() {
-    this.baseUrl = 'http://localhost:3000/api';
+    this.baseUrl = 'https://dev.kover.do/api';
   }
 
   async get<T>(url: string): Promise<T> {

@@ -1,5 +1,5 @@
 import type { Insurance } from '@/mocks/request.mock';
-import { use, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { EstimateForm } from './EstimateForm';
 import Emitir from './Emitir';
 import {
@@ -44,6 +44,7 @@ export const EstimateFlow = ({ storeToken }: FlowProps) => {
       }
     } catch (error) {
         console.log('Error!', error);
+        setIsCheckoutOpen(false);
         setPaymentErrorMessage('Error al obtener el enlace de pago, por favor inténtalo nuevamente.');
         return;
     }

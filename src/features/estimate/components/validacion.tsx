@@ -16,7 +16,7 @@ export const Validacion = ({ payment } : ValidacionProps) => {
     <p>Número de cotización: {payment.data.quoteNumber}</p>
     
     {
-      isEmit ? <p>Número de políza: {payment.data.policyNumber}</p> : ''
+      isEmit ? <p>Número de póliza: {payment.data.policyNumber}</p> : ''
     }
   </div>);
 }

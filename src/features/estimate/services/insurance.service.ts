@@ -1,4 +1,4 @@
-import { httpClient } from "../core/httpClient";
+import { httpClient } from "../../../core/httpClient";
 
 interface InsurancePaymentResponse {
   data: {

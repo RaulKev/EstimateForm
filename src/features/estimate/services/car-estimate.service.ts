@@ -103,7 +103,7 @@ export async function generateQuota(
     try {
         //CONSTRUIR LA DATA QUE SE VA A ENVIAR A LA API
         const requestData = {
-            companyId: generateObjectId(),
+            companyId: generateObjectId(), // store token,
             product: API_DEFAULTS.product,
             customer: {
                 firstName: data.customer.firstName || '',
@@ -162,7 +162,7 @@ export async function generateQuota(
         };
         console.log('Generated Request Data:', JSON.stringify(requestData, null, 2));
         console.log('Request Data:', requestData);
-        const response = await fetch('http://localhost:3000/api/insurances', {
+        const response = await fetch('https://dev.kover.do/api/insurances', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
