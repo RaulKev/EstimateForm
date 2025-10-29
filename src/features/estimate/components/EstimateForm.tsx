@@ -26,11 +26,13 @@ import { XCircle } from 'lucide-react';
 interface EstimateFormProps {
     onSuccess: (data: Insurance) => void;
     setGlobalSuccessMessage: (msg: string | null) => void;
+    storeToken?: string;
 }
 
 export const EstimateForm = ({
     onSuccess,
     setGlobalSuccessMessage,
+    storeToken,
 }: EstimateFormProps) => {
     const [isCedulaVerified, setIsCedulaVerified] = useState(false);
     const [errorAlert, setErrorAlert] = useState<string | null>(null);
@@ -53,11 +55,9 @@ export const EstimateForm = ({
         console.log(data);
         try {
             // Llamar al servicio que hace fetch a la API
-            const response = await generateQuota(data);
-
+            const response = await generateQuota(data, storeToken);
             console.log('Insurance created:', response);
 
-            // Mostrar toast de éxito
             // setear el mensaje global de éxito
             setGlobalSuccessMessage(
                 `Cotización exitosa. Tu número de cotización es: #${response.data.quoteNumber}`
