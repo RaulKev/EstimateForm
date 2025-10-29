@@ -6,21 +6,15 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import type { FuelType } from '../../type/types';
+import { FuelsType } from '../../type/types';
 
 interface SelectData {
-    items: FuelType[];
     name: string;
     value: string;
     onValueChange: (value: string) => void;
 }
 
-export function SelectFuelType({
-    items,
-    name,
-    value,
-    onValueChange,
-}: SelectData) {
+export function SelectFuelType({ name, value, onValueChange }: SelectData) {
     return (
         <Select name={name} onValueChange={onValueChange} value={value}>
             <SelectTrigger className='w-[180px]'>
@@ -28,11 +22,13 @@ export function SelectFuelType({
             </SelectTrigger>
             <SelectContent className='max-h-40 overflow-y-auto'>
                 <SelectGroup>
-                    {items.map((item, i) => (
-                        <SelectItem key={i} value={item.id.toString()}>
-                            {item.name}
-                        </SelectItem>
-                    ))}
+                    <SelectItem value={FuelsType.GASOLINE}>
+                        Gasolina / Diesel
+                    </SelectItem>
+                    <SelectItem value={FuelsType.GAS}>Gas</SelectItem>
+                    <SelectItem value={FuelsType.ELECTRIC}>
+                        Vehículo Eléctrico
+                    </SelectItem>
                 </SelectGroup>
             </SelectContent>
         </Select>
