@@ -15,7 +15,6 @@ import { FieldGroup } from '@/components/ui/field';
 import { Button } from '@/components/ui/button';
 
 import {
-    generateInsurance,
     generateQuota,
 } from '../services/car-estimate.service';
 import type { Insurance } from '@/mocks/request.mock';

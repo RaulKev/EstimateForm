@@ -163,7 +163,7 @@ export async function generateQuota(
         };
         console.log('Generated Request Data:', JSON.stringify(requestData, null, 2));
         console.log('Request Data:', requestData);
-        const response = await fetch('http://localhost:3000/api/insurances', {
+        const response = await fetch('https://dev.kover.do/api/insurances', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

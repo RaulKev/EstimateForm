@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { CarFrontIcon, CheckCircle2 } from 'lucide-react';
+import { AlertCircleIcon, CarFrontIcon, CheckCircle2 } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 interface EmitirProps {
@@ -11,6 +11,8 @@ interface EmitirProps {
     onEmit: () => void;
     isCheckoutOpen: boolean;
     successMessage: string | null;
+    paymentErrorMessage: string;
+    validatingPayment: boolean;
 }
 
 export default function Emitir({
@@ -18,6 +20,8 @@ export default function Emitir({
     onEmit,
     successMessage,
     isCheckoutOpen,
+    paymentErrorMessage,
+    validatingPayment,
 }: EmitirProps) {
     const [kmMes, setKmMes] = React.useState<number>(0);
 
@@ -58,37 +62,6 @@ export default function Emitir({
             )}
             {/* Encabezado */}
             <div className='mb-8 text-center'>
-                {isCheckoutOpen && (
-                    <div
-                        className={`mt-4 transition-all duration-300 ease-out ${
-                            isCheckoutOpen
-                                ? 'scale-100 opacity-100'
-                                : 'scale-50 opacity-0 pointer-events-none'
-                        }`}>
-                        <div className='bg-blue-50 border-l-4 border-blue-500 p-3 rounded-r-lg shadow-sm'>
-                            <div className='flex items-start'>
-                                <div className='shrink-0'>
-                                    <svg
-                                        className='h-5 w-5 text-blue-500'
-                                        fill='currentColor'
-                                        viewBox='0 0 20 20'>
-                                        <path
-                                            fillRule='evenodd'
-                                            d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z'
-                                            clipRule='evenodd'
-                                        />
-                                    </svg>
-                                </div>
-                                <div className='ml-3'>
-                                    <p className='text-sm text-blue-700'>
-                                        Por favor, complete el proceso de pago
-                                        antes de cerrarlo!
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )}
                 <div className='flex flex-col items-center gap-3'>
                     <CarFrontIcon className='size-20 text-orange-500' />
                     <h1 className='text-3xl font-bold tracking-tight text-slate-900'>
@@ -240,16 +213,47 @@ export default function Emitir({
                 </div>
             </div>
 
-            {/* Acciones */}
             <div className='mt-10 flex items-center justify-between'>
                 <Button variant='secondary' className='px-6' onClick={onBack}>
                     ATRÁS
                 </Button>
-                <Button
-                    className='h-11 px-10 bg-orange-500 hover:bg-orange-600 text-base font-semibold'
-                    onClick={onEmit}>
-                    EMITIR
-                </Button>
+                {
+           (isCheckoutOpen || paymentErrorMessage) && (
+            <Alert variant="default" className="w-[50%]">
+              <AlertCircleIcon />
+              <AlertTitle>
+                { isCheckoutOpen && 'Obteniendo enlace de pago...' }
+                { paymentErrorMessage && 'Error en el proceso de pago' }
+              </AlertTitle>
+              <AlertDescription>
+                { paymentErrorMessage && paymentErrorMessage }
+                { isCheckoutOpen && 'Por favor, complete el proceso de pago antes de cerrarlo!' }
+              </AlertDescription>
+            </Alert>
+            )
+          }
+
+          {
+            validatingPayment && (
+              <Alert variant="default" className="w-[50%]">
+              <AlertCircleIcon />
+              <AlertTitle>
+                Validando pago
+              </AlertTitle>
+              <AlertDescription>
+                Por favor, espere...
+              </AlertDescription>
+            </Alert>
+            )
+          }
+
+          <Button
+            className="h-11 px-10 bg-orange-500 hover:bg-orange-600 text-base font-semibold"
+            onClick={onEmit}
+            disabled={isCheckoutOpen || validatingPayment}
+          >
+            EMITIR
+          </Button>
             </div>
         </div>
     );
