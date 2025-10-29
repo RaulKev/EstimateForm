@@ -98,12 +98,13 @@ export const generateInsurance = async (
 };
 
 export async function generateQuota(
-    data: EstimateFormData
+    data: EstimateFormData,
+    storeToken?: string
 ): Promise<InsuranceApiResponse> {
     try {
         //CONSTRUIR LA DATA QUE SE VA A ENVIAR A LA API
         const requestData = {
-            companyId: generateObjectId(),
+            companyId: storeToken || generateObjectId() , //storeTomen
             product: API_DEFAULTS.product,
             customer: {
                 firstName: data.customer.firstName || '',

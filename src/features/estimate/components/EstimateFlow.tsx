@@ -96,6 +96,7 @@ export const EstimateFlow = ({ storeToken }: FlowProps) => {
                 <EstimateForm
                     onSuccess={handleEstimateSuccess}
                     setGlobalSuccessMessage={setSuccessMessage}
+                    storeToken={storeToken}
                 />
             )}
 

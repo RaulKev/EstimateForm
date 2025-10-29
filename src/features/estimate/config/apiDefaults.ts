@@ -1,6 +1,7 @@
 //Datos en duro necesarios para generar el número de cotización.
 // Estos valores se reemplazarán con datos reales más adelante.
 export const API_DEFAULTS = {
+    
     product: 'auto-insurance',
     
     customerDefaults: {

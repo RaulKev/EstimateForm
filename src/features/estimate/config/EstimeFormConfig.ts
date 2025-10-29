@@ -6,6 +6,7 @@ import {
     Gas,
     Gender,
     InstallatationType,
+    NOT_ALLOWED_CORPORATE_EMAIL_DOMAINS,
     ReplacementsCar,
     type Car,
     type Customer,
@@ -14,6 +15,7 @@ import {
 declare module 'yup' {
     interface StringSchema {
         phoneMasked(pattern: RegExp, message?: string): StringSchema;
+        personaleEmail(message?: string): StringSchema;
     }
 }
 
@@ -29,6 +31,17 @@ yup.addMethod<yup.StringSchema>(
         });
     }
 );
+
+yup.addMethod<yup.StringSchema>(yup.string, 'personaleEmail', function (message = 'Solo se permiten correos personales.') {
+    return this.test('personaleEmail', message, function(value) {
+        if (!value) return true;
+        const domain = value.split('@')[1]?.toLowerCase();
+        if (!NOT_ALLOWED_CORPORATE_EMAIL_DOMAINS.includes(domain)) { 
+            return false;
+        }
+        return true;
+    })
+ })
 
 // Patrones de ejemplo (ajusta a tu país/regla)
 const rdCedulaDigits = /^\d{11}$/;
@@ -73,6 +86,7 @@ export const schemaEstimate = yup.object().shape({
         email: yup
             .string()
             .email('Correo electronico no válido.')
+            .personaleEmail('Solo se permiten correos personales.')
             .required('Correo electronico requerido.'),
         phone: yup
             .string()
