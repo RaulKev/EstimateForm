@@ -23,6 +23,7 @@ import { Documents } from '../type/types';
 import { useMemo, useState } from 'react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { XCircle } from 'lucide-react';
+import { usePreventScrollLock } from '../usePreventSchrollLock';
 
 interface EstimateFormProps {
     onSuccess: (data: Insurance) => void;
@@ -95,7 +96,7 @@ export const EstimateForm = ({
         isCedulaVerified,
         isPersonalUse,
     ]);
-
+    usePreventScrollLock();
     return (
         <>
             <h1 className='text-center text-2xl font-bold text-gray-900 mb-8'>
