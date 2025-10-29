@@ -21,37 +21,31 @@ export const AssistantForm = ({ form }: AssistantFormProps) => {
                     control={form.control}
                     name='car.terms.vehicleAssistance'
                     render={({ field, fieldState }) => (
-                        <label
-                            htmlFor='car.term.vehicleAssistanceSwitch'
-                            className='w-full cursor-pointer'>
-                            <Field
-                                orientation='horizontal'
-                                data-invalid={fieldState.invalid}
-                                className='flex flex-row items-center justify-between rounded-lg border p-4 bg-card hover:bg-gray-50 transition-colors'>
-                                <FieldContent>
-                                    <FieldLabel
-                                        htmlFor='car.term.vehicleAssistanceSwitch'
-                                        className='cursor-pointer'>
-                                        Contratar asistencia 24/7
-                                    </FieldLabel>
-                                    <FieldDescription>
-                                        Ayuda inmediata en caso de emergencia en
-                                        carretera
-                                    </FieldDescription>
-                                </FieldContent>
-                                <Switch
-                                    id='car.term.vehicleAssistanceSwitch'
-                                    name={field.name}
-                                    checked={field.value}
-                                    onCheckedChange={field.onChange}
-                                    aria-invalid={fieldState.invalid}
-                                    className='bg-indigo-500'
-                                />
-                                {fieldState.invalid && (
-                                    <FieldError errors={[fieldState.error]} />
-                                )}
-                            </Field>
-                        </label>
+                        <Field
+                            orientation='horizontal'
+                            data-invalid={fieldState.invalid}
+                            className='flex flex-row items-center justify-between rounded-lg border p-4 bg-card'>
+                            <FieldContent>
+                                <FieldLabel htmlFor='form-rhf-complex-emailNotifications'>
+                                    Contratar asistencia 24/7
+                                </FieldLabel>
+                                <FieldDescription>
+                                    Ayuda inmediata en caso de emergencia en
+                                    carretera
+                                </FieldDescription>
+                            </FieldContent>
+                            <Switch
+                                id='car.terms.vehicleAssistance'
+                                name={field.name}
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                                aria-invalid={fieldState.invalid}
+                                className='bg-indigo-500'
+                            />
+                            {fieldState.invalid && (
+                                <FieldError errors={[fieldState.error]} />
+                            )}
+                        </Field>
                     )}
                 />
             </div>
@@ -60,9 +54,7 @@ export const AssistantForm = ({ form }: AssistantFormProps) => {
                     Por tan solo <br />
                     RD$238/MENSUAL
                 </h4>
-                <p className='font-medium mb-3 text-gray-700'>
-                    Ayuda en caso que requieras:
-                </p>
+                <p className='font-medium mb-3 text-gray-700'>Ayuda en caso que requieras:</p>
                 <ul className='grid grid-cols-2 gap-x-4 gap-y-2 text-sm'>
                     <li>• Avería mecánica ligera</li>
                     <li>• Remolque</li>

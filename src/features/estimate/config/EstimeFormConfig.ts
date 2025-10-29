@@ -6,7 +6,6 @@ import {
     Gas,
     Gender,
     InstallatationType,
-    NOT_ALLOWED_CORPORATE_EMAIL_DOMAINS,
     ReplacementsCar,
     type Car,
     type Customer,
@@ -15,7 +14,6 @@ import {
 declare module 'yup' {
     interface StringSchema {
         phoneMasked(pattern: RegExp, message?: string): StringSchema;
-        personaleEmail(message?: string): StringSchema;
     }
 }
 
@@ -32,17 +30,6 @@ yup.addMethod<yup.StringSchema>(
     }
 );
 
-yup.addMethod<yup.StringSchema>(yup.string, 'personaleEmail', function (message = 'Solo se permiten correos personales.') {
-    return this.test('personaleEmail', message, function(value) {
-        if (!value) return true;
-        const domain = value.split('@')[1]?.toLowerCase();
-        if (!NOT_ALLOWED_CORPORATE_EMAIL_DOMAINS.includes(domain)) { 
-            return false;
-        }
-        return true;
-    })
- })
-
 // Patrones de ejemplo (ajusta a tu país/regla)
 const rdCedulaDigits = /^\d{11}$/;
 const rdPhone = /^\d{10}$/;
@@ -56,7 +43,7 @@ export const initialValuesCustomer: Customer = {
     phone: '',
     documentType: undefined,
     documentNumber: '',
-    firstName: '',
+    name: '',
     lastname: '',
     gender: undefined,
     birthDate: '',
@@ -86,7 +73,6 @@ export const schemaEstimate = yup.object().shape({
         email: yup
             .string()
             .email('Correo electronico no válido.')
-            .personaleEmail('Solo se permiten correos personales.')
             .required('Correo electronico requerido.'),
         phone: yup
             .string()
@@ -117,7 +103,7 @@ export const schemaEstimate = yup.object().shape({
                         'Pasaporte inválido (6-15 caracteres alfanuméricos).'
                     ),
             }),
-        firstName: yup.string().when('documentType', {
+        name: yup.string().when('documentType', {
             is: Documents.PASSPORT,
             then: (schema) =>
                 schema
@@ -172,6 +158,7 @@ export const schemaEstimate = yup.object().shape({
         isNew: yup.boolean().defined().default(false),
         fuelType: yup
             .mixed<FuelsType>()
+            .transform((v) => (typeof v === 'string' ? Number(v) : v))
             .oneOf([FuelsType.GAS, FuelsType.GASOLINE, FuelsType.ELECTRIC])
             .required('Selecciona un tipo de combustible.'),
         gasType: yup.mixed<Gas>().when('fuelType', {

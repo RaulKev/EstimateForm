@@ -8,16 +8,16 @@ export const enum Gender {
 }
 
 export const enum FuelsType {
-    GASOLINE = 'Gasolina / Diesel',
-    GAS = 'Gas',
-    ELECTRIC = 'Vehículo Electrico',
+    GASOLINE = 1,
+    GAS = 2,
+    ELECTRIC = 3,
 }
+
 export const enum CarInsurances {
     BASE = 'Base',
     PLUS = 'Plus',
     AUTO_EXCESO = 'AutoExceso',
 }
-
 export const enum Gas {
     GLP = 'GLP',
     GNV = 'GNV',
@@ -30,10 +30,10 @@ export const enum ReplacementsCar {
 }
 export const enum InstallatationType {
     ADAPTED = 'Adaptado',
-    TO_BUILD = 'De Fábrica',
+    TO_BUILD = 'De fábrica',
 }
 
-export interface EstimateFormData {
+export interface RequestUnit {
     customer: Customer;
     car: Car;
 }
@@ -49,19 +49,17 @@ export interface Car {
     worth: number;
     terms: Term;
 }
-
 interface Term {
     insuranceType: CarInsurances;
     vehicleAssistance: boolean;
     replacementCar: ReplacementsCar;
 }
-
 export interface Customer {
     email: string;
     phone: string;
     documentType?: Documents;
     documentNumber: string;
-    firstName?: string;
+    name?: string;
     lastname?: string;
     gender?: Gender;
     birthDate?: string;
@@ -81,10 +79,3 @@ export interface FuelType {
     id: number;
     name: string;
 }
-
-export const NOT_ALLOWED_CORPORATE_EMAIL_DOMAINS = [
-    'gmail.com',
-    'hotmail.com',
-    'outlook.com',
-    'yahoo.com',
-];
