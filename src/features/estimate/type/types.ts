@@ -33,7 +33,7 @@ export const enum InstallatationType {
     TO_BUILD = 'De Fábrica',
 }
 
-export interface RequestUnit {
+export interface EstimateFormData {
     customer: Customer;
     car: Car;
 }
@@ -67,7 +67,6 @@ export interface Customer {
     birthDate?: string;
 }
 
-
 export interface CarModels {
     idModelo: number;
     modelo: string;
@@ -82,3 +81,10 @@ export interface FuelType {
     id: number;
     name: string;
 }
+
+export const NOT_ALLOWED_CORPORATE_EMAIL_DOMAINS = [
+    'gmail.com',
+    'hotmail.com',
+    'outlook.com',
+    'yahoo.com',
+];
