@@ -20,7 +20,6 @@ export const EstimateFlow = ({ storeToken }: FlowProps) => {
   const [paymentData, setPayment] = useState<InsurancePaymentStatusResponse | null>(null);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState<boolean>(false);
   const [paymentErrorMessage, setPaymentErrorMessage] = useState<string>('');
-  const [validatingPayment, setValidatingPayment] = useState<boolean>(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   
     const handleEstimateSuccess = (data: Insurance) => {
@@ -35,6 +34,7 @@ export const EstimateFlow = ({ storeToken }: FlowProps) => {
     setIsCheckoutOpen(true);
     setPaymentErrorMessage('');
     let paymentUrl: string = '';
+
     try {
       paymentUrl = await getUrlPayment(insuranceId);
       
@@ -50,35 +50,34 @@ export const EstimateFlow = ({ storeToken }: FlowProps) => {
     }
 
     const popup = window.open(
-      "about:blank",
+      paymentUrl,
       "popupPago",
       "width=600,height=700,scrollbars=yes,resizable=yes"
     );
-    if (popup) {
-      popup.location.href = paymentUrl;
-    } else {
+
+    if (!popup) {
       alert("Popup bloqueado");
       return;
     }
-
+    
     const interval = setInterval(async () => {
-      if (popup.closed) {
+      const payment = await checkStatusPayment(insuranceId);
+      if (!payment.data.isPaid && popup.closed) {
         clearInterval(interval);
         setIsCheckoutOpen(false);
-        console.log("Popup cerrado", insuranceId);
-        setValidatingPayment(true);
-        const payment = await checkStatusPayment(insuranceId);
-
-        if (payment.data.isPaid) {
-          setPayment(payment);
-          setCurrentStep('emited');
-        } else if (!payment.data.isPaid) {
-          setPaymentErrorMessage('No se pudo procesar el pago. Por favor inténtalo nuevamente.');
-        }
-        setValidatingPayment(false);
+        setPaymentErrorMessage('Ha cancelado el pago. Por favor inténtalo nuevamente.');
         return;
       }
-    }, 1000);
+
+      if (payment.data.isPaid) {
+        popup.close();
+        clearInterval(interval);
+        setIsCheckoutOpen(false);
+        setPayment(payment);
+        setCurrentStep('emited');
+        return;
+      }
+    }, 3000);
   };
 
   useEffect(() => {
@@ -95,7 +94,6 @@ export const EstimateFlow = ({ storeToken }: FlowProps) => {
           onBack={handleBack}
           isCheckoutOpen={isCheckoutOpen}
           paymentErrorMessage={paymentErrorMessage}
-          validatingPayment={validatingPayment}
           successMessage={successMessage}
           onEmit={() => handleEmit(insuranceData.id)}
         />

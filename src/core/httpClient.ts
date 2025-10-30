@@ -1,3 +1,5 @@
+import { API_ENVS } from "@/features/estimate/config/apiConfig";
+
 interface IHttpClient {
   get<T>(url: string): Promise<T>;
   post<T>(url: string, data?: unknown, config?: RequestInit): Promise<T>;
@@ -6,7 +8,7 @@ interface IHttpClient {
 class HttpClient implements IHttpClient {
   private baseUrl: string;
   constructor() {
-    this.baseUrl = 'https://dev.kover.do/api';
+    this.baseUrl = API_ENVS.url.local;
   }
 
   async get<T>(url: string): Promise<T> {

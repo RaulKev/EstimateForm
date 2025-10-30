@@ -12,7 +12,6 @@ interface EmitirProps {
     isCheckoutOpen: boolean;
     successMessage: string | null;
     paymentErrorMessage: string;
-    validatingPayment: boolean;
 }
 
 export default function Emitir({
@@ -21,7 +20,6 @@ export default function Emitir({
     successMessage,
     isCheckoutOpen,
     paymentErrorMessage,
-    validatingPayment,
 }: EmitirProps) {
     const [kmMes, setKmMes] = React.useState<number>(0);
 
@@ -214,7 +212,7 @@ export default function Emitir({
             </div>
 
             <div className='mt-10 flex items-center justify-between'>
-                <Button variant='secondary' className='px-6' onClick={onBack}>
+                <Button variant='secondary' className='px-6' onClick={onBack} disabled={isCheckoutOpen}>
                     ATRÁS
                 </Button>
                 {
@@ -233,24 +231,10 @@ export default function Emitir({
             )
           }
 
-          {
-            validatingPayment && (
-              <Alert variant="default" className="w-[50%]">
-              <AlertCircleIcon />
-              <AlertTitle>
-                Validando pago
-              </AlertTitle>
-              <AlertDescription>
-                Por favor, espere...
-              </AlertDescription>
-            </Alert>
-            )
-          }
-
           <Button
             className="h-11 px-10 bg-orange-500 hover:bg-orange-600 text-base font-semibold"
             onClick={onEmit}
-            disabled={isCheckoutOpen || validatingPayment}
+            disabled={isCheckoutOpen}
           >
             EMITIR
           </Button>
