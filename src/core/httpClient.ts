@@ -25,9 +25,7 @@ class HttpClient implements IHttpClient {
       body: JSON.stringify(data),
       ...config,
     });
-    console.log(response, 'response');
     if (!response.ok) {
-      console.log(response, 'error');
       throw new Error('Error al enviar petición');
     }
     return response.json();
