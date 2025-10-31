@@ -17,8 +17,8 @@ interface SelectData {
 export function SelectFuelType({ name, value, onValueChange }: SelectData) {
     return (
         <Select name={name} onValueChange={onValueChange} value={value}>
-            <SelectTrigger className='w-[180px]'>
-                <SelectValue placeholder='Tipo de combustible' />
+            <SelectTrigger className='select-none'>
+                <SelectValue placeholder='Tipo de combustible'/>
             </SelectTrigger>
             <SelectContent className='max-h-40 overflow-y-auto'>
                 <SelectGroup>

@@ -69,7 +69,7 @@ export const ReplaceCar = ({ form }: ReplaceCarProps) => {
                                             </div>
                                             <label
                                                 htmlFor={inputId}
-                                                className='cursor-pointer'>
+                                                className='cursor-pointer select-none'>
                                                 <Field>
                                                     <FieldContent>
                                                         <FieldLabel

@@ -1,4 +1,3 @@
-// car-estimate.service.ts
 import { carsList } from '@/mocks/car-data.mock';
 import {
     Documents,
@@ -12,6 +11,7 @@ import {
 import type { EstimateFormData } from '../config/EstimeFormConfig';
 import { API_DEFAULTS } from '../config/apiDefaults';
 import { LAW_INSURANCE_LABEL, REPLACEMENT_CAR_LABEL } from '../config/mappers';
+import { httpClient } from '@/core/httpClient';
 
 let counter = Math.floor(Math.random() * 0xffffff);
 
@@ -102,34 +102,25 @@ export async function generateQuota(
         };
         console.log('Generated Request Data:', JSON.stringify(requestData, null, 2));
         console.log('Request Data:', requestData);
-        const response = await fetch('http://localhost:3000/api/insurances', {
-            method: 'POST',
+          const result = await httpClient.post<Insurances>('/insurances', requestData, {
             headers: {
                 'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(requestData),
-        });
-        if (!response.ok) {
-            const errorData = await response.json().catch(() => null);
-            throw new Error(
-                errorData?.message || `Error HTTP ${response.status}`
-            );
+            }
+        })
+        if (!result.success || !result.data) {
+           throw new Error('Respuesta inválida del servidor');
         }
 
-        const result: Insurances = await response.json();
-        // console.log('API Response:', result);
-        // if (result.data) {
-        //     delete (result.data as any).quoteNumber;
-        // }
+        if (result.data.status === 'pending') {
+            throw new Error('Tu cotización está siendo procesada. Te notificaremos por correo electronico.');
+        }
 
        if (!result.data.quoteNumber || result.data.quoteNumber <= 0) {
             throw new Error(
-                'No se pudo generar el número de cotización. ' +
-                'Por favor verifica los datos e intenta nuevamente.'
+                'Tu cotización está siendo procesada. Te notificaremos por correo electronico.'
             );
         }
-        
-
+    
         return result;
     } catch (error) {
         console.error('Error generating insurance:', error);

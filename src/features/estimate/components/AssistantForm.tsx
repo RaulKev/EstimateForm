@@ -23,7 +23,7 @@ export const AssistantForm = ({ form }: AssistantFormProps) => {
                     render={({ field, fieldState }) => (
                         <label
                             htmlFor='car.term.vehicleAssistanceSwitch'
-                            className='w-full cursor-pointer'>
+                            className='w-full cursor-pointer select-none'>
                             <Field
                                 orientation='horizontal'
                                 data-invalid={fieldState.invalid}

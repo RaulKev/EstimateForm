@@ -185,7 +185,7 @@ export const CustomerDataForm = ({
                                 }>
                                 <SelectTrigger
                                     id='customer.documentType'
-                                    aria-invalid={fieldState.invalid}>
+                                    aria-invalid={fieldState.invalid} className='select-none'>
                                     <SelectValue placeholder='Tipo de documento' />
                                 </SelectTrigger>
                                 <SelectContent className='bg-popover z-50'>

@@ -47,7 +47,6 @@ export const LawInsuranceForm = ({ form }: PlansAccordionProps) => {
     return (
         <>
             <div className='space-y-6 animate-in fade-in-50 duration-500'>
-                <div className=''>
                     <Controller
                         control={form.control}
                         name='car.terms.insuranceType'
@@ -77,13 +76,10 @@ export const LawInsuranceForm = ({ form }: PlansAccordionProps) => {
                                                 </div>
                                                 <label
                                                     htmlFor={inputId}
-                                                    className='cursor-pointer'>
+                                                    className='cursor-pointer select-none'>
                                                     <Field>
                                                         <FieldContent>
                                                             <FieldLabel
-                                                                htmlFor={
-                                                                    inputId
-                                                                }
                                                                 className='text-md'>
                                                                 {plan.title}
                                                             </FieldLabel>
@@ -104,7 +100,6 @@ export const LawInsuranceForm = ({ form }: PlansAccordionProps) => {
                         }}
                     />
                 </div>
-            </div>
         </>
     );
 };

@@ -27,7 +27,7 @@ export function SelectCarBrand({
             name={name}
             onValueChange={onValueChange}
             value={value || ''}>
-            <SelectTrigger aria-invalid={invalid} >
+            <SelectTrigger aria-invalid={invalid} className='select-none' >
                 <SelectValue placeholder='Selecciona tu marca'/>
             </SelectTrigger>
             <SelectContent>
