@@ -1,5 +1,5 @@
 import type { InsurancesData } from '@/mocks/request.mock';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { EstimateForm } from './EstimateForm';
 import Emitir from './Emitir';
 import {
@@ -84,6 +84,13 @@ export const EstimateFlow = ({ storeToken }: FlowProps) => {
       }
     }, 3000);
   };
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 150);
+    return () => clearTimeout(timeoutId);
+  }, [currentStep]);
 
   return (
     <>
