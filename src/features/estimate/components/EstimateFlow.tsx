@@ -36,12 +36,14 @@ export const EstimateFlow = ({ storeToken }: FlowProps) => {
     let paymentUrl: string = '';
 
     try {
-      paymentUrl = await getUrlPayment(insuranceId);
-      
-      if (!paymentUrl) {
+      const paymentUrlResponse = await getUrlPayment(insuranceId);
+      if (!paymentUrlResponse) {
         setPaymentErrorMessage('No se pudo obtener el enlace de pago');
         return;
       }
+
+      paymentUrl = `${paymentUrlResponse}&documento=${insuranceData?.customer?.documentNumber}`;
+      console.log('paymentUrl', paymentUrl);
     } catch (error) {
         console.log('Error!', error);
         setIsCheckoutOpen(false);
