@@ -32,7 +32,7 @@ yup.addMethod<yup.StringSchema>(
     }
 );
 
-yup.addMethod<yup.StringSchema>(yup.string, 'personaleEmail', function (message = 'Solo se permiten correos personales.') {
+yup.addMethod<yup.StringSchema>(yup.string, 'personaleEmail', function (message = 'Correo electronico inválido.') {
     return this.test('personaleEmail', message, function(value) {
         if (!value) return true;
         const domain = value.split('@')[1]?.toLowerCase();
@@ -85,8 +85,8 @@ export const schemaEstimate = yup.object().shape({
     customer: yup.object({
         email: yup
             .string()
-            .email('Correo electronico no válido.')
-            .personaleEmail('Solo se permiten correos personales.')
+            .email('Correo electronico inválido.')
+            .personaleEmail('Correo electronico inválido')
             .required('Correo electronico requerido.'),
         phone: yup
             .string()

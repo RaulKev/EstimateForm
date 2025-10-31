@@ -130,7 +130,7 @@ export function CarForm({ form }: CarFormProps) {
                         render={({ field, fieldState }) => (
                             <label
                                 htmlFor='car.isNew'
-                                className='cursor-pointer'>
+                                className='cursor-pointer select-none'>
                                 <Field
                                     orientation='horizontal'
                                     data-invalid={fieldState.invalid}
@@ -166,7 +166,7 @@ export function CarForm({ form }: CarFormProps) {
                         render={({ field, fieldState }) => (
                             <label
                                 htmlFor='car.isPersonalUse'
-                                className='cursor-pointer'>
+                                className='cursor-pointer select-none'>
                                 <Field
                                     orientation='horizontal'
                                     data-invalid={fieldState.invalid}
@@ -224,6 +224,7 @@ export function CarForm({ form }: CarFormProps) {
                                         ]);
                                     }
                                 }}
+                                
                             />
                             {fieldState.invalid && (
                                 <FieldError errors={[fieldState.error]} />
@@ -231,11 +232,6 @@ export function CarForm({ form }: CarFormProps) {
                         </Field>
                     )}
                 />
-                {fuelType === FuelsType.GAS && (
-                    <GasAndInstallToggel form={form} gasEnabled={gasEnabled} />
-                )}
-            </div>
-            <div className=''>
                 <Controller
                     control={form.control}
                     name='car.worth'
@@ -274,6 +270,9 @@ export function CarForm({ form }: CarFormProps) {
                         </Field>
                     )}
                 />
+                {fuelType === FuelsType.GAS && (
+                    <GasAndInstallToggel form={form} gasEnabled={gasEnabled} />
+                )}
             </div>
         </>
     );
