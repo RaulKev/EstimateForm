@@ -31,63 +31,14 @@ export default function Emitir({
     // Validar que existan los datos de la cotización
     const quotationResponse = insuranceData?.quotationResponse;
 
-    if (!quotationResponse || !quotationResponse.data) {
-        return (
-            <div className='mx-auto max-w-5xl px-4 py-10'>
-                <Alert variant='destructive' className='mb-6'>
-                    <AlertCircleIcon className='h-4 w-4' />
-                    <AlertTitle>Error al cargar datos</AlertTitle>
-                    <AlertDescription>
-                        No se pudieron cargar los datos de la cotización. Por favor, intenta nuevamente.
-                    </AlertDescription>
-                </Alert>
-
-                <div className='flex justify-center'>
-                    <Button
-                        variant='secondary'
-                        className='px-6'
-                        onClick={onBack}
-                    >
-                        VOLVER AL FORMULARIO
-                    </Button>
-                </div>
-            </div>
-        );
-    }
-
-    const quotationData = quotationResponse.data;
-    const quotationTerms = quotationData.terminos;
-    const vehiculo = quotationData.vehiculo;
-
-    // Validar que existan los datos necesarios
-    if (!quotationTerms || !vehiculo) {
-        return (
-            <div className='mx-auto max-w-5xl px-4 py-10'>
-                <Alert variant='destructive' className='mb-6'>
-                    <AlertCircleIcon className='h-4 w-4' />
-                    <AlertTitle>Datos incompletos</AlertTitle>
-                    <AlertDescription>
-                        Faltan datos necesarios en la cotización. Por favor, genera una nueva cotización.
-                    </AlertDescription>
-                </Alert>
-
-                <div className='flex justify-center'>
-                    <Button
-                        variant='secondary'
-                        className='px-6'
-                        onClick={onBack}
-                    >
-                        VOLVER AL FORMULARIO
-                    </Button>
-                </div>
-            </div>
-        );
-    }
+    const quotationData = quotationResponse?.data;
+    const quotationTerms = quotationData?.terminos;
+    const vehiculo = quotationData?.vehiculo;
 
     // Obtener datos de la cotización desde el API
-    const primaFija = quotationTerms.primaFija || 0;
-    const precioPorKm = quotationTerms.primaKm || 0;
-    const vehiculoInfo = `${vehiculo.marca} ${vehiculo.modelo} ${vehiculo.anio}`;
+    const primaFija = quotationTerms?.primaFija || 0;
+    const precioPorKm = quotationTerms?.primaKm || 0;
+    const vehiculoInfo = `${vehiculo?.marca} ${vehiculo?.modelo} ${vehiculo?.anio}`;
 
     // Mantener compatibilidad con código existente
     const premium = primaFija;
