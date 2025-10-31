@@ -17,7 +17,7 @@ import { Button } from '@/components/ui/button';
 import {
     generateQuota,
 } from '../services/car-estimate.service';
-import type { Insurance } from '@/mocks/request.mock';
+import type { InsurancesData } from '@/mocks/request.mock';
 import { Documents } from '../type/types';
 import { useMemo, useState } from 'react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -25,7 +25,7 @@ import { XCircle } from 'lucide-react';
 import { usePreventScrollLock } from '../usePreventSchrollLock';
 
 interface EstimateFormProps {
-    onSuccess: (data: Insurance) => void;
+    onSuccess: (data: InsurancesData) => void;
     setGlobalSuccessMessage: (msg: string | null) => void;
     storeToken?: string;
 }
