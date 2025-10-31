@@ -23,6 +23,7 @@ import { useMemo, useState } from 'react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { XCircle } from 'lucide-react';
 import { usePreventScrollLock } from '../hook/usePreventSchrollLock';
+import LoadingOverlay from './LoadingOverlay';
 
 interface EstimateFormProps {
     onSuccess: (data: InsurancesData) => void;
@@ -95,6 +96,7 @@ export const EstimateForm = ({
     usePreventScrollLock();
     return (
         <>
+            {isSubmitting && <LoadingOverlay message="Generando tu cotización..." />}
             <h1 className='text-center text-2xl font-bold text-gray-900 mb-8'>
                 Cotización por lo que conduces
             </h1>
@@ -162,7 +164,7 @@ export const EstimateForm = ({
                                 h-12 px-12 text-lg rounded-md shadow-md transition-all
                                 ${
                                     canSubmit
-                                        ? 'bg-orange-500 hover:bg-orange-600 hover:shadow-xl cursor-pointer'
+                                        ? 'bg-indigo-500 hover:bg-indigo-600 hover:shadow-xl cursor-pointer'
                                         : 'bg-gray-300 text-gray-500 cursor-not-allowed opacity-60'
                                 }
                             `}>

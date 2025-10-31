@@ -55,7 +55,7 @@ export const AssistantForm = ({ form }: AssistantFormProps) => {
                     )}
                 />
             </div>
-            <div className='bg-indigo-50 p-4 rounded-md'>
+            <div className='bg-indigo-50 p-8 rounded-md'>
                 <h4 className='text-center mb-4 '>
                     Por tan solo <br />
                     RD$238/MENSUAL
