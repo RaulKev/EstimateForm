@@ -8,7 +8,7 @@ interface IHttpClient {
 class HttpClient implements IHttpClient {
   private baseUrl: string;
   constructor() {
-    this.baseUrl = API_ENVS.url.local;
+    this.baseUrl = API_ENVS.url.qa;
   }
 
   async get<T>(url: string): Promise<T> {

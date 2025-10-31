@@ -14,6 +14,7 @@ interface EmitirProps {
     successMessage: string | null;
     paymentErrorMessage: string;
     insuranceData?: InsurancesData;
+    isPayment: boolean;
 }
 
 export default function Emitir({
@@ -23,6 +24,7 @@ export default function Emitir({
     isCheckoutOpen,
     paymentErrorMessage,
     insuranceData,
+    isPayment,
 }: EmitirProps) {
     const [kmMes, setKmMes] = React.useState<number>(0);
 
@@ -59,16 +61,16 @@ export default function Emitir({
 
     return (
         <div className='mx-auto max-w-5xl px-4 py-10'>
-            {successMessage && (
+            {(successMessage || isPayment) && (
                 <Alert
                     variant='default'
                     className='mb-6 relative border-green-500 bg-green-50'>
                     <CheckCircle2 className='h-4 w-4 text-green-700' />
                     <AlertTitle className='text-green-700 font-semibold'>
-                        Cotización generada
+                        { isPayment ? 'Pago recibido' : 'Cotización generada' }
                     </AlertTitle>
                     <AlertDescription className='text-green-700 '>
-                        {successMessage}
+                        { isPayment ? '¡Gracias por tu pago! Se enviará un correo para el proceso de inspección.' : successMessage }
                     </AlertDescription>
                 </Alert>
             )}
@@ -248,7 +250,7 @@ export default function Emitir({
           <Button
             className="h-11 px-10 bg-orange-500 hover:bg-orange-600 text-base font-semibold"
             onClick={onEmit}
-            disabled={isCheckoutOpen}
+            disabled={isCheckoutOpen || isPayment}
           >
             EMITIR
           </Button>
