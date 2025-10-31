@@ -1,120 +1,227 @@
-export interface Terms {
-  paymentFraction: string;
-  petPlan?: string; // Optional for non-pet insurance
-  lawInsurance?: string; // For auto/law insurance
-  vehicularAssistance?: boolean; // For auto/law insurance
-  substituteAuto?: string; // For auto/law insurance
-  paymentMethod?: string; // For auto/law insurance
-  startDate?: Date;
-  endDate?: Date;
-  issueDate?: Date;
-  cancellationDate?: Date;
-  premium?: number;
-  tax?: number;
-  totalAmount?: number;
+export interface Insurances {
+    success: boolean;
+    data:    InsurancesData;
 }
 
-export interface Customer {
-  firstName: string;
-  lastName: string;
-  gender?: string;
-  documentType: string;
-  documentNumber: string;
-  phone: string;
-  email: string;
-  occupation?: string;
+export interface InsurancesData {
+    companyId:         string;
+    quoteNumber:       number;
+    product:           string;
+    status:            string;
+    customer:          DataCustomer;
+    vehicle:           Vehicle;
+    terms:             DataTerms;
+    requestDate:       Date;
+    quoteDate:         Date;
+    quotationRequest:  QuotationRequest;
+    quotationResponse: QuotationResponse;
+    createdAt:         Date;
+    updatedAt:         Date;
+    id:                string;
 }
 
-export interface Insurance {
-
-  id: string;  // ID es requerido en el modelo de dominio después de ser creado
-  companyId: string;
-  quoteNumber: number;
-  policyNumber?: string;
-  product: string;
-  status: string;
-  customer?: Customer; // Optional for some insurance types (e.g., auto)// Optional for non-vehicle insurance
-  terms: Terms;
-  requestDate: Date;
-  quoteDate?: Date;
-  purchaseDate?: Date;
-  quotationRequest: unknown;  // Stores the complete request JSON
-  quotationResponse?: unknown; // Stores the complete response JSON
-  createdAt: Date;
-  updatedAt: Date;
+export interface DataCustomer {
+    firstName:      string;
+    lastName:       string;
+    gender:         string;
+    documentType:   string;
+    documentNumber: string;
+    phone:          string;
+    email:          string;
+    occupation:     string;
+    address:        PurpleAddress;
+    _id:            string;
 }
 
-export const insuranceResponse: Insurance = {
-  id: '',
-  companyId: '123456789',
-  quoteNumber: 0,
-  policyNumber: '',
-  product: 'Auto',
-  status: 'Active',
-  customer: {
-    firstName: 'John',
-    lastName: 'Doe',
-    gender: 'Male',
-    documentType: 'Passport',
-    documentNumber: '123456789',
-    phone: '123456789',
-    email: 'john.doe@example.com',
-    occupation: 'Driver',
-  },
-  terms: {
-    paymentFraction: 'yep',
-    petPlan: 'PetPlan',
-    lawInsurance: 'LawInsurance',
-    vehicularAssistance: true,
-    substituteAuto: 'SubstituteAuto',
-    paymentMethod: 'PaymentMethod',
-    startDate: new Date(),
-    endDate: new Date(),
-    issueDate: new Date(),
-    cancellationDate: new Date(),
-    premium: 1000,
-    tax: 200,
-    totalAmount: 1200,
-  },
-  requestDate: new Date(),
-  quoteDate: new Date(),
-  purchaseDate: new Date(),
-  quotationRequest: {
-    customer: {
-      firstName: 'John',
-      lastName: 'Doe',
-      gender: 'Male',
-      documentType: 'Passport',
-      documentNumber: '123456789',
-      phone: '123456789',
-      email: 'john.doe@example.com',
-      occupation: 'Driver',
-    },
-    insurance: {
-      product: 'Auto',
-      status: 'Active',
-      terms: {
-        paymentFraction: 0.1,
-        petPlan: 'PetPlan',
-        lawInsurance: 'LawInsurance',
-        vehicularAssistance: true,
-        substituteAuto: 'SubstituteAuto',
-        paymentMethod: 'PaymentMethod',
-        startDate: new Date(),
-        endDate: new Date(),
-        issueDate: new Date(),
-        cancellationDate: new Date(),
-        premium: 1000,
-        tax: 200,
-        totalAmount: 1200,
-      },
-    },
-  },
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
+export interface PurpleAddress {
+    province:     string;
+    municipality: string;
+    sector:       string;
+    street:       string;
+    _id:          string;
+}
 
-export interface InsuranceApiResponse {
-  success: boolean;
-  data: Insurance;
+export interface QuotationRequest {
+    companyId: string;
+    product:   string;
+    customer:  QuotationRequestCustomer;
+    vehicle:   Vehicle;
+    terms:     QuotationRequestTerms;
+}
+
+export interface QuotationRequestCustomer {
+    firstName:      string;
+    lastName:       string;
+    documentType:   string;
+    documentNumber: string;
+    email:          string;
+    phone:          string;
+    occupation:     string;
+    gender:         string;
+    address:        FluffyAddress;
+}
+
+export interface FluffyAddress {
+    province:       string;
+    municipality:   string;
+    sector:         string;
+    street:         string;
+    houseNumber:    string;
+    referencePoint: string;
+}
+
+export interface QuotationRequestTerms {
+    lawInsurance:        string;
+    vehicularAssistance: boolean;
+    substituteAuto:      string;
+    paymentFraction:     string;
+    paymentMethod:       string;
+}
+
+export interface Vehicle {
+    modelId:           number;
+    year:              number;
+    fuelType:          string;
+    gasType?:          string;
+    installationType?: string;
+    isPersonalUse:     boolean;
+    value:             number;
+    plate:             string;
+    color:             string;
+    displacement:      number;
+    doors:             number;
+    chassis:           string;
+    engine:            string;
+    _id?:              string;
+}
+
+export interface QuotationResponse {
+    producto: string;
+    data:     QuotationResponseData;
+}
+
+export interface QuotationResponseData {
+    requestId:             null;
+    codigoCliente:         string;
+    tipo:                  string;
+    numeroCotizacion:      number;
+    numeroPoliza:          string;
+    codigoIntermediario:   string;
+    cotizacionRelacionada: null;
+    estaAprobada:          boolean;
+    estado:                string;
+    estadoCertificado:     string;
+    idePol:                null;
+    ramo:                  string;
+    plan:                  string;
+    revPlan:               string;
+    cliente:               Cliente;
+    vehiculo:              Vehiculo;
+    ingreso:               null;
+    terminos:              Terminos;
+    pago:                  Pago;
+    primas:                Prima[];
+}
+
+export interface Cliente {
+    nombre:                                        string;
+    apellido:                                      string;
+    genero:                                        string;
+    fechaNacimiento:                               Date;
+    tipoDocumento:                                 string;
+    numeroDocumento:                               string;
+    telefono:                                      string;
+    nacionalidad:                                  string;
+    correo:                                        string;
+    correoAlterno:                                 null;
+    estadoCivil:                                   string;
+    ocupacion:                                     string;
+    paisResidencia:                                null;
+    direccion:                                     Direccion;
+}
+
+export interface Direccion {
+    provincia: string;
+    municipio: string;
+    sector:    string;
+    edificio:  string;
+    calle:     string;
+}
+
+export interface Pago {
+    pagado: boolean;
+}
+
+export interface Prima {
+    fraccionamientoPago: string;
+    descripcion:         string;
+    prima:               number;
+    impuesto:            number;
+    primaKm:             number;
+    cobro:               number;
+}
+
+export interface Terminos {
+    cupon:               null;
+    cuponTipo:           null;
+    cuponMonto:          number;
+    fraccionamientoPago: string;
+    formaPago:           string;
+    seguroLey:           string;
+    asistenciaVehicular: boolean;
+    autoSustituto:       string;
+    montoAsegurado:      number;
+    extraPrima:          number;
+    primaMinima:         null;
+    plazo:               number;
+    inicioVigencia:      Date;
+    finVigencia:         Date;
+    fechaEmision:        null;
+    fechaCancelacion:    null;
+    incluyeDesempleo:    boolean;
+    primaFija:           number;
+    primaKm:             number;
+    prima:               number;
+    impuesto:            number;
+    totalCobro:          number;
+    planAccidentes:      string;
+}
+
+export interface Vehiculo {
+    idModelo:                            number;
+    idMarca:                             number;
+    marca:                               string;
+    modelo:                              string;
+    anio:                                number;
+    esCeroKm:                            boolean;
+    combustible:                         string;
+    tipoGas:                             string;
+    tipoInstalacion:                     string;
+    cumpleRequisitos:                    boolean;
+    esUsoParticularNoDeportivoNoPublico: boolean;
+    valor:                               number;
+    sumaAsegurada:                       number;
+    inspeccion:                          Inspeccion;
+}
+
+export interface Inspeccion {
+    tipo:       string;
+    placa:      string;
+    color:      string;
+    cilindraje: number;
+    puertas:    number;
+    chasis:     string;
+    motor:      string;
+}
+
+export interface DataTerms {
+    paymentFraction:     string;
+    paymentMethod:       string;
+    lawInsurance:        string;
+    vehicularAssistance: boolean;
+    substituteAuto:      string;
+    premium:             number;
+    tax:                 number;
+    totalAmount:         number;
+    _id:                 string;
 }
