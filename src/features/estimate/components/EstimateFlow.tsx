@@ -51,11 +51,13 @@ export const EstimateFlow = ({ storeToken }: FlowProps) => {
         setPaymentErrorMessage('Error al obtener el enlace de pago, por favor inténtalo nuevamente.');
         return;
     }
+    const left = (screen.width / 2) - (600 / 2);
+    const top = (screen.height / 2) - (700 / 2);
 
     const popup = window.open(
       paymentUrl,
       "popupPago",
-      "width=600,height=700,scrollbars=yes,resizable=yes"
+      "width=600,height=700,left=" + left + ",top=" + top + ",scrollbars=yes,resizable=yes"
     );
 
     if (!popup) {
