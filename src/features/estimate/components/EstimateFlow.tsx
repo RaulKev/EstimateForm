@@ -8,8 +8,9 @@ import {
     type InsurancePaymentStatusResponse,
 } from '../services/insurance.service';
 import { Validacion } from './validacion';
+import PaymentConfirmation from './PaymentConfirmation';
 
-type FlowStep = 'estimate' | 'emit' | 'emited';
+type FlowStep = 'estimate' | 'emit' | 'emited' | 'confirmation';
 interface FlowProps {
     storeToken?: string;
 }
@@ -80,6 +81,7 @@ export const EstimateFlow = ({ storeToken }: FlowProps) => {
         setIsCheckoutOpen(false);
         setPayment(payment);
         setIsPayment(true);
+        setCurrentStep('confirmation');
         return;
       }
     }, 3000);
@@ -99,6 +101,18 @@ export const EstimateFlow = ({ storeToken }: FlowProps) => {
           onEmit={() => handleEmit(insuranceData.id)}
           insuranceData={insuranceData}
           isPayment={isPayment}
+        />
+      )}
+      {currentStep === "confirmation" && paymentData && insuranceData && (
+        <PaymentConfirmation
+          insuranceData={insuranceData}
+          paymentData={paymentData}
+          onFinish={() => {
+            setCurrentStep('estimate');
+            setInsuranceData(null);
+            setPayment(null);
+            setSuccessMessage(null);
+          }}
         />
       )}
       {currentStep === "emited" &&  paymentData && (
