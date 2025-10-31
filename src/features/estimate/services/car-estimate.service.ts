@@ -2,15 +2,12 @@
 import { carsList } from '@/mocks/car-data.mock';
 import {
     Documents,
-    Gender,
     type CarListResponse,
     CarInsurances,
     ReplacementsCar,
 } from '../type/types';
 import {
-    insuranceResponse,
-    type Insurance,
-    type InsuranceApiResponse,
+    type Insurances,
 } from '@/mocks/request.mock';
 import type { EstimateFormData } from '../config/EstimeFormConfig';
 import { API_DEFAULTS } from '../config/apiDefaults';
@@ -39,68 +36,10 @@ export const getCars = async (): Promise<CarListResponse[]> => {
     return carsList;
 };
 
-export const generateInsurance = async (
-    data: EstimateFormData
-): Promise<Insurance> => {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            const randomNumber = Math.floor(Math.random() * 2) + 1;
-
-            if (randomNumber === 1) {
-                const policyNumber = `POL-${Date.now()}-${Math.floor(
-                    Math.random() * 1000
-                )}`;
-                // HAPPY PATH: Genera insurance con datos del formulario
-                const insurance: Insurance = {
-                    ...insuranceResponse,
-                    id: `INS-${Date.now()}`,
-                    quoteNumber: Math.floor(Math.random() * 1000000),
-                    policyNumber,
-                    customer: {
-                        firstName: data.customer.firstName || 'N/A',
-                        lastName: data.customer.lastname || 'N/A',
-                        gender:
-                            data.customer.gender === Gender.MALE
-                                ? 'Masculino'
-                                : 'Femenino',
-                        documentType:
-                            data.customer.documentType === Documents.ID
-                                ? 'Cedúla'
-                                : 'Pasaporte',
-                        documentNumber: data.customer.documentNumber,
-                        phone: data.customer.phone,
-                        email: data.customer.email,
-                    },
-                    terms: {
-                        ...insuranceResponse.terms,
-                        vehicularAssistance: data.car.terms.vehicleAssistance,
-                        substituteAuto: data.car.terms.replacementCar,
-                        premium: 1000,
-                        tax: Math.round(data.car.worth * 0.05 * 0.18), // 18% de impuesto
-                        totalAmount: Math.round(data.car.worth * 0.05 * 1.18),
-                    },
-                    quotationRequest: data,
-                    requestDate: new Date(),
-                    quoteDate: new Date(),
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
-                };
-
-                resolve(insurance);
-            } else {
-                // UNHAPPY PATH
-                reject(
-                    new Error('Error al cotizar. Por favor intenta nuevamente.')
-                );
-            }
-        }, 1500);
-    });
-};
-
 export async function generateQuota(
     data: EstimateFormData,
     storeToken?: string
-): Promise<InsuranceApiResponse> {
+): Promise<Insurances> {
     try {
         //CONSTRUIR LA DATA QUE SE VA A ENVIAR A LA API
         const requestData = {
@@ -163,21 +102,35 @@ export async function generateQuota(
         };
         console.log('Generated Request Data:', JSON.stringify(requestData, null, 2));
         console.log('Request Data:', requestData);
-        const response = await fetch('https://dev.kover.do/api/insurances', {
+        const response = await fetch('http://localhost:3000/api/insurances', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(requestData),
         });
-
         if (!response.ok) {
             const errorData = await response.json().catch(() => null);
             throw new Error(
                 errorData?.message || `Error HTTP ${response.status}`
             );
         }
-        return await response.json();
+
+        const result: Insurances = await response.json();
+        // console.log('API Response:', result);
+        // if (result.data) {
+        //     delete (result.data as any).quoteNumber;
+        // }
+
+       if (!result.data.quoteNumber || result.data.quoteNumber <= 0) {
+            throw new Error(
+                'No se pudo generar el número de cotización. ' +
+                'Por favor verifica los datos e intenta nuevamente.'
+            );
+        }
+        
+
+        return result;
     } catch (error) {
         console.error('Error generating insurance:', error);
         if (error instanceof TypeError) {

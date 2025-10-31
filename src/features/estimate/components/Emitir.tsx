@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { AlertCircleIcon, CarFrontIcon, CheckCircle2 } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import type { InsurancesData } from '@/mocks/request.mock';
 
 interface EmitirProps {
     onBack: () => void;
@@ -13,6 +14,7 @@ interface EmitirProps {
     successMessage: string | null;
     paymentErrorMessage: string;
     validatingPayment: boolean;
+    insuranceData?: InsurancesData;
 }
 
 export default function Emitir({
@@ -22,12 +24,73 @@ export default function Emitir({
     isCheckoutOpen,
     paymentErrorMessage,
     validatingPayment,
+    insuranceData,
 }: EmitirProps) {
     const [kmMes, setKmMes] = React.useState<number>(0);
 
-    // Obtener datos de la cotización
-    const premium = 1000;
-    const precioPorKm = 23.15;
+    // Validar que existan los datos de la cotización
+    const quotationResponse = insuranceData?.quotationResponse;
+
+    if (!quotationResponse || !quotationResponse.data) {
+        return (
+            <div className='mx-auto max-w-5xl px-4 py-10'>
+                <Alert variant='destructive' className='mb-6'>
+                    <AlertCircleIcon className='h-4 w-4' />
+                    <AlertTitle>Error al cargar datos</AlertTitle>
+                    <AlertDescription>
+                        No se pudieron cargar los datos de la cotización. Por favor, intenta nuevamente.
+                    </AlertDescription>
+                </Alert>
+
+                <div className='flex justify-center'>
+                    <Button
+                        variant='secondary'
+                        className='px-6'
+                        onClick={onBack}
+                    >
+                        VOLVER AL FORMULARIO
+                    </Button>
+                </div>
+            </div>
+        );
+    }
+
+    const quotationData = quotationResponse.data;
+    const quotationTerms = quotationData.terminos;
+    const vehiculo = quotationData.vehiculo;
+
+    // Validar que existan los datos necesarios
+    if (!quotationTerms || !vehiculo) {
+        return (
+            <div className='mx-auto max-w-5xl px-4 py-10'>
+                <Alert variant='destructive' className='mb-6'>
+                    <AlertCircleIcon className='h-4 w-4' />
+                    <AlertTitle>Datos incompletos</AlertTitle>
+                    <AlertDescription>
+                        Faltan datos necesarios en la cotización. Por favor, genera una nueva cotización.
+                    </AlertDescription>
+                </Alert>
+
+                <div className='flex justify-center'>
+                    <Button
+                        variant='secondary'
+                        className='px-6'
+                        onClick={onBack}
+                    >
+                        VOLVER AL FORMULARIO
+                    </Button>
+                </div>
+            </div>
+        );
+    }
+
+    // Obtener datos de la cotización desde el API
+    const primaFija = quotationTerms.primaFija || 0;
+    const precioPorKm = quotationTerms.primaKm || 0;
+    const vehiculoInfo = `${vehiculo.marca} ${vehiculo.modelo} ${vehiculo.anio}`;
+
+    // Mantener compatibilidad con código existente
+    const premium = primaFija;
 
     const formatDOP = (n: number) =>
         new Intl.NumberFormat('es-DO', {
@@ -69,7 +132,7 @@ export default function Emitir({
                     </h1>
                     <p className='mt-1 text-slate-500'>
                         ¡Listo, mira cuánto ahorrarás con tu{' '}
-                        <span className='font-medium'>ABARTH 695 2012</span>!
+                        <span className='font-medium'>{vehiculoInfo}</span>!
                     </p>
                 </div>
             </div>
@@ -94,7 +157,7 @@ export default function Emitir({
                                 {/* Fixed Amount */}
                                 <div className='text-center'>
                                     <div className='text-3xl font-bold text-emerald-500 mb-1'>
-                                        RD$1,000
+                                        {formatDOP(primaFija)}
                                     </div>
                                     <div className='text-sm font-semibold text-emerald-500 uppercase tracking-wide'>
                                         Fijo
@@ -109,7 +172,7 @@ export default function Emitir({
                                 {/* Per KM */}
                                 <div className='text-center'>
                                     <div className='text-3xl font-bold text-emerald-500 mb-1'>
-                                        RD$23.15
+                                        {formatDOP(precioPorKm)}
                                     </div>
                                     <div className='text-sm font-medium text-emerald-500'>
                                         por Km recorrido

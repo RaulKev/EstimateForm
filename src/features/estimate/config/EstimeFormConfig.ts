@@ -36,7 +36,7 @@ yup.addMethod<yup.StringSchema>(yup.string, 'personaleEmail', function (message 
     return this.test('personaleEmail', message, function(value) {
         if (!value) return true;
         const domain = value.split('@')[1]?.toLowerCase();
-        if (!NOT_ALLOWED_CORPORATE_EMAIL_DOMAINS.includes(domain)) { 
+        if (NOT_ALLOWED_CORPORATE_EMAIL_DOMAINS.includes(domain)) { 
             return false;
         }
         return true;

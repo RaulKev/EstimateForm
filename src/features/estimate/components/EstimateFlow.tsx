@@ -1,4 +1,4 @@
-import type { Insurance } from '@/mocks/request.mock';
+import type { InsurancesData } from '@/mocks/request.mock';
 import { useEffect, useState } from 'react';
 import { EstimateForm } from './EstimateForm';
 import Emitir from './Emitir';
@@ -16,14 +16,14 @@ interface FlowProps {
 
 export const EstimateFlow = ({ storeToken }: FlowProps) => {
   const [currentStep, setCurrentStep] = useState<FlowStep>("estimate");
-  const [insuranceData, setInsuranceData] = useState<Insurance | null>(null);
+  const [insuranceData, setInsuranceData] = useState<InsurancesData | null>(null);
   const [paymentData, setPayment] = useState<InsurancePaymentStatusResponse | null>(null);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState<boolean>(false);
   const [paymentErrorMessage, setPaymentErrorMessage] = useState<string>('');
   const [validatingPayment, setValidatingPayment] = useState<boolean>(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   
-    const handleEstimateSuccess = (data: Insurance) => {
+    const handleEstimateSuccess = (data: InsurancesData) => {
         setInsuranceData(data);
         setCurrentStep('emit');
     };
@@ -83,7 +83,7 @@ export const EstimateFlow = ({ storeToken }: FlowProps) => {
 
   useEffect(() => {
     console.log('company token', storeToken);
-  }, []);
+  }, [storeToken]);
 
   return (
     <>
@@ -98,6 +98,7 @@ export const EstimateFlow = ({ storeToken }: FlowProps) => {
           validatingPayment={validatingPayment}
           successMessage={successMessage}
           onEmit={() => handleEmit(insuranceData.id)}
+          insuranceData={insuranceData}
         />
       )}
       {currentStep === "emited" &&  paymentData && (

@@ -83,8 +83,7 @@ export interface FuelType {
 }
 
 export const NOT_ALLOWED_CORPORATE_EMAIL_DOMAINS = [
-    'gmail.com',
-    'hotmail.com',
-    'outlook.com',
-    'yahoo.com',
+    'prodequa.com',
+    'mytikray.com',
+    'nohaysinsuerte.com',
 ];
