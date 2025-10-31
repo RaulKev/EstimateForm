@@ -20,12 +20,10 @@ function generateObjectId(): string {
         .toString(16)
         .padStart(8, '0');
 
-    // 5 bytes: valor aleatorio (10 caracteres hex)
     const randomValue = Array.from({ length: 10 }, () =>
         Math.floor(Math.random() * 16).toString(16)
     ).join('');
 
-    // 3 bytes: contador incremental (6 caracteres hex)
     counter = (counter + 1) % 0xffffff;
     const counterHex = counter.toString(16).padStart(6, '0');
 
@@ -43,7 +41,7 @@ export async function generateQuota(
     try {
         //CONSTRUIR LA DATA QUE SE VA A ENVIAR A LA API
         const requestData = {
-            companyId: storeToken || generateObjectId() , //storeTomen
+            companyId: storeToken || generateObjectId() ,
             product: API_DEFAULTS.product,
             customer: {
                 firstName: data.customer.firstName || '',
@@ -100,8 +98,6 @@ export async function generateQuota(
                 paymentMethod: API_DEFAULTS.paymentDefaults.paymentMethod,
             },
         };
-        console.log('Generated Request Data:', JSON.stringify(requestData, null, 2));
-        console.log('Request Data:', requestData);
           const result = await httpClient.post<Insurances>('/insurances', requestData, {
             headers: {
                 'Content-Type': 'application/json',

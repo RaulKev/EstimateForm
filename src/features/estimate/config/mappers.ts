@@ -1,6 +1,5 @@
 import { CarInsurances, FuelsType, ReplacementsCar } from "../type/types";
 
-// Mapas tipados para evitar indexing con strings y eliminar 'any' implícito (TS7015)
 export const FUEL_TYPE_LABEL: Record<FuelsType, string> = {
     [FuelsType.GASOLINE]: 'Gasolina / Diesel',
     [FuelsType.ELECTRIC]: 'Vehículo Electrico',

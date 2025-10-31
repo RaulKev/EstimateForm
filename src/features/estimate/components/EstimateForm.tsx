@@ -22,7 +22,7 @@ import { Documents } from '../type/types';
 import { useMemo, useState } from 'react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { XCircle } from 'lucide-react';
-import { usePreventScrollLock } from '../usePreventSchrollLock';
+import { usePreventScrollLock } from '../hook/usePreventSchrollLock';
 
 interface EstimateFormProps {
     onSuccess: (data: InsurancesData) => void;
@@ -53,11 +53,9 @@ export const EstimateForm = ({
     const isCedula = documentType === Documents.ID;
 
     const onSubmit = async (data: EstimateFormData) => {
-        console.log(data);
         try {
             // Llamar al servicio que hace fetch a la API
             const response = await generateQuota(data, storeToken);
-            console.log('Insurance created:', response);
 
             // setear el mensaje global de éxito
             setGlobalSuccessMessage(
@@ -72,7 +70,6 @@ export const EstimateForm = ({
                 error instanceof Error
                     ? error.message
                     : 'Ocurrió un error inesperado. Por favor intenta nuevamente.';
-            console.log(errorMessage);
             setErrorAlert(errorMessage);
         }
     };

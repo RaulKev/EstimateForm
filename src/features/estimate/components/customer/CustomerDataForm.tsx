@@ -87,7 +87,6 @@ export const CustomerDataForm = ({
                         'customer.gender',
                         personData.gender === 'M' ? 1 : 2
                     );
-                    console.log(personData);
                     setCedulaFound(true);
                     setCedulaError(false);
                     onCedulaVerified?.(true);

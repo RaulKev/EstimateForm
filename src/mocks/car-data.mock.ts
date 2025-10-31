@@ -1,4 +1,4 @@
-import type { CarListResponse, FuelType } from "@/features/estimate/type/types";
+import type { CarListResponse } from "@/features/estimate/type/types";
 
 export const carsList: CarListResponse[] = [
   {
@@ -52,27 +52,3 @@ export const carsList: CarListResponse[] = [
     ],
   },
 ];
-
-export const fuelTypes: FuelType[ ] = [
-  {
-    id: 1,
-    name: "Gasolina / Diesel",
-  },
-  {
-    id: 2,
-    name: "Gas",
-  },
-  {
-    id: 3,
-    name: "Vehículo Eléctrico",
-  }
-];
-
-export const insurancePayment = {
-  data: {
-    numeroPoliza: "123",
-    pago: {
-      pagado: false
-    }
-  }
-}
