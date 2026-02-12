@@ -34,7 +34,7 @@ export function CustomSelect({
   return (
     <Select
       name={name}
-      value={value ? String(value) : ''}
+      value={value != null && value !== '' ? String(value) : ''}
       onValueChange={onValueChange}
       disabled={disabled}
     >
@@ -47,8 +47,8 @@ export function CustomSelect({
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
-        {options.map((option) => (
-          <SelectItem key={option.value} value={option.value}>
+        {options.map((option, index) => (
+          <SelectItem key={index} value={option.value}>
             {option.label}
           </SelectItem>
         ))}

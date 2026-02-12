@@ -95,7 +95,7 @@ export async function generateQuota(
         paymentMethod: API_DEFAULTS.paymentDefaults.paymentMethod,
       },
     };
-
+    console.log('requestData', requestData)
     const result = await httpClient.post<InsurancesData>('/insurances', requestData, {
       headers: {
         'Content-Type': 'application/json',

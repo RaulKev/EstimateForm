@@ -16,11 +16,9 @@ import { Button } from '@/components/ui/button';
 import {
   AlertCircleIcon,
   Calendar,
-  CarFront,
   CarIcon,
   CheckCircleIcon,
   FileTextIcon,
-  Fuel,
   MailIcon,
   MapPinIcon,
   PhoneIcon,
@@ -30,23 +28,19 @@ import {
 import type { FlowStep } from '../../type/types';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { InsurancesType } from '@/mocks/summary.mock';
+import { DetailInsuranceSummary } from '@/shared/components/InsuranceDetailSummary';
+import { ProductInsuredDetailSummary } from '@/shared/components/ProductInsuredDetailSummary';
+import { PetInsuranceExclusions } from '@/features/pet-insurance/components/PetInsuranceExclusions';
+import { PetInsuranceBenefits } from '@/features/pet-insurance/components/PetInsuranceBenefits';
 
 interface QuoteSummaryProps {
   insuranceData: InsurancesData;
-  handlePayment: (insuranceId: string) => Promise<void>;
+  handlePayment: (insuranceId: InsurancesData, handleStep: (step: FlowStep) => void, insuranceType: InsurancesType) => Promise<void>;
   handleStep: (step: FlowStep) => void;
   isCheckoutOpen: boolean;
   paymentErrorMessage: string;
   insuranceType: InsurancesType;
-  selectedFrequency?: string;
 }
-
-const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat('es-DO', {
-    style: 'currency',
-    currency: 'DOP',
-  }).format(amount);
-};
 
 const formatDate = (dateString: Date) => {
   return new Date(dateString).toLocaleDateString('es-DO', {
@@ -63,41 +57,13 @@ export function QuoteSummary({
   isCheckoutOpen,
   paymentErrorMessage,
   insuranceType,
-  selectedFrequency,
 }: QuoteSummaryProps) {
   const [acceptedTerms, setAcceptedTerms] = useState<CheckedState>(false);
+  const petPlan = insuranceData.quotationResponse.data.terminos.planMascota;
 
-  const isAuto = insuranceType === InsurancesType.AUTO_INSURANCE;
-  const selectedPrima = insuranceData.quotationResponse.data.primas.find(
-    (p) => p.fraccionamientoPago === selectedFrequency
-  );
-  const primaAmount = selectedPrima ? selectedPrima.cobro : 0;
-  // const formatYears = (totalMonths: number) => {
-  //   const years = Math.floor(totalMonths / 12);
-  //   const months = totalMonths % 12; //
-  //   if (totalMonths === 0) {
-  //     return '0 meses';
-  //   }
-  //   let result = '';
-  //   if (years > 0) {
-  //     const yearText = years === 1 ? 'año' : 'años';
-  //     result += years + ' ' + yearText;
-  //   } else if (months > 0) {
-  //     const monthText = months === 1 ? 'mes' : 'meses';
-  //     const monthString = months + ' ' + monthText;
-  //     if (result.length > 0) {
-  //       result += ' y ';
-  //     }
-  //     result += monthString;
-  //   }
-  //   return result;
-  // };
   return (
     <>
       <div className="flex flex-col items-center gap-2 mb-4">
-        <h1 className="text-2xl text-slate-900 font-semibold">
-          {isAuto ? 'Para Tu Auto' : 'Por Lo Que conduces'}
-        </h1>
         <div className="flex flex-col items-center text-slate-500">
           <p className="text-sm">Aquí te mostramos lo que estas contratando,</p>
           <p className="text-sm">por favor revisa que todo este correcto.</p>
@@ -113,81 +79,7 @@ export function QuoteSummary({
               </div>
             </AccordionTrigger>
             <AccordionContent className="px-6 pb-6 pt-2">
-              {isAuto ? (
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium text-muted-foreground">
-                      Suma Asegurada
-                    </p>
-                    <p className="text-base font-semibold text-foreground">
-                      {formatCurrency(
-                        insuranceData.quotationResponse.data.vehiculo.sumaAsegurada
-                      )}
-                    </p>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium text-muted-foreground">
-                      Plazo de seguro
-                    </p>
-                    <p className="text-base font-semibold text-foreground">
-                      1 año
-                      {/* {formatYears(insuranceData.quotationResponse.data.terminos.plazo)} */}
-                    </p>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium text-muted-foreground">Prima</p>
-                    <div className="flex items-center gap-2">
-                      <p className="text-base font-semibold text-foreground">
-                        {formatCurrency(primaAmount)}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium text-muted-foreground">
-                      Prima fija mensual
-                    </p>
-                    <p className="text-base font-semibold text-foreground">
-                      {formatCurrency(
-                        insuranceData.quotationResponse.data.terminos.primaFija
-                      )}
-                    </p>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium text-muted-foreground">
-                      Tarifa x KM:
-                    </p>
-                    <p className="text-base font-semibold text-foreground">
-                      {formatCurrency(
-                        insuranceData.quotationResponse.data.terminos.primaKm
-                      )}
-                    </p>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium text-muted-foreground">
-                      Plazo de seguro
-                    </p>
-                    <p className="text-base font-semibold text-foreground">
-                      12 meses{' '}
-                      {/* {formatYears(insuranceData.quotationResponse.data.terminos.plazo)} */}
-                    </p>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium text-muted-foreground">
-                      Monto asegurado
-                    </p>
-                    <div className="flex items-center gap-2">
-                      <p className="text-base font-semibold text-foreground">
-                        {formatCurrency(
-                          insuranceData.quotationResponse.data.terminos.montoAsegurado
-                        )}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
+              <DetailInsuranceSummary insuranceType={insuranceType} insuranceData={insuranceData} />
             </AccordionContent>
           </AccordionItem>
 
@@ -285,50 +177,18 @@ export function QuoteSummary({
             <AccordionTrigger className="px-6 py-4 hover:bg-muted/50 transition-colors">
               <div className="flex items-center gap-3">
                 <CarIcon className="h-5 w-5 text-kover-widget-primary" />
-                <span className="font-semibold text-lg">Vehículo</span>
+                <span className="font-semibold text-lg">
+                  {
+                    [InsurancesType.AUTO_INSURANCE, InsurancesType.DRIVE_INSURANCE].includes(insuranceType)
+                      ? 'Tu Vehículo'
+                      : 'Tu Mascota'
+                  }
+                </span>
               </div>
             </AccordionTrigger>
             <AccordionContent className="px-6 pb-6 pt-2">
               <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-1">
-                  <p className="text-sm font-medium text-muted-foreground">Marca</p>
-                  <div className="flex items-center gap-2">
-                    <CarFront className="h-4 w-4 text-muted-foreground" />
-                    <p className="text-base font-semibold text-foreground">
-                      {insuranceData.quotationResponse.data.vehiculo.marca}
-                    </p>
-                  </div>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-sm font-medium text-muted-foreground">Modelo</p>
-                  <div className="flex items-center gap-2">
-                    <CarFront className="h-4 w-4 text-muted-foreground" />
-                    <p className="text-base font-semibold text-foreground">
-                      {insuranceData.quotationResponse.data.vehiculo.modelo}
-                    </p>
-                  </div>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-sm font-medium text-muted-foreground">Año</p>
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-muted-foreground" />
-                    <p className="text-base font-semibold text-foreground">
-                      {insuranceData.quotationResponse.data.vehiculo.anio}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <p className="text-sm font-medium text-muted-foreground">
-                    Tipo de Combustible
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <Fuel className="h-4 w-4 text-muted-foreground" />
-                    <p className="text-base font-semibold text-foreground">
-                      {insuranceData.quotationResponse.data.vehiculo.combustible}
-                    </p>
-                  </div>
-                </div>
+                <ProductInsuredDetailSummary insuranceType={insuranceType} insuranceData={insuranceData} />
               </div>
             </AccordionContent>
           </AccordionItem>
@@ -341,10 +201,14 @@ export function QuoteSummary({
               </div>
             </AccordionTrigger>
             <AccordionContent className="px-6 pb-6 pt-2">
-              <BenefitsSection
-                terms={insuranceData.terms}
-                typeInsurance={insuranceType}
-              ></BenefitsSection>
+              {
+                insuranceType === InsurancesType.PET_INSURANCE ?
+                <PetInsuranceBenefits petPlan={petPlan} /> :
+                <BenefitsSection
+                  terms={insuranceData.terms}
+                  typeInsurance={insuranceType}
+                ></BenefitsSection>
+              }
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-5">
@@ -357,7 +221,11 @@ export function QuoteSummary({
               </div>
             </AccordionTrigger>
             <AccordionContent className="px-6 pb-6 pt-2">
-              <ExclusionsSection typeInsurance={insuranceType}></ExclusionsSection>
+              {
+                insuranceType === InsurancesType.PET_INSURANCE ?
+                <PetInsuranceExclusions /> :
+                <ExclusionsSection typeInsurance={insuranceType}></ExclusionsSection>
+              }
             </AccordionContent>
           </AccordionItem>
         </Accordion>
@@ -388,7 +256,7 @@ export function QuoteSummary({
           </Button>
           <Button
             disabled={(!acceptedTerms as boolean) || isCheckoutOpen}
-            onClick={() => handlePayment(insuranceData.id)}
+            onClick={() => handlePayment(insuranceData, handleStep, insuranceType)}
             className="w-full md:w-44 h-11 px-10 bg-kover-widget-primary hover:bg-kover-widget-primary-hover text-base font-semibold cursor-pointer"
           >
             PAGAR
