@@ -234,7 +234,7 @@ export function QuoteSummary({
       <div className="m-5">
         <div className="flex items-center justify-center gap-2">
           <Checkbox id="terms" onCheckedChange={(e) => setAcceptedTerms(e)}></Checkbox>
-          <Label htmlFor="terms">
+          <Label htmlFor="terms" className='cursor-pointer'>
             He leído y acepto los
             <a
               target="_blank"

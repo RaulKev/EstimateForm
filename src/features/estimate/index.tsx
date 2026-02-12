@@ -40,10 +40,11 @@ function initializaWidget() {
     styleElement.textContent = styles;
 
     shadowRoot.appendChild(styleElement);
-    shadowRoot.appendChild(shadowWidgetContent);
+    widgetPortalContainer.appendChild(shadowWidgetContent);
+    // shadowRoot.appendChild(shadowWidgetContent);
 
-    const token = getStoreToken(widgetContainer);
     const insuranceType = getInsuranceType(widgetContainer);
+    const token = getStoreToken(widgetContainer);
     const root = createRoot(shadowWidgetContent);
     root.render(
       <ShadowRootContext.Provider value={shadowRoot}>
