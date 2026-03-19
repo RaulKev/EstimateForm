@@ -81,7 +81,7 @@ export const PetInsuranceConfirmation = ({
             onClick={onFinish}
             className="flex-1 h-12 bg-kover-widget-primary hover:bg-kover-widget-primary-hover text-white"
           >
-            Finalizar
+            FINALIZAR
           </Button>
         )}
       </div>
