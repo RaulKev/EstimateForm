@@ -1,0 +1,40 @@
+import type { InsurancesData, Prima } from '@/features/estimate/type/insurance.types';
+import { formatCurrency, formatYears } from '@/utils';
+
+interface AutoInsuranceDetailProps {
+  insuranceData: InsurancesData;
+  paymentData?: Prima;
+}
+
+export const AutoInsuranceDetail = ({
+  insuranceData,
+  paymentData,
+}: AutoInsuranceDetailProps) => {
+  const insuredAmount =
+    insuranceData.quotationResponse.data?.vehiculo?.sumaAsegurada || 0;
+
+  return (
+    <div className="grid gap-4 md:grid-cols-2">
+      <div className="space-y-1">
+        <p className="text-sm font-medium text-muted-foreground">Suma Asegurada</p>
+        <p className="text-base font-semibold text-foreground">
+          {formatCurrency(insuredAmount)}
+        </p>
+      </div>
+      <div className="space-y-1">
+        <p className="text-sm font-medium text-muted-foreground">Plazo de seguro</p>
+        <p className="text-base font-semibold text-foreground">
+          {formatYears(insuranceData.quotationResponse.data.terminos.plazo)}
+        </p>
+      </div>
+      <div className="space-y-1">
+        <p className="text-sm font-medium text-muted-foreground">Prima</p>
+        <div className="flex items-center gap-2">
+          <p className="text-base font-semibold text-foreground">
+            {formatCurrency(paymentData?.cobro || 0)}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};

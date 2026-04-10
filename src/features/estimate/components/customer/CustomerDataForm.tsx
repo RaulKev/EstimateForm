@@ -2,8 +2,6 @@ import { Input } from '@/components/ui/input';
 import { Documents } from '../../type/types';
 import { PersonalPassportForm } from './PersonalPassportForm';
 import { Controller, type UseFormReturn } from 'react-hook-form';
-import type { EstimateFormData } from '../../config/EstimeFormConfig';
-
 import {
   Select,
   SelectContent,
@@ -16,9 +14,10 @@ import { useCallback, useEffect, useState } from 'react';
 import { MaskedInput } from './MaskedInput';
 import { fetchPersonDataByCedula } from '../../services/document.service';
 import { CheckCircle2, Loader2, XCircle } from 'lucide-react';
+import type { WithCustomer } from '@/shared/types/form-types';
 
 interface CustomDataFormProps {
-  form: UseFormReturn<EstimateFormData>;
+  form: UseFormReturn<WithCustomer>;
   onCedulaVerified?: (verified: boolean) => void;
 }
 
@@ -206,8 +205,8 @@ export const CustomerDataForm = ({ form, onCedulaVerified }: CustomDataFormProps
                     documentType === Documents.ID
                       ? '000-0000000-0'
                       : documentType === Documents.PASSPORT
-                      ? 'A12345678'
-                      : ''
+                        ? 'A12345678'
+                        : ''
                   }
                   className="bg-[#F8FAFC] pr-10 flex items-center"
                   aria-invalid={fieldState.invalid}

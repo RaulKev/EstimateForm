@@ -6,14 +6,14 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Controller, type UseFormReturn } from 'react-hook-form';
-import type { AdditionalDataFormData } from './AdditionalDataFormWrapper';
 import { Input } from '@/components/ui/input';
 import { Kinship, RelationShip } from '../../type/types';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { useEffect } from 'react';
+import type { MixedAdditionalDataFormData } from '../../schemas/additionalDataSchema';
 
 interface PoliticalExposeDataProps {
-  form: UseFormReturn<AdditionalDataFormData | Omit<AdditionalDataFormData, 'smartDevice'>>;
+  form: UseFormReturn<MixedAdditionalDataFormData>;
 }
 const kingOptions = Object.values(Kinship);
 export const PoliticalExposeData = ({ form }: PoliticalExposeDataProps) => {

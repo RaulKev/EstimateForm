@@ -9,7 +9,7 @@ type LawInsuranceModalProps = {
 
 export const LawInsuranceModal = ({ openLaw, setOpenLaw }: LawInsuranceModalProps) => {
   return (
-    <Modal open={openLaw} onOpenChange={setOpenLaw} >
+    <Modal title='  ' open={openLaw} onOpenChange={setOpenLaw} >
       <LawInsurancePlans />
     </Modal>
   );
