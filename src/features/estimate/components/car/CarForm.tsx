@@ -74,6 +74,7 @@ export function CarForm({ form }: CarFormProps) {
     const cleanValue = rawValue.replace(/[^0-9.]/g, '');
     onChange(cleanValue === '' ? '' : Number(cleanValue));
   };
+  const isHasWorthValue = currentWorth >= MIN_WORTH;
   useEffect(() => {
     const totalComplements = complements.reduce((acc, c) => acc + c.value, 0);
     const MAX_LIMIT = 7_000_000;
@@ -278,78 +279,84 @@ export function CarForm({ form }: CarFormProps) {
             </Field>
           )}
         />
-        <Controller
-          control={form.control}
-          name="car.isZeroDeductible"
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <div className="flex items-center gap-1">
-                <FieldLabel htmlFor="car.isZeroDeductible">
-                  ¿Desea Cero Deducible?{' '}
-                </FieldLabel>
+        {isHasWorthValue && (
+          <>
+            <Controller
+              control={form.control}
+              name="car.isZeroDeductible"
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <div className="flex items-center gap-1">
+                    <FieldLabel htmlFor="car.isZeroDeductible">
+                      ¿Desea Cero Deducible?{' '}
+                    </FieldLabel>
+                    <CustomTooltip
+                      message="Con cero deducible, no tendrás que pagar ningún deducible en caso de siniestro."
+                      iconClassName="text-kover-widget-primary mt-1"
+                    />
+                  </div>
+                  <CustomSelect
+                    placeholder="¿Desea Cero Deducible?"
+                    name={field.name}
+                    value={
+                      field.value !== undefined && field.value !== null
+                        ? String(field.value)
+                        : ''
+                    }
+                    onValueChange={(val) => field.onChange(val === 'true')}
+                    invalid={fieldState.invalid}
+                    options={boolOptions}
+                  />
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
+
+            <div className="flex flex-col flex-1 justify-center min-w-0">
+              <FieldLabel className="mb-3 flex items-center gap-2">
+                ¿Desea incluir algún aditamento?
                 <CustomTooltip
-                  message="Con cero deducible, no tendrás que pagar ningún deducible en caso de siniestro."
-                  iconClassName="text-kover-widget-primary mt-1"
+                  message="Los aditamentos son accesorios adicionales instalados en tu vehículo que deseas asegurar."
+                  iconClassName="text-kover-widget-primary text-blue-900"
                 />
-              </div>
-              <CustomSelect
-                placeholder="¿Desea Cero Deducible?"
-                name={field.name}
-                value={
-                  field.value !== undefined && field.value !== null
-                    ? String(field.value)
-                    : ''
-                }
-                onValueChange={(val) => field.onChange(val === 'true')}
-                invalid={fieldState.invalid}
-                options={boolOptions}
+              </FieldLabel>
+              <ComplementsCar
+                complements={complements}
+                setSelected={setSelected}
+                selected={selected}
+                setComplements={setComplements}
               />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
 
-        <div className="flex flex-col flex-1 justify-center min-w-0">
-          <FieldLabel className="mb-3 flex items-center gap-2">
-            ¿Desea incluir algún aditamento?
-            <CustomTooltip
-              message="Los aditamentos son accesorios adicionales instalados en tu vehículo que deseas asegurar."
-              iconClassName="text-kover-widget-primary text-blue-900"
-            />
-          </FieldLabel>
-          <ComplementsCar
-            complements={complements}
-            setSelected={setSelected}
-            selected={selected}
-            setComplements={setComplements}
-          />
-
-          {complements.length > 0 && !selected && (
-            <div className="mt-4 flex flex-col items-center gap-2 text-center text-slate-700">
-              <p className="text-sm font-medium">
-                {complements.length} aditamento(s) agregado(s) - Total: RD$
-                {complements.reduce((sum, c) => sum + c.value, 0).toLocaleString('es-DO')}
-              </p>
-              <button
-                type="button"
-                onClick={() => setSelected(true)}
-                className="text-kover-widget-primary font-medium hover:underline text-sm"
-              >
-                Gestionar aditamentos
-              </button>
+              {complements.length > 0 && !selected && (
+                <div className="mt-4 flex flex-col items-center gap-2 text-center text-slate-700">
+                  <p className="text-sm font-medium">
+                    {complements.length} aditamento(s) agregado(s) - Total: RD$
+                    {complements
+                      .reduce((sum, c) => sum + c.value, 0)
+                      .toLocaleString('es-DO')}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setSelected(true)}
+                    className="text-kover-widget-primary font-medium hover:underline text-sm"
+                  >
+                    Gestionar aditamentos
+                  </button>
+                </div>
+              )}
             </div>
-          )}
-        </div>
 
-        <div className="col-span-full mt-4">
-          {selected && (
-            <ComplementsDetailsCar
-              complements={complements}
-              setComplements={setComplements}
-              onClose={() => setSelected(false)}
-            />
-          )}
-        </div>
+            <div className="col-span-full mt-4">
+              {selected && (
+                <ComplementsDetailsCar
+                  complements={complements}
+                  setComplements={setComplements}
+                  onClose={() => setSelected(false)}
+                />
+              )}
+            </div>
+          </>
+        )}
       </div>
 
       <div className="col-span-full mt-4">
