@@ -14,7 +14,7 @@ const VALID_PERSON_DATA: PersonData = {
 };
 
 
-export const fetchPersonDataByCedula = async (documentNumber: string): Promise<PersonData | null> => {
+export const fetchPersonDataByCedula = async (_documentNumber: string): Promise<PersonData | null> => {
     // const cleanNumber = documentNumber.replace(/\D/g, '');
 
     await new Promise(resolve => setTimeout(resolve, 300 + Math.random() * 300));

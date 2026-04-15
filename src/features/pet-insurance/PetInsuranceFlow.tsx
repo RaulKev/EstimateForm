@@ -8,7 +8,7 @@ import { AdditionalDataFormWrapper } from '../estimate/components/additional-dat
 import { useInsuranceFlow } from '@/shared/hooks/useInsuranceFlow';
 import { usePaymentFlow } from '@/shared/hooks/usePaymentFlow';
 import { useState } from 'react';
-import PaymentSummary from './components/paymentSummary';
+import PaymentSummary from './components/PaymentSummary';
 
 interface PetInsuranceFlowProps {
   storeToken?: string;
