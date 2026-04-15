@@ -23,7 +23,7 @@ export const ExclusionsSection = ({ typeInsurance }: { typeInsurance: Insurances
           considerationsGroupOne.map((consideration, index) => (
             <div key={index}>
               <div className="flex gap-2 text-gray-700">
-                <MinusCircle className="mt-[3px] w-4 h-4 text-gray-400 flex-shrink-0" />
+                <MinusCircle className="mt-[3px] w-4 h-4 text-gray-400 shrink-0" />
                 <span>{consideration.description}</span>
                 {consideration.tooltip && <CustomTooltip message={consideration.tooltip} />}
               </div>  
@@ -44,7 +44,7 @@ export const ExclusionsSection = ({ typeInsurance }: { typeInsurance: Insurances
           considerationsGroupTwo.map((consideration, index) => (
             <div key={index}>
               <div className="flex gap-2 text-gray-700">
-                <MinusCircle className="mt-[3px] w-4 h-4 text-gray-400 flex-shrink-0" />
+                <MinusCircle className="mt-[3px] w-4 h-4 text-gray-400 shrink-0" />
                 <span>{consideration.description}</span>
                 {consideration.tooltip && <CustomTooltip message={consideration.tooltip} />}
               </div>
