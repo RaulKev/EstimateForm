@@ -19,13 +19,13 @@ import { CheckCircle2, Loader2, XCircle } from 'lucide-react';
 
 interface CustomDataFormProps {
   form: UseFormReturn<EstimateFormData>;
-  onCedulaVerified?: (verified: boolean) => void;
+  // onCedulaVerified?: (verified: boolean) => void;
 }
 
-export const CustomerDataForm = ({ form, onCedulaVerified }: CustomDataFormProps) => {
-  const [isLoadingCedula, setIsLoadingCedula] = useState(false);
-  const [cedulaFound, setCedulaFound] = useState(false);
-  const [cedulaError, setCedulaError] = useState(false);
+export const CustomerDataForm = ({ form }: CustomDataFormProps) => {
+  // const [isLoadingCedula, setIsLoadingCedula] = useState(false);
+  // const [cedulaFound, setCedulaFound] = useState(false);
+  // const [cedulaError, setCedulaError] = useState(false);
 
   const documentType = form.watch('customer.documentType');
   const documentNumber = form.watch('customer.documentNumber');
@@ -38,9 +38,9 @@ export const CustomerDataForm = ({ form, onCedulaVerified }: CustomDataFormProps
       fieldOnChange(numValue);
       form.setValue('customer.documentNumber', '');
       form.clearErrors('customer.documentNumber');
-      setCedulaFound(false);
-      setCedulaError(false);
-      onCedulaVerified?.(false);
+      // setCedulaFound(false);
+      // setCedulaError(false);
+      // onCedulaVerified?.(false);
       if (numValue !== Documents.ID) {
         form.setValue('customer.firstName', '');
         form.setValue('customer.lastname', '');
@@ -54,57 +54,34 @@ export const CustomerDataForm = ({ form, onCedulaVerified }: CustomDataFormProps
         ]);
       }
     },
-    [form, onCedulaVerified]
+    [form]
   );
 
   useEffect(() => {
-    const autoFillCedula = async () => {
+    const autoFillCedula = () => {
       if (!isCedula || !documentNumber) return;
 
       const cleanNumber = documentNumber.replace(/\D/g, '');
-      // Solo buscar cuando no tenga 11 dígitos completos
-      if (cleanNumber.length !== 11) {
-        setIsLoadingCedula(false);
-        setCedulaFound(false);
-        setCedulaError(false);
-        return;
-      }
-
-      setIsLoadingCedula(true);
-      setCedulaFound(false);
-      setCedulaError(false);
-      try {
-        const personData = await fetchPersonDataByCedula(cleanNumber);
-
-        if (personData) {
-          form.setValue('customer.firstName', personData.firstName);
-          form.setValue('customer.lastname', personData.lastName);
-          form.setValue('customer.birthDate', personData.birthDate);
-          form.setValue('customer.gender', personData.gender === 'M' ? 1 : 2);
-          setCedulaFound(true);
-          setCedulaError(false);
-          onCedulaVerified?.(true);
-        }
-      } catch (error) {
-        console.error('Error consultando cédula:', error);
+      
+      // Cuando tenga 11 dígitos estemos seguros que validó localmente,
+      // pasamos los valores hardcodeados
+      if (cleanNumber.length === 11) {
+        form.setValue('customer.firstName', 'Usuario');
+        form.setValue('customer.lastname', 'Genérico');
+        form.setValue('customer.birthDate', '1990-01-01');
+        form.setValue('customer.gender', 1);
+        form.clearErrors('customer.documentNumber');
+      } else {
+        // Opcional: limpiar los valores si borran la cédula
         form.setValue('customer.firstName', '');
         form.setValue('customer.lastname', '');
         form.setValue('customer.birthDate', '');
         form.setValue('customer.gender', undefined);
-        setCedulaFound(false);
-        setCedulaError(true);
-        onCedulaVerified?.(false);
-        form.setError('customer.documentNumber', {
-          type: 'manual',
-          message: 'No se encontró información para la cédula ingresada.',
-        });
-      } finally {
-        setIsLoadingCedula(false);
       }
     };
 
     autoFillCedula();
-  }, [documentNumber, isCedula, form, onCedulaVerified]);
+  }, [documentNumber, isCedula, form]);
 
   return (
     <>
@@ -215,21 +192,21 @@ export const CustomerDataForm = ({ form, onCedulaVerified }: CustomDataFormProps
                   aria-describedby="cedula-format-hint"
                 />
 
-                {isLoadingCedula && (
+                {/* {isLoadingCedula && (
                   <div className="absolute right-3 top-1/3 -translate-y-1/2">
                     <Loader2 className="h-4 w-4 animate-spin text-blue-500" />
                   </div>
-                )}
-                {cedulaFound && !isLoadingCedula && (
+                )} */}
+                {/* {cedulaFound && !isLoadingCedula && (
                   <div className="absolute right-3 top-1/3 -translate-y-1/2">
                     <CheckCircle2 className="h-4 w-4 text-green-500" />
                   </div>
-                )}
-                {cedulaError && !isLoadingCedula && (
+                )} */}
+                {/* {cedulaError && !isLoadingCedula && (
                   <div className="absolute right-3 top-1/3 -translate-y-1/2">
                     <XCircle className="h-4 w-4 text-red-500" />
                   </div>
-                )}
+                )} */}
               </div>
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
