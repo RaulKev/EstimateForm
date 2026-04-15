@@ -28,9 +28,8 @@ export const AutoInsuranceEmit = ({
   onEmit,
   successMessage,
   selectedPlan,
-  onPlanSelect
+  onPlanSelect,
 }: AutoInsurancesEmit) => {
-
   const availablePlans = insuranceData?.quotationResponse.data.primas
     .filter((prima) => PLAN_CONFIG[prima.fraccionamientoPago])
     .map((prima) => {
@@ -45,8 +44,8 @@ export const AutoInsuranceEmit = ({
     })
     .sort((a, b) => a.order - b.order);
 
-    const vehicle = insuranceData?.quotationResponse.data.vehiculo
-    const vehicleInfo = `${vehicle?.marca} ${vehicle?.modelo} ${vehicle?.anio}`;
+  const vehicle = insuranceData?.quotationResponse.data.vehiculo;
+  const vehicleInfo = `${vehicle?.marca} ${vehicle?.modelo} ${vehicle?.anio}`;
   const formatMoney = (amount: number) => {
     const formated = new Intl.NumberFormat('es-DO', {
       style: 'currency',

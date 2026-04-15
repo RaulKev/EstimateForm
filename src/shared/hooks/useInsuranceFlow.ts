@@ -1,7 +1,4 @@
-import type {
-  InsurancesData,
-  UpdateInsuranceRequest,
-} from '@/features/estimate/type/insurance.types';
+import type { InsurancesData } from '@/features/estimate/type/insurance.types';
 import type { FlowStep } from '@/features/estimate/type/types';
 import { useState } from 'react';
 
@@ -12,7 +9,6 @@ export const useInsuranceFlow = () => {
 
   const handleStep = (step: FlowStep) => {
     setCurrentStep(step);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleEstimateSuccess = (data: InsurancesData) => {
@@ -23,7 +19,7 @@ export const useInsuranceFlow = () => {
     setCurrentStep('emit');
   };
 
-  const handleSaveAdditionalData = async (data: UpdateInsuranceRequest) => {
+  const handleSaveAdditionalData = async (data: InsurancesData) => {
     if (!insuranceData) return;
     setInsuranceData({
       ...insuranceData,

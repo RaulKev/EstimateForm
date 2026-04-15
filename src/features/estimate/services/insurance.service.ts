@@ -1,5 +1,5 @@
-import { httpClient } from "../../../core/httpClient";
-import type { UpdateInsuranceRequest } from "../type/insurance.types";
+import { httpClient, type KoverResponse } from '../../../core/httpClient';
+import type { InsurancesData, UpdateInsuranceRequest } from '../type/insurance.types';
 
 interface InsurancePaymentResponse {
   paymentUrl: string;
@@ -18,26 +18,41 @@ export interface SendEmailResponse {
 }
 
 export const getUrlPayment = async (insuranceId: string): Promise<string> => {
-  const response = await httpClient.post<InsurancePaymentResponse>(`/insurances/${insuranceId}/payment-url`);
+  const response = await httpClient.post<InsurancePaymentResponse>(
+    `/insurances/${insuranceId}/payment-url`
+  );
   return response.data.paymentUrl;
 };
 
-export const checkStatusPayment = async (insuranceId: string): Promise<InsurancePaymentStatusResponse> => {
-  const response = await httpClient.get<InsurancePaymentStatusResponse>(`/insurances/${insuranceId}/payment-status`);
+export const checkStatusPayment = async (
+  insuranceId: string
+): Promise<InsurancePaymentStatusResponse> => {
+  const response = await httpClient.get<InsurancePaymentStatusResponse>(
+    `/insurances/${insuranceId}/payment-status`
+  );
   return response.data;
 };
 
 export const sendInspectionEmail = async (insuranceId: string): Promise<boolean> => {
   try {
-    const response = await httpClient.post<SendEmailResponse>(`/insurances/${insuranceId}/inspection-email`);
-    return response.success;  
+    const response = await httpClient.post<SendEmailResponse>(
+      `/insurances/${insuranceId}/inspection-email`
+    );
+    return response.success;
   } catch (error) {
     console.error('Error al enviar email de inspección', error);
     return false;
   }
 };
 
-export const updateInsurance = async (insuranceId: string, data: Partial<UpdateInsuranceRequest>): Promise<boolean> => {
-  const response = await httpClient.put(`/insurances/${insuranceId}`, data, { headers: { 'Content-Type': 'application/json' } });
-  return response.success;
-}
+export const updateInsurance = async (
+  insuranceId: string,
+  data: Partial<UpdateInsuranceRequest>
+): Promise<KoverResponse<InsurancesData>> => {
+  const response = await httpClient.put<InsurancesData>(
+    `/insurances/${insuranceId}`,
+    data,
+    { headers: { 'Content-Type': 'application/json' } }
+  );
+  return response;
+};

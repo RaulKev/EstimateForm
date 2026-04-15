@@ -9,6 +9,7 @@ import { InsurancesType } from '@/mocks/summary.mock';
 import { AutoInsuranceEmit } from '@/features/auto-insurance/AutoInsuranceEmit';
 import { useInsuranceFlow } from '@/shared/hooks/useInsuranceFlow';
 import { usePaymentFlow } from '@/shared/hooks/usePaymentFlow';
+import { useScrollToTop } from '@/shared/hooks/useScrollToTop';
 
 interface FlowProps {
   storeToken: string;
@@ -35,12 +36,7 @@ export const EstimateFlow = ({ storeToken, insuranceType }: FlowProps) => {
   const [selectedFrequency, setSelectedFrequency] = useState<string | null>(null);
   const isAuto = insuranceType === InsurancesType.AUTO_INSURANCE;
 
-  // useEffect(() => {
-  //   const timeoutId = setTimeout(() => {
-  //     window.scrollTo({ top: 0, behavior: 'smooth' });
-  //   }, 150);
-  //   return () => clearTimeout(timeoutId);
-  // }, [currentStep]);
+  useScrollToTop(currentStep);
 
   return (
     <>
