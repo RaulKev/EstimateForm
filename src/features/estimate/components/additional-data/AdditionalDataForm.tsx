@@ -24,6 +24,8 @@ import { Switch } from '@/components/ui/switch';
 import { PolicyData } from './PoliticalData';
 import { PoliticalExposeData } from './PoliticalExposeData';
 import type { InsurancesType } from '@/mocks/summary.mock';
+import { CustomSelect } from '@/shared/CustomSelected';
+import { sectors } from '@/mocks/directions.mock';
 interface AddressFormProps {
   form: UseFormReturn<AdditionalDataFormData | Omit<AdditionalDataFormData, 'smartDevice'>>;
   insuranceType: InsurancesType
@@ -220,12 +222,12 @@ export const AddressForm = ({ form, insuranceType }: AddressFormProps) => {
               name="customer.address.referencePoint"
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Referencias</FieldLabel>
+                  <FieldLabel>Edificio</FieldLabel>
                   <Input
                     type="text"
                     id={field.name}
                     aria-invalid={fieldState.invalid}
-                    placeholder="Referencias"
+                    placeholder="Edificio"
                     {...field}
                   />
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -312,7 +314,19 @@ export const AddressForm = ({ form, insuranceType }: AddressFormProps) => {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="customer.address.sector">Sector</FieldLabel>
-                  <Input
+                  <CustomSelect
+                    options={sectors.map((sector) => ({
+                      value: sector.nombre,
+                      label: sector.nombre,
+                    }))}
+                    value={field.value || ''}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                    }}
+                    disabled={!selectedMunicipality}
+                    placeholder='Selecciona un sector'
+                  />
+                  {/* <Input
                     type="text"
                     id="customer.address.sector"
                     placeholder="Ej.: Centro, Zona Colonial, etc."
@@ -320,7 +334,7 @@ export const AddressForm = ({ form, insuranceType }: AddressFormProps) => {
                     {...field}
                     aria-invalid={fieldState.invalid}
                     disabled={!selectedMunicipality}
-                  />
+                  /> */}
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}

@@ -830,3 +830,12 @@ export const municipalities = [
   },
 
 ];
+
+export const sectors = [
+  { id: 1, nombre: '16 de Agosto' },
+  { id: 2, nombre: '24 de abril ' },
+  { id: 3, nombre: '27 de febrero' },
+  { id: 4, nombre: '30 de mayo' },
+  { id: 5, nombre: 'Aesa' },
+  { id: 6, nombre: 'Alfirmar' },
+];
