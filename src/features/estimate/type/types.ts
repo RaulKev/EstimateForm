@@ -36,6 +36,7 @@ export const enum CarInsurances {
   BASE = 'Base',
   PLUS = 'Plus',
   AUTO_EXCESO = 'AutoExceso',
+  AUTO_EXCESO_PLUS = 'Auto Exceso+',
 }
 
 export const enum Gas {
@@ -67,6 +68,7 @@ export interface Car {
   installationType?: InstallatationType;
   isPersonalUse?: boolean;
   worth: number;
+  isZeroDeductible?: boolean;
   terms: Term;
 }
 
@@ -120,6 +122,10 @@ export interface CarModels {
 export interface CarListResponse {
   marca: string;
   modelos: CarModels[];
+}
+export interface ComplementsCar {
+  id: number;
+  name: string;
 }
 
 export interface FuelType {

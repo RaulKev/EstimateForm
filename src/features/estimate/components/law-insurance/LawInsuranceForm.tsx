@@ -38,6 +38,13 @@ const PLANS: Plan[] = [
     summary:
       'Máxima protección. Este plan aumenta en $5MM tu cobertura de Responsabilidad Civil, en exceso sobre la cobertura del plan Plus.',
   },
+  {
+    id: CarInsurances.AUTO_EXCESO_PLUS,
+    title: 'Auto Exceso+',
+    price: 'RD$655/mes',
+    summary:
+      'Máxima protección. Este plan aumenta en $10MM tu cobertura de Responsabilidad Civil, en exceso sobre la cobertura del plan Plus.',
+  },
 ];
 
 interface PlansAccordionProps {
