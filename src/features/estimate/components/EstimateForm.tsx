@@ -3,7 +3,7 @@ import { CarForm } from './car/CarForm';
 import { LawInsuranceForm } from './law-insurance/LawInsuranceForm';
 import { AssistantForm } from './Assistant/AssistantForm';
 import { ReplaceCar } from './ReplaceCar';
-import { useForm } from 'react-hook-form';
+import { useForm, type UseFormReturn } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   initialValues,
@@ -25,17 +25,16 @@ import { CustomTooltip } from '@/shared/CustomTooltip';
 import { LawInsuranceModal } from './law-insurance/LawInsuranceModal';
 import { AssistantModal } from './Assistant/AssistantModal';
 import { InsurancesType } from '@/mocks/summary.mock';
+import type { WithCustomer } from '@/shared/types/form-types';
 
 interface EstimateFormProps {
   onSuccess: (data: InsurancesData) => void;
-  setGlobalSuccessMessage: (msg: string | null) => void;
   storeToken?: string;
   typeInsurances: InsurancesType;
 }
 
 export const EstimateForm = ({
   onSuccess,
-  setGlobalSuccessMessage,
   storeToken,
   typeInsurances,
 }: EstimateFormProps) => {
@@ -60,11 +59,6 @@ export const EstimateForm = ({
       // Llamar al servicio que hace fetch a la API
       const response = await generateQuota(data, typeInsurances, storeToken);
 
-      // setear el mensaje global de éxito
-      setGlobalSuccessMessage(
-        `Cotización exitosa. Tu número de cotización es: #${response.data.quoteNumber}`
-      );
-
       onSuccess(response.data);
       reset();
     } catch (error) {
@@ -85,7 +79,6 @@ export const EstimateForm = ({
 
   usePreventScrollLock();
   useEffect(() => {
-    //SI HAY UN ALERT DE ERROR Y NO HAY ERRORE DE VALIDACIÓN
     if (errorAlert && form.formState.isValid) {
       const timer = setTimeout(() => {
         setErrorAlert(null);
@@ -100,16 +93,19 @@ export const EstimateForm = ({
 
       {isAuto ? (
         <div className="text-center mb-8">
-          <h1 className="text-center text-2xl font-bold text-gray-900 mb-8 select-none">
+          {/* <h1 className="text-center text-2xl font-bold text-gray-900 mb-8 select-none">
             Para Tu Auto
-          </h1>
-          <p className="text-gray-600">Asegura tu auto nuevo o usado con la cobertura más completa, al mejor precio del mercado.</p>
+          </h1> */}
+          <p className="text-gray-600">
+            Asegura tu auto nuevo o usado con la cobertura más completa, al mejor precio
+            del mercado.
+          </p>
         </div>
       ) : (
         <div className="text-center mb-8">
-        <h1 className="text-center text-2xl font-bold text-gray-900 mb-8 select-none">
-          Por Lo Que Conduces
-        </h1>
+          {/* <h1 className="text-center text-2xl font-bold text-gray-900 mb-8 select-none">
+            Por Lo Que Conduces
+          </h1> */}
           <p className="text-gray-600">Seguro de Auto Full por Kilometraje</p>
         </div>
       )}
@@ -121,7 +117,7 @@ export const EstimateForm = ({
               <h4 className=" font-bold text-kover-widget-primary mb-6">
                 Información de contacto
               </h4>
-              <CustomerDataForm form={form} />
+              <CustomerDataForm form={form as unknown as UseFormReturn<WithCustomer>} />
             </div>
             <Separator />
             <div className="space-y-4 animate-in fade-in-50 duration-500">

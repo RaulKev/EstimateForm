@@ -27,11 +27,12 @@ class HttpClient implements IHttpClient {
   async post<T>(url: string, data?: unknown, config?: RequestInit): Promise<KoverResponse<T>> {
     const response = await fetch(`${this.baseUrl}${url}`, {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: data instanceof FormData ? data : JSON.stringify(data),
       ...config,
     });
     if (!response.ok) {
-      throw new Error('Error al enviar petición');
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Error al enviar petición');
     }
     return response.json();
   }

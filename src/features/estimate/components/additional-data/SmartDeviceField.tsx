@@ -1,5 +1,4 @@
 import { Controller, type UseFormReturn } from 'react-hook-form';
-import type { AdditionalDataFormData } from './AdditionalDataFormWrapper';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { SelectCustom } from './SelectCustom';
 import {
@@ -9,10 +8,10 @@ import {
   municipalityLocations,
 } from '@/mocks/installation.mock';
 
+import type { MixedAdditionalDataFormData } from '../../schemas/additionalDataSchema';
+
 interface SmartDeviceProps {
-  form: UseFormReturn<
-    AdditionalDataFormData | Omit<AdditionalDataFormData, 'smartDevice'>
-  >;
+  form: UseFormReturn<MixedAdditionalDataFormData>;
 }
 
 export const SmartDeviceField = ({ form }: SmartDeviceProps) => {
@@ -21,34 +20,32 @@ export const SmartDeviceField = ({ form }: SmartDeviceProps) => {
 
   return (
     <>
-      <div className="flex items-center gap-2">
+      <div className="flex flex-col  gap-3 mt-[32px]">
         <h3 className="text-sm font-semibold text-kover-widget-primary">
           Dispositivo Smart
         </h3>
-      </div>
-      <div className="col-span-2 flex flex-col gap-4">
-        <Controller
-          control={form.control}
-          name="smartDevice.installationType"
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel>¿Cómo deseas instalar el dispositivo smart?</FieldLabel>
-              <SelectCustom
-                items={installationTypes}
-                value={field.value ?? ''}
-                name="smartDevice.installationType"
-                placeHolder="Seleccionar tipo de dispositivo"
-                onChange={(value) => {
-                  field.onChange(value);
-                }}
-                invalid={fieldState.invalid}
-              />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-
-        <Controller
+        <div className="col-span-2 flex flex-col gap-4">
+          <Controller
+            control={form.control}
+            name="smartDevice.installationType"
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel>¿Cómo deseas instalar el dispositivo smart?</FieldLabel>
+                <SelectCustom
+                  items={installationTypes}
+                  value={field.value ?? ''}
+                  name="smartDevice.installationType"
+                  placeHolder="Seleccionar tipo de dispositivo"
+                  onChange={(value) => {
+                    field.onChange(value);
+                  }}
+                  invalid={fieldState.invalid}
+                />
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              </Field>
+            )}
+          />
+            <Controller
           control={form.control}
           name="smartDevice.installationCenter"
           render={({ field, fieldState }) => (
@@ -86,6 +83,7 @@ export const SmartDeviceField = ({ form }: SmartDeviceProps) => {
             )}
           </div>
         )}
+        </div>
       </div>
     </>
   );

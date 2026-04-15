@@ -18,7 +18,7 @@ type AutoInsurancesEmit = {
   onBack: () => void;
   onEmit: () => void;
   successMessage: string | null;
-  selectedPlan?: string;
+  selectedPlan: string | null;
   onPlanSelect?: (planId: string) => void;
 };
 

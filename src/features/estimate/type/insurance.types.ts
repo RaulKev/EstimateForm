@@ -1,3 +1,6 @@
+import type { PetPlans } from "@/features/pet-insurance/types/insurance.type";
+import type { TermsInsuranceRequest } from "./types";
+
 export interface Insurances {
   success: boolean;
   data: InsurancesData;
@@ -24,7 +27,7 @@ export interface DataCustomer {
   firstName: string;
   lastName: string;
   gender: string;
-  birthDate: Date;
+  birthDate: Date | string;
   documentType: string;
   documentNumber: string;
   phone: string;
@@ -46,8 +49,21 @@ export interface QuotationRequest {
   companyId: string;
   product: string;
   customer: QuotationRequestCustomer;
-  vehicle: Vehicle;
+  vehicle?: Vehicle;
   terms: QuotationRequestTerms;
+}
+
+export interface PetQuoteRequest extends Omit<QuotationRequest, 'vehicle' | 'terms'> {
+  pet: PetRequest;
+  terms: TermsInsuranceRequest;
+}
+
+interface PetRequest {
+  name: string;
+  birthYear: string;
+  raceId: number;
+  age: number;
+  isDomestic: boolean;
 }
 
 export interface UpdateInsuranceRequest {
@@ -55,6 +71,7 @@ export interface UpdateInsuranceRequest {
   endorsementAssignment?: Partial<EndorsementAssignment>;
   intermediary?: string;
   smartDevice?: Partial<SmartDevice>;
+  terms?: Partial<QuotationRequestTerms>;
 }
 
 interface SmartDevice {
@@ -82,6 +99,7 @@ export interface QuotationRequestCustomer {
   address: FluffyAddress;
   requiresFiscalReceipt?: boolean;
   dueDiligence?: Partial<DueDiligenceDto>;
+  birthDate?: string;
 }
 
 interface DueDiligenceDto {
@@ -150,10 +168,19 @@ export interface QuotationResponseData {
   revPlan: string;
   cliente: Cliente;
   vehiculo: Vehiculo;
+  mascota: Mascota;
   ingreso: null;
   terminos: Terminos;
   pago: Pago;
   primas: Prima[];
+}
+
+interface Mascota {
+  nombre: string;
+  edad: number;
+  edadRango: string;
+  anioNacimiento: number;
+  raza: string;
 }
 
 export interface Cliente {
@@ -208,6 +235,7 @@ export interface Terminos {
   primaMinima: null;
   plazo: number;
   inicioVigencia: Date;
+  planMascota: PetPlans;
   finVigencia: Date;
   fechaEmision: null;
   fechaCancelacion: null;
@@ -248,6 +276,7 @@ export interface Inspeccion {
 }
 
 export interface DataTerms {
+  petPlan: string;
   paymentFraction: string;
   paymentMethod: string;
   lawInsurance: string;

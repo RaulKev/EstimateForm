@@ -1,6 +1,6 @@
 import { SelectCarYear } from './SelectType';
 import { Field, FieldDescription, FieldError, FieldLabel } from '@/components/ui/field';
-import { useState, type ChangeEvent } from 'react';
+import { useEffect, useState, type ChangeEvent } from 'react';
 import {
   FuelsType,
   Gas,
@@ -19,6 +19,12 @@ import { formatNumber } from '@/utils';
 
 import { CustomSelect } from '@/shared/CustomSelected';
 import { RequerimentsAdaptedInstallationType } from './RequirementAdaptedInstallationType';
+import { CustomTooltip } from '@/shared/CustomTooltip';
+import { ComplementsCar } from './complements/ComplementsCar';
+import {
+  ComplementsDetailsCar,
+  type AddedComplement,
+} from './complements/ComplementsDetailsCar';
 
 interface CarFormProps {
   form: UseFormReturn<EstimateFormData>;
@@ -40,11 +46,15 @@ const installationOptions = [
 ];
 export function CarForm({ form }: CarFormProps) {
   const [models, setModels] = useState<CarModels[]>([]);
-  const actualYear = new Date().getFullYear();
-  const years = Array.from({ length: 16 }, (_, i) => actualYear - i);
+  const [selected, setSelected] = useState<boolean>(false);
+  const [complements, setComplements] = useState<AddedComplement[]>([]);
+
+  const actualYear = new Date().getFullYear() + 1;
+  const years = Array.from({ length: 17 }, (_, i) => actualYear - i);
   const brand = form.watch('car.brand');
   const fuelType = form.watch('car.fuelType');
   const installationType = form.watch('car.installationType');
+  const currentWorth = form.watch('car.worth') || 0;
   const gasEnabled = fuelType === FuelsType.GAS;
   const MIN_WORTH = 200_000;
   const MAX_WORTH = 7_000_000;
@@ -64,6 +74,20 @@ export function CarForm({ form }: CarFormProps) {
     const cleanValue = rawValue.replace(/[^0-9.]/g, '');
     onChange(cleanValue === '' ? '' : Number(cleanValue));
   };
+  useEffect(() => {
+    const totalComplements = complements.reduce((acc, c) => acc + c.value, 0);
+    const MAX_LIMIT = 7_000_000;
+    if (currentWorth + totalComplements > MAX_LIMIT) {
+      form.setError('car.worth', {
+        type: 'manual',
+        message: `El valor del vehículo y aditamentos supera el límite de RD$ ${MAX_LIMIT.toLocaleString('es-DO')}`,
+      });
+    } else {
+      if (form.formState.errors.car?.worth?.type === 'manual') {
+        form.clearErrors('car.worth');
+      }
+    }
+  }, [complements, currentWorth, form]);
 
   return (
     <>
@@ -90,10 +114,8 @@ export function CarForm({ form }: CarFormProps) {
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor="car.modelId">Modelo</FieldLabel>
               <SelectCarModel
-                name={field.name}
-                value={field.value === 0 ? undefined : String(field.value)}
+                field={field}
                 items={models}
-                onValueChange={(value) => field.onChange(Number(value))}
                 invalid={fieldState.invalid}
                 disabled={!brand}
               />
@@ -256,9 +278,81 @@ export function CarForm({ form }: CarFormProps) {
             </Field>
           )}
         />
+        <Controller
+          control={form.control}
+          name="car.isZeroDeductible"
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <div className="flex items-center gap-1">
+                <FieldLabel htmlFor="car.isZeroDeductible">
+                  ¿Desea Cero Deducible?{' '}
+                </FieldLabel>
+                <CustomTooltip
+                  message="Con cero deducible, no tendrás que pagar ningún deducible en caso de siniestro."
+                  iconClassName="text-kover-widget-primary mt-1"
+                />
+              </div>
+              <CustomSelect
+                placeholder="¿Desea Cero Deducible?"
+                name={field.name}
+                value={
+                  field.value !== undefined && field.value !== null
+                    ? String(field.value)
+                    : ''
+                }
+                onValueChange={(val) => field.onChange(val === 'true')}
+                invalid={fieldState.invalid}
+                options={boolOptions}
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+
+        <div className="flex flex-col flex-1 justify-center min-w-0">
+          <FieldLabel className="mb-3 flex items-center gap-2">
+            ¿Desea incluir algún aditamento?
+            <CustomTooltip
+              message="Los aditamentos son accesorios adicionales instalados en tu vehículo que deseas asegurar."
+              iconClassName="text-kover-widget-primary text-blue-900"
+            />
+          </FieldLabel>
+          <ComplementsCar
+            complements={complements}
+            setSelected={setSelected}
+            selected={selected}
+            setComplements={setComplements}
+          />
+
+          {complements.length > 0 && !selected && (
+            <div className="mt-4 flex flex-col items-center gap-2 text-center text-slate-700">
+              <p className="text-sm font-medium">
+                {complements.length} aditamento(s) agregado(s) - Total: RD$
+                {complements.reduce((sum, c) => sum + c.value, 0).toLocaleString('es-DO')}
+              </p>
+              <button
+                type="button"
+                onClick={() => setSelected(true)}
+                className="text-kover-widget-primary font-medium hover:underline text-sm"
+              >
+                Gestionar aditamentos
+              </button>
+            </div>
+          )}
+        </div>
+
+        <div className="col-span-full mt-4">
+          {selected && (
+            <ComplementsDetailsCar
+              complements={complements}
+              setComplements={setComplements}
+              onClose={() => setSelected(false)}
+            />
+          )}
+        </div>
       </div>
 
-      <div className="col-start-1 col-end-3 mt-4">
+      <div className="col-span-full mt-4">
         <Controller
           control={form.control}
           name="car.isPersonalUse"
