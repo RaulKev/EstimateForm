@@ -35,6 +35,16 @@ export const AutoInsuranceDetail = ({
           </p>
         </div>
       </div>
+      <div className="space-y-1">
+        <p className="text-sm font-medium text-muted-foreground">Aditamentos</p>
+        <p className="text-base font-semibold text-foreground">
+          Aros / goma: RD$ 20,000
+        </p>
+      </div>
+      <div className="space-y-1">
+        <p className="text-sm font-medium text-muted-foreground">¿Cero deducible?</p>
+        <p className="text-base font-semibold text-foreground">Si, Cero 0%</p>
+      </div>
     </div>
   );
 };
