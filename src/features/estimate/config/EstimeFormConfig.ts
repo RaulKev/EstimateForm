@@ -257,4 +257,5 @@ export const schemaEstimate = yup.object().shape({
       .required(),
   }),
 });
+
 export type EstimateFormData = yup.InferType<typeof schemaEstimate>;

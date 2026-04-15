@@ -55,8 +55,24 @@ export const enum InstallatationType {
 
 export interface EstimateFormData {
   customer: Customer;
-  car: Car;
+  car?: Car;
+  pet?: PetInsuranceRequest;
+  terms?: TermsInsuranceRequest;
 }
+
+export interface PetInsuranceRequest {
+  name: string;
+  birthYear: string;
+  breedId: number;
+  age: number;
+  isDomestic: boolean;
+}
+
+export interface TermsInsuranceRequest {
+  petPlan: string;
+  paymentFraction: string;
+}
+
 export interface Car {
   brand?: string;
   modelId: number;
@@ -138,4 +154,5 @@ export type FlowStep =
     | 'emit'
     | 'additional-data'
     | 'confirmation'
-    | 'quote-summary';
+    | 'quote-summary'
+    | 'upload-file';

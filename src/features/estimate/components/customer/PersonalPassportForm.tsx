@@ -10,13 +10,15 @@ import {
 } from '@/components/ui/select';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { Gender, MaritalStatus } from '../../type/types';
-import type { EstimateFormData } from '../../config/EstimeFormConfig';
+import type { WithCustomer } from '@/shared/types/form-types';
 
 type PersonalPassportFormProps = {
-  form: UseFormReturn<EstimateFormData>;
+  form: UseFormReturn<WithCustomer>;
 };
 
-export const PersonalPassportForm = ({ form }: PersonalPassportFormProps) => {
+export const PersonalPassportForm =({
+  form,
+}: PersonalPassportFormProps) => {
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

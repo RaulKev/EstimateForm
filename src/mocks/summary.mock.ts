@@ -123,9 +123,11 @@ export const driveInsuranceBenefits = [
 export const enum InsurancesType {
   AUTO_INSURANCE = 'auto-insurance',
   DRIVE_INSURANCE = 'drive-insurance',
+  PET_INSURANCE = 'pet-insurance'
 }
 
 export const insuranceConsiderations: Record<InsurancesType, InsuranceConsiderations[]> = {
   [InsurancesType.AUTO_INSURANCE]: autoInsuranceConsiderations,
   [InsurancesType.DRIVE_INSURANCE]: driveIsuranceConsiderations,
+  [InsurancesType.PET_INSURANCE]: []
 }

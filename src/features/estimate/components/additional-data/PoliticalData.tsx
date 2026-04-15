@@ -1,29 +1,21 @@
 import { Controller, type UseFormReturn } from 'react-hook-form';
-import type { AdditionalDataFormData } from './AdditionalDataFormWrapper';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { SelectCustom } from './SelectCustom';
 import { financialInstitutions } from '@/mocks/emit.mock';
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { MaskedInput } from '../customer/MaskedInput';
-import { SmartDeviceField } from './SmartDeviceField';
-import { InsurancesType } from '@/mocks/summary.mock';
+import type { MixedAdditionalDataFormData } from '../../schemas/additionalDataSchema';
 
 interface PolicyDataProps {
-  form: UseFormReturn<AdditionalDataFormData | Omit<AdditionalDataFormData, 'smartDevice'>>;
-  insuranceType: InsurancesType
+  form: UseFormReturn<MixedAdditionalDataFormData>;
 }
 
-export const PolicyData = ({ form, insuranceType }: PolicyDataProps) => {
+export const PolicyData = ({ form }: PolicyDataProps) => {
   // const [hasIntermediary, setHasIntermediary] = useState<boolean>(false);
   const [hasEndorsmentPolicy, setHasEndorsmentPolicy] = useState<boolean>(false);
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {
-        insuranceType === InsurancesType.DRIVE_INSURANCE &&
-        <SmartDeviceField form={form} />
-      }
-
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-[32px]">
       {/** Intermediario no es necesario por el momento */}
       {/* <div className="space-y-4">
         <Controller

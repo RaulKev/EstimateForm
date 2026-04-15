@@ -1,186 +1,48 @@
 import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import type { InsurancesData } from '@/features/estimate/type/insurance.types';
+import type {
+  InsurancesData,
+  UpdateInsuranceRequest,
+} from '@/features/estimate/type/insurance.types';
 import { AddressForm } from './AdditionalDataForm';
 import { FieldGroup } from '@/components/ui/field';
 import { useEffect, useState } from 'react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { XCircle } from 'lucide-react';
-import { RelationShip } from '../../type/types';
 import LoadingOverlay from '@/shared/LoadingOverlay';
 import { InsurancesType } from '@/mocks/summary.mock';
+import { PolicyData } from './PoliticalData';
+import { SmartDeviceField } from './SmartDeviceField';
+import {
+  additionalDataDefaultValues,
+  createAdditionalDataSchema,
+  type MixedAdditionalDataFormData,
+} from '../../schemas/additionalDataSchema';
+import { formatInsuranceUpdateRequest } from '../../mappers/format-update-insurance';
+import { updateInsurance } from '../../services/insurance.service';
 
 interface AdditionalDataFormWrapperProps {
   insuranceData: InsurancesData;
   insuranceType: InsurancesType;
   onBack: () => void;
-  onSubmit: (data: AdditionalDataFormData | Omit<AdditionalDataFormData, 'smartDevice'>) => Promise<boolean>;
-  onProcessPayment: () => Promise<void>;
-  nextStep: () => void;
+  onSubmit: (data: UpdateInsuranceRequest) => Promise<void>;
+  paymentFraction: string | null;
 }
-
-// Reutilizamos las validaciones del EstimateFormConfig
-const additionalDataSchema = yup.object({
-  customer: yup.object({
-    occupation: yup.string().required('Selecciona una ocupación.'),
-    address: yup.object({
-      street: yup
-        .string()
-        .required('La calle es requerida.')
-        .min(3, 'Mínimo 3 caracteres'),
-      referencePoint: yup.string().optional(),
-      province: yup
-        .string()
-        .required('La provincia es requerida.')
-        .min(1, 'Selecciona una provincia.'),
-      municipality: yup.string().when('province', {
-        is: (province: string) => !!province && province.length > 0,
-        then: (schema) =>
-          schema
-            .required('El municipio es requerido.')
-            .min(1, 'Selecciona un municipio válido.'),
-        otherwise: (schema) => schema.optional(),
-      }),
-      sector: yup.string().when('municipality', {
-        is: (municipality: string) => !!municipality && municipality.length > 0,
-        then: (schema) => schema.required('El sector es requerido.'),
-        otherwise: (schema) => schema.optional(),
-      }),
-    }),
-    dueDiligence: yup.object({
-      politicallyExposed: yup.boolean().defined().default(false),
-      isItACloseRelative: yup.mixed<RelationShip>().when('politicallyExposed', {
-        is: true,
-        then: (schema) =>
-          schema
-            .oneOf(
-              [RelationShip.FAMILY, RelationShip.IAM],
-              'Selecciona una opción válida.'
-            )
-            .required('Selecciona una opción válida.'),
-        otherwise: (schema) => schema.optional(),
-      }),
-      familyName: yup.string().when(['politicallyExposed', 'isItACloseRelative'], {
-        is: (politically: boolean, isRelative: RelationShip) =>
-          politically === true && isRelative === RelationShip.FAMILY,
-        then: (schema) => schema.required('El nombre del familiar es requerido.'),
-        otherwise: (schema) => schema.optional(),
-      }),
-      kinship: yup.string().when(['politicallyExposed', 'isItACloseRelative'], {
-        is: (politically: boolean, isRelative: RelationShip) =>
-          politically === true && isRelative === RelationShip.FAMILY,
-        then: (schema) => schema.required('La relación familiar es requerida.'),
-        otherwise: (schema) => schema.optional(),
-      }),
-      position: yup.string().when(['politicallyExposed', 'isItACloseRelative'], {
-        is: (politically: boolean, isRelative: RelationShip) =>
-          politically === true && isRelative === RelationShip.IAM,
-        then: (schema) => schema.required('El cargo público es requerido.'),
-        otherwise: (schema) => schema.optional(),
-      }),
-      positionFamily: yup.string().when(['politicallyExposed', 'isItACloseRelative'], {
-        is: (politically: boolean, isRelative: RelationShip) =>
-          politically === true && isRelative === RelationShip.FAMILY,
-        then: (schema) => schema.required('El cargo del familiar es requerido.'),
-        otherwise: (schema) => schema.optional(),
-      }),
-    }),
-    requiresFiscalReceipt: yup.boolean().defined().default(false),
-    hasIntermediary: yup.boolean().defined().default(false),
-    intermediary: yup.string().when('hasIntermediary', {
-      is: (hasIntermediary: boolean) => hasIntermediary,
-      then: (schema) => schema.required('El intermediario es requerido'),
-      otherwise: (schema) => schema.optional(),
-    }),
-  }),
-  endorsmentPolicy: yup.object({
-    hasEndorsmentPolicy: yup.boolean().defined().default(false),
-    institution: yup.string().when('hasEndorsmentPolicy', {
-      is: (hasEndorsmentPolicy: boolean) => hasEndorsmentPolicy,
-      then: (schema) => schema.required('La institución es requerida'),
-      otherwise: (schema) => schema.optional(),
-    }),
-    subsidiary: yup.string().when('hasEndorsmentPolicy', {
-      is: (hasEndorsmentPolicy: boolean) => hasEndorsmentPolicy,
-      then: (schema) => schema.required('La subsidiaria es requerida'),
-      otherwise: (schema) => schema.optional(),
-    }),
-    executiveName: yup.string().when('hasEndorsmentPolicy', {
-      is: (hasEndorsmentPolicy: boolean) => hasEndorsmentPolicy,
-      then: (schema) => schema.required('El nombre del ejecutivo es requerido'),
-      otherwise: (schema) => schema.optional(),
-    }),
-    executiveEmail: yup
-      .string()
-      .email('Debe ser un correo válido.')
-      .when('hasEndorsmentPolicy', {
-        is: (hasEndorsmentPolicy: boolean) => hasEndorsmentPolicy,
-        then: (schema) =>
-          schema
-            .personaleEmail()
-            .required('El correo electrónico del ejecutivo es requerido'),
-        otherwise: (schema) => schema.optional(),
-      }),
-    executivePhoneNumber: yup.string().when('hasEndorsmentPolicy', {
-      is: (hasEndorsmentPolicy: boolean) => hasEndorsmentPolicy,
-      then: (schema) =>
-        schema
-          .matches(/^\d{10}$/, 'El teléfono debe tener 10 dígitos.')
-          .dominicPhone('El teléfono debe comenzar con 809, 829 o 849.'),
-      otherwise: (schema) => schema.optional(),
-    }),
-  }),
-  smartDevice: yup.object({
-    installationType: yup.string().required('Selecciona un tipo de instalación.'),
-    installationCenter: yup.string().required('Selecciona el centro de instalación.'),
-  }),
-});
-
-export type AdditionalDataFormData = yup.InferType<typeof additionalDataSchema>;
 
 export const AdditionalDataFormWrapper = ({
   onBack,
   onSubmit,
-  nextStep,
   insuranceType,
+  paymentFraction,
+  insuranceData,
 }: AdditionalDataFormWrapperProps) => {
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
-  const schemaToResolve = insuranceType === InsurancesType.DRIVE_INSURANCE ? additionalDataSchema : additionalDataSchema.omit(['smartDevice']);
-  const form = useForm<AdditionalDataFormData | Omit<AdditionalDataFormData, 'smartDevice'>>({
+  const schemaToResolve = createAdditionalDataSchema(insuranceType);
+
+  const form = useForm<MixedAdditionalDataFormData>({
     resolver: yupResolver(schemaToResolve),
-    defaultValues: {
-      customer: {
-        occupation: '',
-        address: {
-          street: '',
-          province: '',
-          municipality: '',
-          sector: '',
-          referencePoint: '',
-        },
-        dueDiligence: {
-          politicallyExposed: false,
-          isItACloseRelative: undefined,
-          familyName: '',
-          kinship: '',
-          position: '',
-          positionFamily: '',
-        },
-        requiresFiscalReceipt: false,
-        hasIntermediary: false,
-        intermediary: '',
-      },
-      endorsmentPolicy: {
-        hasEndorsmentPolicy: false,
-        institution: '',
-        subsidiary: '',
-        executiveName: '',
-        executiveEmail: '',
-        executivePhoneNumber: '',
-      },
-    },
+    defaultValues: additionalDataDefaultValues,
     mode: 'onChange',
   });
 
@@ -189,15 +51,27 @@ export const AdditionalDataFormWrapper = ({
     formState: { isSubmitting },
   } = form;
 
-  const handleSubmit = async (data: AdditionalDataFormData | Omit<AdditionalDataFormData, 'smartDevice'>) => {
+  const showSmartDevice = insuranceType === InsurancesType.DRIVE_INSURANCE;
+  const showEndorsment = [
+    InsurancesType.AUTO_INSURANCE,
+    InsurancesType.DRIVE_INSURANCE,
+  ].includes(insuranceType);
+
+  const handleSubmit = async (data: MixedAdditionalDataFormData) => {
     try {
       setAlertMessage(null);
-      const success = await onSubmit(data);
+      const completeData = {
+        ...data,
+        ...(paymentFraction && { terms: { paymentFraction } }),
+      };
+      const updatePayload = formatInsuranceUpdateRequest(completeData);
+      const success = await updateInsurance(insuranceData.id, updatePayload);
+
       if (success) {
         reset();
         setAlertMessage(null);
         setTimeout(() => setAlertMessage(null), 5000);
-        nextStep();
+        onSubmit(updatePayload);
       } else {
         setAlertMessage(
           'No se pudieron guardar los datos. Por favor intenta nuevamente.'
@@ -244,7 +118,7 @@ export const AdditionalDataFormWrapper = ({
         >
           <FieldGroup className="w-full max-w-3xl">
             <div className="w-full">
-              <AddressForm form={form} insuranceType={insuranceType} />
+              <AddressForm form={form} />
               {alertMessage && (
                 <Alert variant={'destructive'} className="border-red-500 bg-red-50 mt-6">
                   <XCircle className="h-5 w-5 text-red-600 shrink-0" />
@@ -252,6 +126,10 @@ export const AdditionalDataFormWrapper = ({
                   <AlertDescription className="text-sm">{alertMessage}</AlertDescription>
                 </Alert>
               )}
+
+              {showSmartDevice && <SmartDeviceField form={form} />}
+              {showEndorsment && <PolicyData form={form} />}
+
               <div className="mt-10 flex flex-col md:flex-row items-center justify-between gap-4 w-full">
                 <Button
                   type="button"
