@@ -39,7 +39,7 @@ export const municipalityLocations: Record<
   Santiago: {
     location: 'Av. Juan Pablo Duarte No. 192, Villa Olga',
     phone: '(809) 567-8648',
-    schedule: 'Lunes a Viernes de 8:30 a.m a 6:00 p.m Sabado: 9:00 a.m a 1:00 p.m',
+    schedule: 'Lunes a Viernes de 8:30 a.m a 5:30 p.m Sabado: 9:00 a.m a 1:00 p.m',
   },
   'Punta Cana / Bávaro': {
     location: 'Montilla Motors, Carretera Barceló Km 2, Bávaro',
@@ -49,7 +49,7 @@ export const municipalityLocations: Record<
   'Puerto Plata': {
     location: 'Av. Manolo Tavárez Justo No. 70',
     phone: '(809) 567-8648',
-    schedule: 'Lunes a Viernes de 8:30 a.m a 6:00 p.m Sabado: 9:00 a.m a 1:00 p.m',
+    schedule: 'Lunes a Viernes de 8:30 a.m a 5:30 p.m Sabado: 9:00 a.m a 1:00 p.m',
   },
   'San Francisco de Macoris': {
     location: 'Av. Frank Grullón Esq. Villa Olímpica #9',

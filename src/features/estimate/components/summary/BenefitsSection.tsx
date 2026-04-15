@@ -88,7 +88,7 @@ export const BenefitsSection = ({ terms, typeInsurance }: BenefitsSectionProps) 
                   <CustomTooltip message="Aplica en siniestros cuyo costos de reparación superen el monto deducible." />
                 </div>
                 <p className="ml-4 text-sm text-gray-600 pl-2">
-                  {terms.substituteAuto === 'No' ? '- No Incluido' : terms.substituteAuto}
+                  {terms.substituteAuto === 'No' ? '- No Incluido' : terms.substituteAuto}: Camioneta por hasta 30 días en el año.
                 </p>
               </div>
             </div>
