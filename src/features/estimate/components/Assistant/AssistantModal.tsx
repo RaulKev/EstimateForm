@@ -11,7 +11,7 @@ export const AssistantModal = ({
   setOpenAssistant,
 }: AssistantModalProps) => {
   return (
-    <Modal open={openAssistant} onOpenChange={setOpenAssistant}>
+    <Modal title=" " open={openAssistant} onOpenChange={setOpenAssistant}>
       <Assistantinfo />
     </Modal>
   );

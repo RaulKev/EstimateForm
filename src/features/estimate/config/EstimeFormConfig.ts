@@ -60,15 +60,15 @@ yup.addMethod<yup.StringSchema>(
 const rdCedulaDigits = /^\d{11}$/;
 const rdPhone = /^\d{10}$/;
 const passportRegex = /^[A-Z0-9]{6,15}$/i;
-const currentYear = new Date().getFullYear();
+const currentYear = new Date().getFullYear() + 1;
 const MIN_WORTH = 200_000;
 const MAX_WORTH = 7_000_000;
 
 export const initialValuesCustomer: Customer = {
   email: '',
   phone: '',
-  documentType: Documents.ID,
-  documentNumber: '402-2004330-7',
+  documentType: undefined,
+  documentNumber: '',
   firstName: '',
   lastname: '',
   gender: undefined,
@@ -85,6 +85,7 @@ export const initialValuesCar: Car = {
   installationType: undefined,
   isPersonalUse: false,
   worth: 0,
+  isZeroDeductible: false,
   terms: {
     insuranceType: CarInsurances.BASE,
     vehicleAssistance: true,
@@ -240,11 +241,12 @@ export const schemaEstimate = yup.object().shape({
       .min(MIN_WORTH, `El valor mínimo es RD$ ${MIN_WORTH.toLocaleString('es-DO')}`)
       .max(MAX_WORTH, `El valor máximo es RD$ ${MAX_WORTH.toLocaleString('es-DO')}`)
       .required('El valor del vehículo es requerido.'),
+    isZeroDeductible: yup.boolean().default(false),
     terms: yup
       .object({
         insuranceType: yup
           .mixed<CarInsurances>()
-          .oneOf([CarInsurances.BASE, CarInsurances.PLUS, CarInsurances.AUTO_EXCESO])
+          .oneOf([CarInsurances.BASE, CarInsurances.PLUS, CarInsurances.AUTO_EXCESO, CarInsurances.AUTO_EXCESO_PLUS])
           .default(CarInsurances.BASE),
 
         vehicleAssistance: yup.boolean().default(true),
@@ -257,4 +259,5 @@ export const schemaEstimate = yup.object().shape({
       .required(),
   }),
 });
+
 export type EstimateFormData = yup.InferType<typeof schemaEstimate>;

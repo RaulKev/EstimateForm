@@ -34,7 +34,7 @@ export const CustomTooltip = ({
           contentClassName
         )}
       >
-        <p className="mx-auto max-w-[200px] whitespace-normal">{message}</p>
+        <p className="mx-auto max-w-[250px] whitespace-normal text-center">{message}</p>
       </TooltipContent>
     </Tooltip>
   );

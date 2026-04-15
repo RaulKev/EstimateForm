@@ -10,6 +10,7 @@ export const LAW_INSURANCE_LABEL: Record<CarInsurances, string> = {
     [CarInsurances.BASE]: 'Base',
     [CarInsurances.PLUS]: 'Plus',
     [CarInsurances.AUTO_EXCESO]: 'Auto Exceso',
+    [CarInsurances.AUTO_EXCESO_PLUS]: 'Auto Exceso+',
 };
 
 export const REPLACEMENT_CAR_LABEL: Record<ReplacementsCar, string> = {

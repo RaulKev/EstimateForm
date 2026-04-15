@@ -19,17 +19,18 @@ import type { Municipality, Occupations, Province } from '../../type/types';
 import { getMunicipalities, getProvinces } from '../../services/direction.service';
 import { OcuppationInput } from './OcuppationSelect';
 import { getOccupations } from '../../services/ocupation.service';
-import type { AdditionalDataFormData } from './AdditionalDataFormWrapper';
 import { Switch } from '@/components/ui/switch';
-import { PolicyData } from './PoliticalData';
 import { PoliticalExposeData } from './PoliticalExposeData';
 import type { InsurancesType } from '@/mocks/summary.mock';
+import { CustomSelect } from '@/shared/CustomSelected';
+import { sectors } from '@/mocks/directions.mock';
+
+import type { MixedAdditionalDataFormData } from '../../schemas/additionalDataSchema';
 interface AddressFormProps {
-  form: UseFormReturn<AdditionalDataFormData | Omit<AdditionalDataFormData, 'smartDevice'>>;
-  insuranceType: InsurancesType
+  form: UseFormReturn<MixedAdditionalDataFormData>;
 }
 
-export const AddressForm = ({ form, insuranceType }: AddressFormProps) => {
+export const AddressForm = ({ form }: AddressFormProps) => {
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [municipalities, setMunicipalities] = useState<Municipality[]>([]);
   const [occupation, setOccupation] = useState<Occupations[]>([]);
@@ -38,7 +39,6 @@ export const AddressForm = ({ form, insuranceType }: AddressFormProps) => {
   const selectedMunicipality = form.watch('customer.address.municipality');
   const street = form.watch('customer.address.street');
   const isReferencePoint = form.watch('customer.address.referencePoint');
-  // Optimización: usar useMemo para evitar cálculos innecesarios
   const isStreetValid = useMemo(() => street && street.length >= 3, [street]);
   const politicallyExposed = form.watch('customer.dueDiligence.politicallyExposed');
 
@@ -220,12 +220,12 @@ export const AddressForm = ({ form, insuranceType }: AddressFormProps) => {
               name="customer.address.referencePoint"
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Referencias</FieldLabel>
+                  <FieldLabel>Edificio</FieldLabel>
                   <Input
                     type="text"
                     id={field.name}
                     aria-invalid={fieldState.invalid}
-                    placeholder="Referencias"
+                    placeholder="Edificio"
                     {...field}
                   />
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -312,7 +312,19 @@ export const AddressForm = ({ form, insuranceType }: AddressFormProps) => {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="customer.address.sector">Sector</FieldLabel>
-                  <Input
+                  <CustomSelect
+                    options={sectors.map((sector) => ({
+                      value: sector.nombre,
+                      label: sector.nombre,
+                    }))}
+                    value={field.value || ''}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                    }}
+                    disabled={!selectedMunicipality}
+                    placeholder='Selecciona un sector'
+                  />
+                  {/* <Input
                     type="text"
                     id="customer.address.sector"
                     placeholder="Ej.: Centro, Zona Colonial, etc."
@@ -320,17 +332,13 @@ export const AddressForm = ({ form, insuranceType }: AddressFormProps) => {
                     {...field}
                     aria-invalid={fieldState.invalid}
                     disabled={!selectedMunicipality}
-                  />
+                  /> */}
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}
             />
           </div>
         </div>
-      </div>
-
-      <div className="space-y-4">
-        <PolicyData form={form} insuranceType={insuranceType} />
       </div>
     </div>
   );

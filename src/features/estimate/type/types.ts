@@ -36,6 +36,7 @@ export const enum CarInsurances {
   BASE = 'Base',
   PLUS = 'Plus',
   AUTO_EXCESO = 'AutoExceso',
+  AUTO_EXCESO_PLUS = 'Auto Exceso+',
 }
 
 export const enum Gas {
@@ -55,8 +56,24 @@ export const enum InstallatationType {
 
 export interface EstimateFormData {
   customer: Customer;
-  car: Car;
+  car?: Car;
+  pet?: PetInsuranceRequest;
+  terms?: TermsInsuranceRequest;
 }
+
+export interface PetInsuranceRequest {
+  name: string;
+  birthYear: string;
+  breedId: number;
+  age: number;
+  isDomestic: boolean;
+}
+
+export interface TermsInsuranceRequest {
+  petPlan: string;
+  paymentFraction: string;
+}
+
 export interface Car {
   brand?: string;
   modelId: number;
@@ -67,6 +84,7 @@ export interface Car {
   installationType?: InstallatationType;
   isPersonalUse?: boolean;
   worth: number;
+  isZeroDeductible?: boolean;
   terms: Term;
 }
 
@@ -121,6 +139,10 @@ export interface CarListResponse {
   marca: string;
   modelos: CarModels[];
 }
+export interface ComplementsCar {
+  id: number;
+  name: string;
+}
 
 export interface FuelType {
   id: number;
@@ -138,4 +160,5 @@ export type FlowStep =
     | 'emit'
     | 'additional-data'
     | 'confirmation'
-    | 'quote-summary';
+    | 'quote-summary'
+    | 'upload-file';

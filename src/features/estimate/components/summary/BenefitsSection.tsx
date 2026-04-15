@@ -11,7 +11,6 @@ interface BenefitsSectionProps {
 export const BenefitsSection = ({ terms, typeInsurance }: BenefitsSectionProps) => {
   const benefits =
     typeInsurance === InsurancesType.DRIVE_INSURANCE ? driveInsuranceBenefits : null;
-  console.log(benefits, 'beneficios');
   return (
     <div>
       <div className="grid md:grid-cols-2 gap-6">
