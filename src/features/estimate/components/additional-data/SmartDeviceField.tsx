@@ -7,6 +7,7 @@ import {
   installationTypes,
   municipalityLocations,
 } from '@/mocks/installation.mock';
+
 import type { MixedAdditionalDataFormData } from '../../schemas/additionalDataSchema';
 
 interface SmartDeviceProps {
@@ -23,7 +24,6 @@ export const SmartDeviceField = ({ form }: SmartDeviceProps) => {
         <h3 className="text-sm font-semibold text-kover-widget-primary">
           Dispositivo Smart
         </h3>
-
         <div className="col-span-2 flex flex-col gap-4">
           <Controller
             control={form.control}
@@ -45,44 +45,44 @@ export const SmartDeviceField = ({ form }: SmartDeviceProps) => {
               </Field>
             )}
           />
-
-          <Controller
-            control={form.control}
-            name="smartDevice.installationCenter"
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <SelectCustom
-                  items={
-                    installationMunicipalities[
-                      form.watch('smartDevice.installationType')
-                    ] ?? []
-                  }
-                  value={field.value ?? ''}
-                  name="smartDevice.installationCenter"
-                  placeHolder="Seleccionar centro de instalación"
-                  onChange={(value) => {
-                    field.onChange(value);
-                  }}
-                  invalid={fieldState.invalid}
-                />
-                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-              </Field>
-            )}
-          />
-          {installationCenter && (
-            <div className="text-center text-sm text-slate-500">
-              Nuestro servicio al cliente se comunicará contigo para coordinar la cita en
-              el horario que más te convenga.
-              {installationType === InstallationTypes.CENTRO_ESPECIALIZADO && (
+            <Controller
+          control={form.control}
+          name="smartDevice.installationCenter"
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <SelectCustom
+                items={
+                  installationMunicipalities[
+                    form.watch('smartDevice.installationType')
+                  ] ?? []
+                }
+                value={field.value ?? ''}
+                name="smartDevice.installationCenter"
+                placeHolder="Seleccionar centro de instalación"
+                onChange={(value) => {
+                  field.onChange(value);
+                }}
+                invalid={fieldState.invalid}
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+        {installationCenter && (
+          <div className="text-center text-sm text-slate-500">
+            Nuestro servicio al cliente se comunicará contigo para coordinar la cita en el
+            horario que más te convenga.
+            {installationType === InstallationTypes.CENTRO_ESPECIALIZADO && (
+              <>
+                <p className='max-w-[250px] mx-auto'>{municipalityLocations[installationCenter].schedule}</p>
                 <p>
-                  Lunes a Viernes: 8:30 a.m. a 6:00 p.m <br />
-                  Sábado: 9:00am a 1:00pm <br />
                   {municipalityLocations[installationCenter].location} <br />
                   Teléfono: <b>{municipalityLocations[installationCenter].phone}</b>
                 </p>
-              )}
-            </div>
-          )}
+              </>
+            )}
+          </div>
+        )}
         </div>
       </div>
     </>

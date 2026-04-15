@@ -3,7 +3,6 @@ export const InstallationTypes = {
   CENTRO_ESPECIALIZADO: 'Instalación en un centro especializado',
 } as const;
 
-
 export const installationTypes = [
   'Instalación en un centro especializado',
   'Visita de un técnico a domicilio',
@@ -17,38 +16,54 @@ export const installationMunicipalities: Record<string, string[]> = {
     'Punta Cana / Bávaro',
     'Puerto Plata',
     'San Francisco de Macoris',
-    'San Pedro de Macoris',
+    'La Vega',
+    'Alameda'
   ],
   'Visita de un técnico a domicilio': ['Santo Domingo', 'Santo Domingo Este', 'Santiago'],
 };
 
-export const municipalityLocations: Record<string, { location: string; phone: string }> = {
+export const municipalityLocations: Record<
+  string,
+  { location: string; phone: string; schedule?: string }
+> = {
   'Santo Domingo': {
     location: 'Av. 27 de Febrero No. 301, Evaristo Morales',
-    phone: '(809) 620-2002',
+    phone: '(809) 567-8648',
+    schedule: 'Lunes a Viernes de 8:30 a.m a 5:30 p.m Sabado: 9:00 a.m a 1:00 p.m',
   },
   'Santo Domingo Este': {
-    location: 'Av. San Vicente de Paul Marginal Sur #3',
-    phone: '(809) 331-2002',
+    location: 'C/Bonaire #265, Alma Rosa II, Zona Oriental',
+    phone: '(809) 567-8648',
+    schedule: 'Lunes a Viernes de 8:30 a.m a 6:00 p.m Sabado: 9:00 a.m a 1:00 p.m',
   },
-  'Santiago': {
+  Santiago: {
     location: 'Av. Juan Pablo Duarte No. 192, Villa Olga',
-    phone: '(809) 226-1717',
+    phone: '(809) 567-8648',
+    schedule: 'Lunes a Viernes de 8:30 a.m a 6:00 p.m Sabado: 9:00 a.m a 1:00 p.m',
   },
   'Punta Cana / Bávaro': {
-    location: 'Av. Barceló, Plaza Paseo Colonial, Local No.10',
-    phone: '(809) 669-5521',
+    location: 'Montilla Motors, Carretera Barceló Km 2, Bávaro',
+    phone: '(809) 567-8648',
+    schedule: 'Lunes a Viernes de 9:00 a.m a 5:00 p.m Sabado: 9:00 a.m a 1:00 p.m',
   },
   'Puerto Plata': {
     location: 'Av. Manolo Tavárez Justo No. 70',
-    phone: '(809) 669-6677',
+    phone: '(809) 567-8648',
+    schedule: 'Lunes a Viernes de 8:30 a.m a 6:00 p.m Sabado: 9:00 a.m a 1:00 p.m',
   },
   'San Francisco de Macoris': {
-    location: 'Av. Presidente Antonio Guzmán Fdez., Km 3, Centro de la Ciudad',
-    phone: '(809) 294-1221',
+    location: 'Av. Frank Grullón Esq. Villa Olímpica #9',
+    phone: '(809) 567-8648',
+    schedule: 'Lunes a Viernes de 8:30 a.m a 5:30 p.m Sabado: 9:00 a.m a 1:00 p.m',
   },
-  'San Pedro de Macoris': {
-    location: 'Plaza Las Nietas, Calle General Cabral #58',
-    phone: '(809) 669-9197',
+  'La Vega': {
+    location: 'Av. Pedro A. Rivera #67, Km 1½',
+    phone: '(809) 567-8648',
+    schedule: 'Lunes a Viernes de 8:30 a.m a 5:30 p.m Sabado: 9:00 a.m a 12:00 p.m',
+  },
+  'Alameda': {
+    location: 'Prol. Av. 27 de Febrero 1055, Santo Domingo',
+    phone: '(809) 567-8648',
+    schedule: 'Lunes a Viernes de 8:30 a.m a 5:30 p.m Sabado: 9:00 a.m a 1:00 p.m',
   },
 };
