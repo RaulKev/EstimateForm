@@ -9,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { RentCarSelection } from './RentCarSelection';
 
 type Plan = {
   id: ReplacementsCar;
@@ -40,6 +41,8 @@ type ReplaceCarProps = {
   form: UseFormReturn<EstimateFormData>;
 };
 export const ReplaceCar = ({ form }: ReplaceCarProps) => {
+  const replacementValue = form.watch('car.terms.replacementCar');
+
   return (
     <>
       <div className="space-y-6 animate-in fade-in-50 duration-500">
@@ -77,6 +80,9 @@ export const ReplaceCar = ({ form }: ReplaceCarProps) => {
             );
           }}
         />
+        {replacementValue === ReplacementsCar.RENT_A_CAR && (
+          <RentCarSelection />
+        )}
       </div>
     </>
   );
