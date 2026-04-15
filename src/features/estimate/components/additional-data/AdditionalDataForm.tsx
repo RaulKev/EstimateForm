@@ -21,7 +21,6 @@ import { OcuppationInput } from './OcuppationSelect';
 import { getOccupations } from '../../services/ocupation.service';
 import { Switch } from '@/components/ui/switch';
 import { PoliticalExposeData } from './PoliticalExposeData';
-import type { InsurancesType } from '@/mocks/summary.mock';
 import { CustomSelect } from '@/shared/CustomSelected';
 import { sectors } from '@/mocks/directions.mock';
 

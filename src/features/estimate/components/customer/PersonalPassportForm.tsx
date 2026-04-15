@@ -10,10 +10,10 @@ import {
 } from '@/components/ui/select';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { Gender, MaritalStatus } from '../../type/types';
-import type { WithCustomer } from '@/shared/types/form-types';
+import type { EstimateFormData } from '../../config/EstimeFormConfig';
 
 type PersonalPassportFormProps = {
-  form: UseFormReturn<WithCustomer>;
+  form: UseFormReturn<EstimateFormData>;
 };
 
 export const PersonalPassportForm =({

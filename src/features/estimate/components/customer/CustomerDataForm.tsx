@@ -10,11 +10,9 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { MaskedInput } from './MaskedInput';
-import { fetchPersonDataByCedula } from '../../services/document.service';
-import { CheckCircle2, Loader2, XCircle } from 'lucide-react';
-import type { WithCustomer } from '@/shared/types/form-types';
+import type { EstimateFormData } from '../../config/EstimeFormConfig';
 
 interface CustomDataFormProps {
   form: UseFormReturn<EstimateFormData>;

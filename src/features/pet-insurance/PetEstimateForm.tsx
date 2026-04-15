@@ -18,7 +18,7 @@ import {
   petSchemaInitialValues,
   type PetEstimateFormDataType,
 } from './schemas/petInsuranceSchema';
-import type { WithCustomer } from '@/shared/types/form-types';
+import type { EstimateFormData } from '../estimate/config/EstimeFormConfig';
 
 interface PetEstimateProps {
   onSuccess: (data: InsurancesData) => void;
@@ -78,7 +78,7 @@ export const PetEstimateForm = ({ onSuccess, storeToken }: PetEstimateProps) => 
               <h4 className=" font-bold text-kover-widget-primary mb-6">
                 Información de contacto
               </h4>
-              <CustomerDataForm form={form as unknown as UseFormReturn<WithCustomer>} />
+              <CustomerDataForm form={form as unknown as UseFormReturn<EstimateFormData>} />
             </div>
             <Separator />
             <div className="space-y-4 animate-in fade-in-50 duration-500">

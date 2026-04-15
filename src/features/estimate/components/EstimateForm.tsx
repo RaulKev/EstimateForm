@@ -25,7 +25,6 @@ import { CustomTooltip } from '@/shared/CustomTooltip';
 import { LawInsuranceModal } from './law-insurance/LawInsuranceModal';
 import { AssistantModal } from './Assistant/AssistantModal';
 import { InsurancesType } from '@/mocks/summary.mock';
-import type { WithCustomer } from '@/shared/types/form-types';
 
 interface EstimateFormProps {
   onSuccess: (data: InsurancesData) => void;
@@ -117,7 +116,7 @@ export const EstimateForm = ({
               <h4 className=" font-bold text-kover-widget-primary mb-6">
                 Información de contacto
               </h4>
-              <CustomerDataForm form={form as unknown as UseFormReturn<WithCustomer>} />
+              <CustomerDataForm form={form as unknown as UseFormReturn<EstimateFormData>} />
             </div>
             <Separator />
             <div className="space-y-4 animate-in fade-in-50 duration-500">
