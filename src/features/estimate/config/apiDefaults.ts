@@ -21,7 +21,7 @@ export const API_DEFAULTS = {
         color: 'BLANCO',
         displacement: 4,
         doors: 4,
-        chassis: '123123',
+        chassis: '12345678901234567',
         engine: '25874',
     },
     paymentDefaults: {

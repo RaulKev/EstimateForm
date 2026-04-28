@@ -1,4 +1,4 @@
-import { Modal } from '@/shared/Modal';
+import { Modal } from '@/shared/components/Modal';
 import type { Dispatch } from 'react';
 import { Assistantinfo } from './AssistantInfo';
 type AssistantModalProps = {

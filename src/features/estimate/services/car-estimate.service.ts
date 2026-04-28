@@ -5,8 +5,8 @@ import {
   ReplacementsCar,
 } from '../type/types';
 import {
-    type Insurances,
-    type InsurancesData,
+  type Insurances,
+  type InsurancesData,
 } from '@/features/estimate/type/insurance.types';
 import type { EstimateFormData } from '../config/EstimeFormConfig';
 import { API_DEFAULTS } from '../config/apiDefaults';
@@ -76,7 +76,7 @@ export async function generateQuota(
         meetsRequirements: data.car.meetsRequirements,
         value: data.car.worth,
         isNew: data.car.isNew,
-        gasType: data.car.gasType ,
+        gasType: data.car.gasType,
         installationType: data.car.installationType,
         // Datos que se pedirán después
         plate: API_DEFAULTS.vehicleDefaults.plate,
@@ -93,9 +93,11 @@ export async function generateQuota(
           REPLACEMENT_CAR_LABEL[data.car.terms.replacementCar as ReplacementsCar],
         paymentFraction: API_DEFAULTS.paymentDefaults.paymentFraction,
         paymentMethod: API_DEFAULTS.paymentDefaults.paymentMethod,
+        zeroDeductible: data.car.terms.zeroDeductible,
       },
+      ...(data.addons && data.addons.length > 0 && { addons: data.addons }),
     };
-    console.log('requestData', requestData)
+    console.log('requestData', requestData);
     const result = await httpClient.post<InsurancesData>('/insurances', requestData, {
       headers: {
         'Content-Type': 'application/json',
@@ -116,7 +118,7 @@ export async function generateQuota(
         'Tu cotización está siendo procesada. Te notificaremos por correo electronico.'
       );
     }
-    
+
     return result;
   } catch (error) {
     console.error('Error generating insurance:', error);

@@ -1,17 +1,19 @@
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Controller, type UseFormReturn } from 'react-hook-form';
-import { CustomSelect } from '@/shared/CustomSelected';
-import { petBreeds } from '@/mocks/pet.mock';
+import { CustomSelect } from '@/shared/components/CustomSelected';
 import { Checkbox } from '@/components/ui/checkbox';
-import { CustomTooltip } from '@/shared/CustomTooltip';
+import { CustomTooltip } from '@/shared/components/CustomTooltip';
 import type { PetEstimateFormDataType } from '../schemas/petInsuranceSchema';
+import { usePets } from '../hook/usePets';
 
 interface PetFormProps {
   form: UseFormReturn<PetEstimateFormDataType>;
 }
 
 export const PetDataForm = ({ form }: PetFormProps) => {
+  const { pets, isLoading, isError } = usePets();
+  console.log('data', pets);
   const actualYear = new Date().getFullYear();
   const years = Array.from({ length: 9 }, (_, i) => actualYear - i);
   const petAge = Array.from({ length: 9 }, (_, i) => i);
@@ -83,8 +85,9 @@ export const PetDataForm = ({ form }: PetFormProps) => {
               <FieldLabel>¿Cuál es su raza?</FieldLabel>
               <CustomSelect
                 value={field.value}
-                options={petBreeds}
+                options={pets}
                 onValueChange={(value) => field.onChange(Number(value))}
+                disabled={isLoading}
               ></CustomSelect>
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>

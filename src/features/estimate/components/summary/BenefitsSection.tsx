@@ -1,16 +1,33 @@
 import { CheckCircle2 } from 'lucide-react';
-import { CustomTooltip } from '../../../../shared/CustomTooltip';
+import { CustomTooltip } from '../../../../shared/components/CustomTooltip';
 import type { InsurancesData } from '@/features/estimate/type/insurance.types';
 import { driveInsuranceBenefits, InsurancesType } from '@/mocks/summary.mock';
+import { useRentACar } from '../../hook/useRentACar';
 
 interface BenefitsSectionProps {
+  insurancesId: string;
   typeInsurance: string;
   terms: InsurancesData['terms'];
 }
 
-export const BenefitsSection = ({ terms, typeInsurance }: BenefitsSectionProps) => {
+export const BenefitsSection = ({
+  terms,
+  typeInsurance,
+  insurancesId,
+}: BenefitsSectionProps) => {
   const benefits =
     typeInsurance === InsurancesType.DRIVE_INSURANCE ? driveInsuranceBenefits : null;
+
+  const { data: rentCarOptions } = useRentACar(
+    insurancesId!,
+    terms.substituteAuto === 'Rent-a-Car'
+  );
+  const selectedOption = rentCarOptions?.find(
+    (opt) =>
+      opt.codCategoria === terms.rentCarOption?.codCategoria &&
+      opt.codDias === terms.rentCarOption?.codDias
+  );
+  const rentCarOption = selectedOption ? ` ${selectedOption.categoria} por hasta ${selectedOption.dias} días en el año.` : ' Cargando detalles...';
   return (
     <div>
       <div className="grid md:grid-cols-2 gap-6">
@@ -88,7 +105,9 @@ export const BenefitsSection = ({ terms, typeInsurance }: BenefitsSectionProps) 
                   <CustomTooltip message="Aplica en siniestros cuyo costos de reparación superen el monto deducible." />
                 </div>
                 <p className="ml-4 text-sm text-gray-600 pl-2">
-                  {terms.substituteAuto === 'No' ? '- No Incluido' : terms.substituteAuto}: Camioneta por hasta 30 días en el año.
+                  {terms.substituteAuto === 'No' ? '- No Incluido' : terms.substituteAuto}
+                  :
+                  {rentCarOption}
                 </p>
               </div>
             </div>

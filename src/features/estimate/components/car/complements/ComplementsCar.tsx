@@ -5,7 +5,7 @@ interface ComplementsCarProps {
   setSelected: (value: boolean) => void;
   selected: boolean;
   complements: AddedComplement[];
-  setComplements: React.Dispatch<React.SetStateAction<AddedComplement[]>>;
+  setComplements: (complements: AddedComplement[]) => void
 }
 
 export function ComplementsCar({

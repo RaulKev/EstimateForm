@@ -1,7 +1,7 @@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-import { CustomTooltip } from '@/shared/CustomTooltip';
+import { CustomTooltip } from '@/shared/components/CustomTooltip';
 import { CheckCircle2, Coins } from 'lucide-react';
 import type { InsurancesData } from '../estimate/type/insurance.types';
 import { Button } from '@/components/ui/button';

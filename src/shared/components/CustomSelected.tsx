@@ -13,7 +13,7 @@ export interface SelectOption {
 }
 
 interface CustomSelectProps {
-  options: SelectOption[]; // Recibe un array estándar
+  options: SelectOption[] | undefined; // Recibe un array estándar
   value?: string | number; // Acepta string o number
   onValueChange: (value: string) => void;
   placeholder?: string;
@@ -47,7 +47,7 @@ export function CustomSelect({
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
-        {options.map((option, index) => (
+        {options?.map((option, index) => (
           <SelectItem key={index} value={option.value}>
             {option.label}
           </SelectItem>

@@ -10,7 +10,7 @@ import { FieldGroup } from '@/components/ui/field';
 import { useEffect, useState } from 'react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { XCircle } from 'lucide-react';
-import LoadingOverlay from '@/shared/LoadingOverlay';
+import LoadingOverlay from '@/shared/components/LoadingOverlay';
 import { InsurancesType } from '@/mocks/summary.mock';
 import { PolicyData } from './PoliticalData';
 import { SmartDeviceField } from './SmartDeviceField';
@@ -60,6 +60,7 @@ export const AdditionalDataFormWrapper = ({
   const handleSubmit = async (data: MixedAdditionalDataFormData) => {
     try {
       setAlertMessage(null);
+      // const savedTerms = insuranceData.terms
       const completeData = {
         ...data,
         ...(paymentFraction && { terms: { paymentFraction } }),

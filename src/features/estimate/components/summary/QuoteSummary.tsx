@@ -35,7 +35,11 @@ import { PetInsuranceBenefits } from '@/features/pet-insurance/components/PetIns
 
 interface QuoteSummaryProps {
   insuranceData: InsurancesData;
-  handlePayment: (insuranceId: InsurancesData, handleStep: (step: FlowStep) => void, insuranceType: InsurancesType) => Promise<void>;
+  handlePayment: (
+    insuranceId: InsurancesData,
+    handleStep: (step: FlowStep) => void,
+    insuranceType: InsurancesType
+  ) => Promise<void>;
   handleStep: (step: FlowStep) => void;
   isCheckoutOpen: boolean;
   paymentErrorMessage: string;
@@ -79,7 +83,10 @@ export function QuoteSummary({
               </div>
             </AccordionTrigger>
             <AccordionContent className="px-6 pb-6 pt-2">
-              <DetailInsuranceSummary insuranceType={insuranceType} insuranceData={insuranceData} />
+              <DetailInsuranceSummary
+                insuranceType={insuranceType}
+                insuranceData={insuranceData}
+              />
             </AccordionContent>
           </AccordionItem>
 
@@ -178,17 +185,21 @@ export function QuoteSummary({
               <div className="flex items-center gap-3">
                 <CarIcon className="h-5 w-5 text-kover-widget-primary" />
                 <span className="font-semibold text-lg">
-                  {
-                    [InsurancesType.AUTO_INSURANCE, InsurancesType.DRIVE_INSURANCE].includes(insuranceType)
-                      ? 'Tu Vehículo'
-                      : 'Tu Mascota'
-                  }
+                  {[
+                    InsurancesType.AUTO_INSURANCE,
+                    InsurancesType.DRIVE_INSURANCE,
+                  ].includes(insuranceType)
+                    ? 'Tu Vehículo'
+                    : 'Tu Mascota'}
                 </span>
               </div>
             </AccordionTrigger>
             <AccordionContent className="px-6 pb-6 pt-2">
               <div className="grid gap-4 md:grid-cols-2">
-                <ProductInsuredDetailSummary insuranceType={insuranceType} insuranceData={insuranceData} />
+                <ProductInsuredDetailSummary
+                  insuranceType={insuranceType}
+                  insuranceData={insuranceData}
+                />
               </div>
             </AccordionContent>
           </AccordionItem>
@@ -201,14 +212,15 @@ export function QuoteSummary({
               </div>
             </AccordionTrigger>
             <AccordionContent className="px-6 pb-6 pt-2">
-              {
-                insuranceType === InsurancesType.PET_INSURANCE ?
-                <PetInsuranceBenefits petPlan={petPlan} /> :
+              {insuranceType === InsurancesType.PET_INSURANCE ? (
+                <PetInsuranceBenefits petPlan={petPlan} />
+              ) : (
                 <BenefitsSection
+                  insurancesId={insuranceData.id}
                   terms={insuranceData.terms}
                   typeInsurance={insuranceType}
-                ></BenefitsSection>
-              }
+                />
+              )}
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-5">
@@ -221,11 +233,11 @@ export function QuoteSummary({
               </div>
             </AccordionTrigger>
             <AccordionContent className="px-6 pb-6 pt-2">
-              {
-                insuranceType === InsurancesType.PET_INSURANCE ?
-                <PetInsuranceExclusions /> :
+              {insuranceType === InsurancesType.PET_INSURANCE ? (
+                <PetInsuranceExclusions />
+              ) : (
                 <ExclusionsSection typeInsurance={insuranceType}></ExclusionsSection>
-              }
+              )}
             </AccordionContent>
           </AccordionItem>
         </Accordion>
@@ -234,7 +246,7 @@ export function QuoteSummary({
       <div className="m-5">
         <div className="flex items-center justify-center gap-2">
           <Checkbox id="terms" onCheckedChange={(e) => setAcceptedTerms(e)}></Checkbox>
-          <Label htmlFor="terms" className='cursor-pointer'>
+          <Label htmlFor="terms" className="cursor-pointer">
             He leído y acepto los
             <a
               target="_blank"

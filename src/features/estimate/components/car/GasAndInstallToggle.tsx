@@ -2,7 +2,7 @@ import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { Controller, type UseFormReturn } from 'react-hook-form';
 import type { EstimateFormData } from '../../config/EstimeFormConfig';
 import { Gas, InstallatationType } from '../../type/types';
-import { CustomSelect } from '@/shared/CustomSelected';
+import { CustomSelect } from '@/shared/components/CustomSelected';
 interface CarFormProps {
   form: UseFormReturn<EstimateFormData>;
   gasEnabled: boolean;

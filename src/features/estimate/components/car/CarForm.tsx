@@ -1,6 +1,6 @@
 import { SelectCarYear } from './SelectType';
 import { Field, FieldDescription, FieldError, FieldLabel } from '@/components/ui/field';
-import { useEffect, useState, type ChangeEvent } from 'react';
+import { useState, type ChangeEvent } from 'react';
 import {
   FuelsType,
   Gas,
@@ -17,9 +17,9 @@ import { SelectBrandCar } from './SearchBrandCar';
 import { Checkbox } from '@/components/ui/checkbox';
 import { formatNumber } from '@/utils';
 
-import { CustomSelect } from '@/shared/CustomSelected';
+import { CustomSelect } from '@/shared/components/CustomSelected';
 import { RequerimentsAdaptedInstallationType } from './RequirementAdaptedInstallationType';
-import { CustomTooltip } from '@/shared/CustomTooltip';
+import { CustomTooltip } from '@/shared/components/CustomTooltip';
 import { ComplementsCar } from './complements/ComplementsCar';
 import {
   ComplementsDetailsCar,
@@ -75,20 +75,26 @@ export function CarForm({ form }: CarFormProps) {
     onChange(cleanValue === '' ? '' : Number(cleanValue));
   };
   const isHasWorthValue = currentWorth >= MIN_WORTH;
-  useEffect(() => {
-    const totalComplements = complements.reduce((acc, c) => acc + c.value, 0);
-    const MAX_LIMIT = 7_000_000;
-    if (currentWorth + totalComplements > MAX_LIMIT) {
-      form.setError('car.worth', {
-        type: 'manual',
-        message: `El valor del vehículo y aditamentos supera el límite de RD$ ${MAX_LIMIT.toLocaleString('es-DO')}`,
-      });
-    } else {
-      if (form.formState.errors.car?.worth?.type === 'manual') {
-        form.clearErrors('car.worth');
-      }
-    }
-  }, [complements, currentWorth, form]);
+
+  const handleUpdateAddons = (complements: AddedComplement[]) => {
+    setComplements(complements);
+    form.setValue('addons', complements, { shouldValidate: true });
+  };
+
+  // useEffect(() => {
+  //   const totalComplements = complements.reduce((acc, c) => acc + c.monto, 0);
+  //   const MAX_LIMIT = 7_000_000;
+  //   if (currentWorth + totalComplements > MAX_LIMIT) {
+  //     form.setError('car.worth', {
+  //       type: 'manual',
+  //       message: `El valor del vehículo y aditamentos supera el límite de RD$ ${MAX_LIMIT.toLocaleString('es-DO')}`,
+  //     });
+  //   } else {
+  //     if (form.formState.errors.car?.worth?.type === 'manual') {
+  //       form.clearErrors('car.worth');
+  //     }
+  //   }
+  // }, [complements, currentWorth, form]);
 
   return (
     <>
@@ -283,7 +289,7 @@ export function CarForm({ form }: CarFormProps) {
           <>
             <Controller
               control={form.control}
-              name="car.isZeroDeductible"
+              name="car.terms.zeroDeductible"
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <div className="flex items-center gap-1">
@@ -324,7 +330,7 @@ export function CarForm({ form }: CarFormProps) {
                 complements={complements}
                 setSelected={setSelected}
                 selected={selected}
-                setComplements={setComplements}
+                setComplements={handleUpdateAddons}
               />
 
               {complements.length > 0 && !selected && (
@@ -332,7 +338,7 @@ export function CarForm({ form }: CarFormProps) {
                   <p className="text-sm font-medium">
                     {complements.length} aditamento(s) agregado(s) - Total: RD$
                     {complements
-                      .reduce((sum, c) => sum + c.value, 0)
+                      .reduce((sum, c) => sum + c.monto, 0)
                       .toLocaleString('es-DO')}
                   </p>
                   <button
@@ -350,7 +356,7 @@ export function CarForm({ form }: CarFormProps) {
               {selected && (
                 <ComplementsDetailsCar
                   complements={complements}
-                  setComplements={setComplements}
+                  setComplements={handleUpdateAddons}
                   onClose={() => setSelected(false)}
                 />
               )}

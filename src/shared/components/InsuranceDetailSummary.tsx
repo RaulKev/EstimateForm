@@ -21,6 +21,11 @@ export const DetailInsuranceSummary = ({
   const kmAmount = insuranceData.quotationResponse.data.terminos?.primaKm || 0;
   const insuredAmount =
     insuranceData.quotationResponse.data?.vehiculo?.sumaAsegurada || 0;
+  const addons = insuranceData.quotationResponse.data.aditamentos.map((a) => ({
+    name: a.nombreAditamento,
+    price: a.montoAditamento,
+  }));
+    const zeroDeductible = insuranceData.terms.zeroDeductible;
 
   switch (insuranceType) {
     case InsurancesType.AUTO_INSURANCE:
@@ -61,13 +66,23 @@ export const DetailInsuranceSummary = ({
           </div>
           <div className="space-y-1">
             <p className="text-sm font-medium text-muted-foreground">Aditamentos</p>
-            <p className="text-base font-semibold text-foreground">
-              Aros / goma: RD$ 20,000
-            </p>
+            <p className="text-base font-semibold text-foreground"></p>
+            {addons.length > 0 ? (
+              addons.map((addon) => (
+                <div key={addon.name} className="flex items-center gap-2">
+                  <p className="text-base text-foreground">{addon.name}</p>
+                  <p className="text-base font-semibold text-foreground">
+                    {formatCurrency(addon.price)}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p className="text-base text-foreground">No hay aditamentos</p>
+            )}
           </div>
           <div className="space-y-1">
             <p className="text-sm font-medium text-muted-foreground">¿Cero deducible?</p>
-            <p className="text-base font-semibold text-foreground">Si, Cero 0%</p>
+            <p className="text-base font-semibold text-foreground">{zeroDeductible ? 'Sí' : 'No'}</p>
           </div>
         </div>
       );

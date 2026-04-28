@@ -10,17 +10,17 @@ export enum Kinship {
   SISTER = 'Hermana',
   SOON = 'Hijo / Hija',
   MOTHER = 'Mama',
-  FATHER = 'Papa'
+  FATHER = 'Papa',
 }
 
 export const enum Documents {
   ID = 1,
   PASSPORT = 2,
 }
-export const enum MaritalStatus{
+export const enum MaritalStatus {
   SOLTERO = 'S',
   CASADO = 'C',
-  VIUDO = 'V'
+  VIUDO = 'V',
 }
 export const enum Gender {
   MALE = 1,
@@ -59,6 +59,7 @@ export interface EstimateFormData {
   car?: Car;
   pet?: PetInsuranceRequest;
   terms?: TermsInsuranceRequest;
+  addons?: AddonPayload[];
 }
 
 export interface PetInsuranceRequest {
@@ -84,7 +85,6 @@ export interface Car {
   installationType?: InstallatationType;
   isPersonalUse?: boolean;
   worth: number;
-  isZeroDeductible?: boolean;
   terms: Term;
 }
 
@@ -92,6 +92,11 @@ interface Term {
   insuranceType: CarInsurances;
   vehicleAssistance: boolean;
   replacementCar: ReplacementsCar;
+  rentCarOption?: {
+    codCategoria: string;
+    codDias: string;
+  };
+  zeroDeductible?: boolean;
 }
 
 export interface Customer {
@@ -109,6 +114,37 @@ export interface Customer {
   requiresFiscalReceipt?: boolean;
   maritalStatus?: MaritalStatus;
 }
+export interface RentCar {
+  codCategoria: string;
+  categoria: string;
+  codDias: string;
+  descDias: string;
+  dias: number;
+  prima: number;
+}
+export interface RentCarResponse {
+  success: boolean;
+  data: RentCar[];
+}
+
+export interface AditamentosResponse {
+  success: boolean;
+  data: Aditamentos[];
+}
+export interface Aditamentos {
+  codAditamento: number;
+  nombreAditamento: string;
+}
+export interface PetResponse {
+  success: boolean;
+  data: Pet[];
+}
+export interface Pet {
+  id: number;
+  descripcion: string;
+  estaActivo: string;
+}
+
 export interface Address {
   street?: string;
   province?: string;
@@ -117,15 +153,17 @@ export interface Address {
 }
 export interface Province {
   id: number;
-  nombre: string;
+  name: string;
 }
 
 export interface Municipality {
   id: number;
-  provinciaId: number;
-  nombre: string;
+  name: string;
 }
-
+export interface Sector {
+  id: number;
+  name: string;
+}
 export interface Occupations {
   idOccupation: number;
   occupation: string;
@@ -156,9 +194,21 @@ export const NOT_ALLOWED_CORPORATE_EMAIL_DOMAINS = [
 ];
 
 export type FlowStep =
-    | 'estimate'
-    | 'emit'
-    | 'additional-data'
-    | 'confirmation'
-    | 'quote-summary'
-    | 'upload-file';
+  | 'estimate'
+  | 'emit'
+  | 'additional-data'
+  | 'confirmation'
+  | 'quote-summary'
+  | 'upload-file';
+
+export interface AditamentoCatalogItem {
+  codigo: string;
+  descripcion?: string;
+  montoMinimo?: number;
+  montoMaximo?: number;
+}
+export interface AddonPayload {
+  codigo: string;
+  monto: number;
+  comentario?: string;
+}

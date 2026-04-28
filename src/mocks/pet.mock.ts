@@ -1,12 +1,5 @@
 import type { PetPlans } from "@/features/pet-insurance/types/insurance.type";
 
-export const petBreeds = [
-  { label: 'Airedale Terrier', value: '1' },
-  { label: 'Akita', value: '2' },
-  { label: 'Akita Americano', value: '3' },
-  { label: 'Alaskan Husky', value: '4' },
-  { label: 'Alaskan Malamute', value: '5' },
-];
 
 export const petPlans = [
   { label: 'Ultra can', value: 'UltraCan' },

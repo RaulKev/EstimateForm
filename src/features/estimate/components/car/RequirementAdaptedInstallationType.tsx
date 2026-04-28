@@ -4,7 +4,7 @@ import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { Info } from 'lucide-react';
 import { RequirimentsAdaptedModal } from './RequerimentsAdaptedModal';
 import { useState } from 'react';
-import { CustomSelect } from '@/shared/CustomSelected';
+import { CustomSelect } from '@/shared/components/CustomSelected';
 
 interface RequerimentsAdaptedInstallationTypeProps {
   form: UseFormReturn<EstimateFormData>;

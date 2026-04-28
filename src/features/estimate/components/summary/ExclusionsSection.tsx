@@ -1,7 +1,7 @@
 import { MinusCircle } from 'lucide-react';
-import { CustomTooltip } from '../../../../shared/CustomTooltip';
+import { CustomTooltip } from '../../../../shared/components/CustomTooltip';
 import { insuranceConsiderations, InsurancesType } from '@/mocks/summary.mock';
-import { InsuranceExlusions } from '@/shared/InsuranceExlusions';
+import { InsuranceExlusions } from '@/shared/components/InsuranceExlusions';
 
 export const ExclusionsSection = ({
   typeInsurance,

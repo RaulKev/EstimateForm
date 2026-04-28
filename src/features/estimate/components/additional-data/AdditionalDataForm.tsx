@@ -14,69 +14,43 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Controller, type UseFormReturn } from 'react-hook-form';
-import { useEffect, useState, useMemo } from 'react';
-import type { Municipality, Occupations, Province } from '../../type/types';
-import { getMunicipalities, getProvinces } from '../../services/direction.service';
+import { useEffect, useState } from 'react';
+import type { Occupations } from '../../type/types';
 import { OcuppationInput } from './OcuppationSelect';
 import { getOccupations } from '../../services/ocupation.service';
 import { Switch } from '@/components/ui/switch';
 import { PoliticalExposeData } from './PoliticalExposeData';
-import { CustomSelect } from '@/shared/CustomSelected';
-import { sectors } from '@/mocks/directions.mock';
+import { CustomSelect } from '@/shared/components/CustomSelected';
 
 import type { MixedAdditionalDataFormData } from '../../schemas/additionalDataSchema';
+import { useMunicipio, useProvince, useSector } from '../../hook/useAddress';
 interface AddressFormProps {
   form: UseFormReturn<MixedAdditionalDataFormData>;
 }
 
 export const AddressForm = ({ form }: AddressFormProps) => {
-  const [provinces, setProvinces] = useState<Province[]>([]);
-  const [municipalities, setMunicipalities] = useState<Municipality[]>([]);
-  const [occupation, setOccupation] = useState<Occupations[]>([]);
-
+  // Observadores del estado del formulario
   const selectedProvince = form.watch('customer.address.province');
   const selectedMunicipality = form.watch('customer.address.municipality');
-  const street = form.watch('customer.address.street');
-  const isReferencePoint = form.watch('customer.address.referencePoint');
-  const isStreetValid = useMemo(() => street && street.length >= 3, [street]);
   const politicallyExposed = form.watch('customer.dueDiligence.politicallyExposed');
 
-  useEffect(() => {
-    const provincesList = getProvinces();
-    setProvinces(provincesList);
-  }, []);
+  const { provinces } = useProvince();
+  const { municipalities, isLoading: loadingMunis } = useMunicipio(selectedProvince);
+  const { sector, isLoading, isError } = useSector(
+    selectedProvince ?? '',
+    selectedMunicipality ?? ''
+  );
+
+  const [occupation, setOccupation] = useState<Occupations[]>([]);
+
+  const hasSectors = sector && sector.length > 0;
+
+  const showInput = !isLoading && selectedMunicipality && (!hasSectors || isError);
+
   useEffect(() => {
     const occupations = getOccupations();
     setOccupation(occupations);
   }, []);
-
-  // Cargar municipios cuando cambia la provincia
-  useEffect(() => {
-    if (selectedProvince) {
-      // Buscar el ID de la provincia basado en el nombre
-      const province = provinces.find((p) => p.nombre === selectedProvince);
-      if (province) {
-        const municipalitiesList = getMunicipalities(province.id);
-        setMunicipalities(municipalitiesList);
-      } else {
-        setMunicipalities([]);
-      }
-    } else {
-      setMunicipalities([]);
-    }
-  }, [selectedProvince, provinces]);
-
-  useEffect(() => {
-    if (
-      !isReferencePoint &&
-      !isStreetValid &&
-      (selectedProvince || selectedMunicipality)
-    ) {
-      form.setValue('customer.address.municipality', '', { shouldValidate: false });
-      form.setValue('customer.address.sector', '', { shouldValidate: false });
-      form.clearErrors(['customer.address.municipality', 'customer.address.sector']);
-    }
-  }, [isReferencePoint, isStreetValid, selectedProvince, selectedMunicipality, form]);
 
   return (
     <div className="space-y-8">
@@ -239,13 +213,18 @@ export const AddressForm = ({ form }: AddressFormProps) => {
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
                 <FieldLabel htmlFor="address.province">Provincia</FieldLabel>
+                {/* <CustomSelect /> */}
                 <Select
                   name={field.name}
                   value={field.value || ''}
                   onValueChange={(value) => {
                     field.onChange(value);
                     form.setValue('customer.address.municipality', '');
-                    form.clearErrors(['customer.address.municipality']);
+                    form.setValue('customer.address.sector', '');
+                    form.clearErrors([
+                      'customer.address.municipality',
+                      'customer.address.sector',
+                    ]);
                   }}
                 >
                   <SelectTrigger
@@ -258,8 +237,8 @@ export const AddressForm = ({ form }: AddressFormProps) => {
                   </SelectTrigger>
                   <SelectContent className="bg-popover z-50 h-52">
                     {provinces.map((prov) => (
-                      <SelectItem key={prov.id} value={prov.nombre}>
-                        {prov.nombre}
+                      <SelectItem key={prov.id} value={prov.name}>
+                        {prov.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -280,8 +259,10 @@ export const AddressForm = ({ form }: AddressFormProps) => {
                   value={field.value || ''}
                   onValueChange={(value) => {
                     field.onChange(value);
+                    form.setValue('customer.address.sector', '');
+                    form.clearErrors(['customer.address.sector']);
                   }}
-                  disabled={!selectedProvince}
+                  disabled={!selectedProvince || loadingMunis}
                 >
                   <SelectTrigger
                     id="address.municipality"
@@ -292,9 +273,9 @@ export const AddressForm = ({ form }: AddressFormProps) => {
                     <SelectValue placeholder="Selecciona un municipio" />
                   </SelectTrigger>
                   <SelectContent className="bg-popover z-50">
-                    {municipalities.map((muni) => (
-                      <SelectItem key={muni.id} value={muni.nombre}>
-                        {muni.nombre}
+                    {municipalities?.map((muni) => (
+                      <SelectItem key={muni.id} value={muni.name}>
+                        {muni.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -311,27 +292,29 @@ export const AddressForm = ({ form }: AddressFormProps) => {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="customer.address.sector">Sector</FieldLabel>
-                  <CustomSelect
-                    options={sectors.map((sector) => ({
-                      value: sector.nombre,
-                      label: sector.nombre,
-                    }))}
-                    value={field.value || ''}
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                    }}
-                    disabled={!selectedMunicipality}
-                    placeholder='Selecciona un sector'
-                  />
-                  {/* <Input
-                    type="text"
-                    id="customer.address.sector"
-                    placeholder="Ej.: Centro, Zona Colonial, etc."
-                    className="bg-[#F8FAFC]"
-                    {...field}
-                    aria-invalid={fieldState.invalid}
-                    disabled={!selectedMunicipality}
-                  /> */}
+                  {showInput ? (
+                    <Input
+                      type="text"
+                      id="customer.address.sector"
+                      placeholder="Escribe el sector"
+                      className="bg-[#F8FAFC]"
+                      {...field}
+                      aria-invalid={fieldState.invalid}
+                    />
+                  ) : (
+                    <CustomSelect
+                      options={sector?.map((s) => ({
+                        value: s.name,
+                        label: s.name,
+                      }))}
+                      value={field.value || ''}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                      }}
+                      disabled={!selectedMunicipality || isLoading}
+                      placeholder="Selecciona un sector"
+                    />
+                  )}
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}

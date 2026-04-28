@@ -1,4 +1,4 @@
-import { CustomTooltip } from '@/shared/CustomTooltip';
+import { CustomTooltip } from '@/shared/components/CustomTooltip';
 import { XCircle, FileText } from 'lucide-react';
 
 interface ExclusionItem {

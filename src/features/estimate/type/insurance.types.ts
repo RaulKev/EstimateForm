@@ -1,5 +1,5 @@
-import type { PetPlans } from "@/features/pet-insurance/types/insurance.type";
-import type { TermsInsuranceRequest } from "./types";
+import type { PetPlans } from '@/features/pet-insurance/types/insurance.type';
+import type { TermsInsuranceRequest } from './types';
 
 export interface Insurances {
   success: boolean;
@@ -14,6 +14,7 @@ export interface InsurancesData {
   customer: DataCustomer;
   vehicle: Vehicle;
   terms: DataTerms;
+  addons: Addons[];
   requestDate: Date;
   quoteDate: Date;
   quotationRequest: QuotationRequest;
@@ -21,6 +22,11 @@ export interface InsurancesData {
   createdAt: Date;
   updatedAt: Date;
   id: string;
+}
+export interface Addons {
+  codigo: string;
+  monto: number;
+  comentario?: string;
 }
 
 export interface DataCustomer {
@@ -173,8 +179,14 @@ export interface QuotationResponseData {
   terminos: Terminos;
   pago: Pago;
   primas: Prima[];
+  aditamentos: Aditamentos[];
 }
-
+interface Aditamentos {
+  codAditamentos: string;
+  nombreAditamento: string;
+  montoAditamento: number;
+  comentario: string;
+}
 interface Mascota {
   nombre: string;
   edad: number;
@@ -282,8 +294,15 @@ export interface DataTerms {
   lawInsurance: string;
   vehicularAssistance: boolean;
   substituteAuto: string;
+  zeroDeductible: boolean;
+  rentCarOption?: RentCarOption;
   premium: number;
   tax: number;
   totalAmount: number;
   _id: string;
+}
+export interface RentCarOption {
+  codCategoria: string;
+  codDias: string;
+  prima: number;
 }

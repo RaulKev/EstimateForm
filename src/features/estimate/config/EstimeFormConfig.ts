@@ -9,6 +9,7 @@ import {
   MaritalStatus,
   NOT_ALLOWED_CORPORATE_EMAIL_DOMAINS,
   ReplacementsCar,
+  type AddonPayload,
   type Car,
   type Customer,
 } from '../type/types';
@@ -85,16 +86,21 @@ export const initialValuesCar: Car = {
   installationType: undefined,
   isPersonalUse: false,
   worth: 0,
-  isZeroDeductible: false,
   terms: {
     insuranceType: CarInsurances.BASE,
     vehicleAssistance: true,
     replacementCar: ReplacementsCar.NONE,
+    rentCarOption: {
+      codCategoria: '',
+      codDias: '',
+    },
+    zeroDeductible: false,
   },
 };
 export const initialValues = {
   customer: initialValuesCustomer,
   car: initialValuesCar,
+  addons: [] as AddonPayload[],
 };
 export const schemaEstimate = yup.object().shape({
   customer: yup.object({
@@ -240,24 +246,72 @@ export const schemaEstimate = yup.object().shape({
       .typeError('Ingresa un monto válido.')
       .min(MIN_WORTH, `El valor mínimo es RD$ ${MIN_WORTH.toLocaleString('es-DO')}`)
       .max(MAX_WORTH, `El valor máximo es RD$ ${MAX_WORTH.toLocaleString('es-DO')}`)
+      .test('worth-with-addons', '', function (value) {
+        const MAX_WORTH_LIMIT = 7_000_000;
+        const rootValue = this.from?.[1]?.value as EstimateFormData;
+        const addons = rootValue?.addons ?? [];
+        const totalAddons = addons?.reduce((acc, addon) => acc + addon.monto, 0) || 0;
+        if (!value) return true;
+        if (value + totalAddons > MAX_WORTH_LIMIT) {
+          return this.createError({
+            message: `El valor del vehículo y aditamentos supera el límite de RD$ ${MAX_WORTH_LIMIT.toLocaleString('es-DO')}`,
+          });
+        }
+        return true;
+      })
       .required('El valor del vehículo es requerido.'),
-    isZeroDeductible: yup.boolean().default(false),
     terms: yup
       .object({
         insuranceType: yup
           .mixed<CarInsurances>()
-          .oneOf([CarInsurances.BASE, CarInsurances.PLUS, CarInsurances.AUTO_EXCESO, CarInsurances.AUTO_EXCESO_PLUS])
+          .oneOf([
+            CarInsurances.BASE,
+            CarInsurances.PLUS,
+            CarInsurances.AUTO_EXCESO,
+            CarInsurances.AUTO_EXCESO_PLUS,
+          ])
           .default(CarInsurances.BASE),
 
         vehicleAssistance: yup.boolean().default(true),
-
         replacementCar: yup
           .mixed<ReplacementsCar>()
           .oneOf([ReplacementsCar.UBER, ReplacementsCar.RENT_A_CAR, ReplacementsCar.NONE])
           .default(ReplacementsCar.NONE),
+        rentCarOption: yup
+          .object({
+            codCategoria: yup.string().default(''),
+            codDias: yup.string().default(''),
+          })
+          .when('replacementCar', {
+            is: ReplacementsCar.RENT_A_CAR,
+            then: (schema) =>
+              schema
+                .shape({
+                  codCategoria: yup.string().required('Selecciona una categoría.'),
+                  codDias: yup.string().required('Selecciona los días.'),
+                })
+                .required('Selecciona una opción de vehículo rentado.'),
+            otherwise: (schema) => schema.optional().nullable(),
+          }),
+        zeroDeductible: yup.boolean().default(false),
       })
       .required(),
   }),
+  addons: yup
+    .array()
+    .of(
+      yup.object().shape({
+        codigo: yup.string().required('El código es requerido'),
+        monto: yup
+          .number()
+          .typeError('El monto debe ser numérico')
+          .required('El monto es requerido')
+          .min(1, 'El monto debe ser mayor a 0'),
+        comentario: yup.string().optional(),
+      })
+    )
+    .optional()
+    .default([]),
 });
 
 export type EstimateFormData = yup.InferType<typeof schemaEstimate>;

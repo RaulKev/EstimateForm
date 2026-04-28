@@ -10,7 +10,7 @@ import type { InsurancesData } from '../estimate/type/insurance.types';
 import { formatPetInsuranceRequest } from './mappers/pet-insurance.mapper';
 import { generatePetQuote } from './services/pet.service';
 import { Separator } from '@/components/ui/separator';
-import LoadingOverlay from '@/shared/LoadingOverlay';
+import LoadingOverlay from '@/shared/components/LoadingOverlay';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { XCircle } from 'lucide-react';
 import {

@@ -10,6 +10,9 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { RentCarSelection } from './RentCarSelection';
+import { useQuery } from '@tanstack/react-query';
+import { getRentACar } from '../services/term.service';
+import { useEffect } from 'react';
 
 type Plan = {
   id: ReplacementsCar;
@@ -39,10 +42,32 @@ const REPLACEMENT_CAR: Plan[] = [
 
 type ReplaceCarProps = {
   form: UseFormReturn<EstimateFormData>;
+  insurancesId: string;
 };
-export const ReplaceCar = ({ form }: ReplaceCarProps) => {
+export const ReplaceCar = ({ form, insurancesId }: ReplaceCarProps) => {
   const replacementValue = form.watch('car.terms.replacementCar');
 
+  const { data: rentCarOptions, isLoading } = useQuery({
+    queryKey: ['rent-a-car', insurancesId],
+    queryFn: () => getRentACar(insurancesId),
+    enabled: !!insurancesId && replacementValue === ReplacementsCar.RENT_A_CAR,
+  });
+  useEffect(() => {
+    if (rentCarOptions && rentCarOptions.length > 0) {
+      const rentCarOption = form.getValues('car.terms.rentCarOption');
+
+      if (!rentCarOption?.codCategoria) {
+        form.setValue(
+          'car.terms.rentCarOption',
+          {
+            codCategoria: rentCarOptions[0].codCategoria,
+            codDias: rentCarOptions[0].codDias,
+          },
+          { shouldValidate: true }
+        );
+      }
+    }
+  }, [rentCarOptions, form]);
   return (
     <>
       <div className="space-y-6 animate-in fade-in-50 duration-500">
@@ -81,7 +106,7 @@ export const ReplaceCar = ({ form }: ReplaceCarProps) => {
           }}
         />
         {replacementValue === ReplacementsCar.RENT_A_CAR && (
-          <RentCarSelection />
+          <RentCarSelection options={rentCarOptions} isLoading={isLoading} form={form} />
         )}
       </div>
     </>

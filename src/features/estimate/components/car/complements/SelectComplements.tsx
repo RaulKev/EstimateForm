@@ -6,14 +6,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { ComplementsCarList } from '@/mocks/car-data.mock';
+import type { Aditamentos } from '@/features/estimate/type/types';
 
 interface SelectComplementsProps {
   value?: string;
   onValueChange?: (value: string) => void;
+  aditamentos: Aditamentos[]; 
 }
 
-export function SelectComplements({ value, onValueChange }: SelectComplementsProps) {
+export function SelectComplements({ value, onValueChange, aditamentos }: SelectComplementsProps) {
   return (
     <Select value={value} onValueChange={onValueChange}>
       <SelectTrigger>
@@ -21,9 +22,9 @@ export function SelectComplements({ value, onValueChange }: SelectComplementsPro
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          {ComplementsCarList.map((item) => (
-            <SelectItem key={item.id} value={item.id.toString()}>
-              {item.name}
+          {aditamentos.map((item) => (
+            <SelectItem key={item.codAditamento} value={item.codAditamento.toString()}>
+              {item.nombreAditamento}
             </SelectItem>
           ))}
         </SelectGroup>
