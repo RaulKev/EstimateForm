@@ -13,13 +13,19 @@ export const usePaymentFlow = () => {
   const [paymentErrorMessage, setPaymentErrorMessage] = useState<string>('');
   const [paymentData, setPayment] = useState<InsurancePaymentStatusResponse | null>(null);
 
-  const handlePayment = async (insuranceData: InsurancesData, handleStep: (step: FlowStep) => void, insuranceType: InsurancesType = InsurancesType.AUTO_INSURANCE) => {
+  const handlePayment = async (
+    insuranceData: InsurancesData,
+    handleStep: (step: FlowStep) => void,
+    insuranceType: InsurancesType = InsurancesType.AUTO_INSURANCE
+  ) => {
     setIsCheckoutOpen(true);
     setPaymentErrorMessage('');
     let paymentUrl: string = '';
     const insuranceId = insuranceData.id;
-    const isAutoInsurance = [InsurancesType.AUTO_INSURANCE, InsurancesType.DRIVE_INSURANCE].includes(insuranceType);
-
+    const isAutoInsurance = [
+      InsurancesType.AUTO_INSURANCE,
+      InsurancesType.DRIVE_INSURANCE,
+    ].includes(insuranceType);
     try {
       const paymentUrlResponse = await getUrlPayment(insuranceId);
       if (!paymentUrlResponse) {
@@ -64,6 +70,15 @@ export const usePaymentFlow = () => {
         return;
       }
 
+      if (popup.closed && payment.isPaid && !payment.policyNumber && !isAutoInsurance) {
+        clearInterval(interval);
+        setIsCheckoutOpen(false);
+        setPaymentErrorMessage(
+          'El seguro no ha sido emitido. Por favor inténtalo nuevamente.'
+        );
+        return;
+      }
+
       if (payment.isPaid && isAutoInsurance) {
         popup.close();
         clearInterval(interval);
@@ -75,6 +90,7 @@ export const usePaymentFlow = () => {
       }
 
       if (payment.isPaid && payment.policyNumber && !isAutoInsurance) {
+        console.log('El seguro ha sido emitido');
         popup.close();
         clearInterval(interval);
         setIsCheckoutOpen(false);
@@ -98,5 +114,5 @@ export const usePaymentFlow = () => {
     paymentData,
     handlePayment,
     handleFinishPaymentFlow,
-  }
+  };
 };

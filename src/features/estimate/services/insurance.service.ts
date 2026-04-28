@@ -1,6 +1,6 @@
-import { httpClient } from '../../../core/httpClient';
-import type { InsurancesData, UpdateInsuranceRequest } from '../type/insurance.types';
+import { httpClient, type KoverResponse } from '../../../core/httpClient';
 import type { Aditamentos } from '../type/types';
+import type { InsurancesData, UpdateInsuranceRequest } from '../type/insurance.types';
 
 interface InsurancePaymentResponse {
   paymentUrl: string;
@@ -49,11 +49,13 @@ export const sendInspectionEmail = async (insuranceId: string): Promise<boolean>
 export const updateInsurance = async (
   insuranceId: string,
   data: Partial<UpdateInsuranceRequest>
-): Promise<InsurancesData> => {
-  const response = await httpClient.put(`/insurances/${insuranceId}`, data, {
-    headers: { 'Content-Type': 'application/json' },
-  });
-  return response.data as InsurancesData;
+): Promise<KoverResponse<InsurancesData>> => {
+  const response = await httpClient.put<InsurancesData>(
+    `/insurances/${insuranceId}`,
+    data,
+    { headers: { 'Content-Type': 'application/json' } }
+  );
+  return response;
 };
 
 export const getAditamentos = async (): Promise<Aditamentos[]> => {

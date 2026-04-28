@@ -5,6 +5,7 @@ import type {
   AdditionalDataFormData,
   MixedAdditionalDataFormData,
 } from '../schemas/additionalDataSchema';
+import { PeriodsFrequency } from '@/shared/types/insurances.types';
 
 export function hasEndorsmentPolicy(
   form: unknown
@@ -26,6 +27,15 @@ export const formatInsuranceUpdateRequest = (
   const smartDevice = hasSmartDevice(data) ? data.smartDevice : null;
   const endorsmentPolicy = hasEndorsmentPolicy(data) ? data.endorsmentPolicy : null;
   const terms = hasTerms(data) ? data.terms : null;
+
+  const getPaymentFraction = (paymentFraction: string) => {
+    switch (paymentFraction) {
+      case PeriodsFrequency.QUARTERLY:
+        return PeriodsFrequency.FOUR_MOUNTHS;
+      default:
+        return paymentFraction;
+    }
+  };
 
   return {
     customer: {
@@ -68,7 +78,9 @@ export const formatInsuranceUpdateRequest = (
     }),
     ...(terms && {
       terms: {
-        ...(terms.paymentFraction && { paymentFraction: terms.paymentFraction }),
+        ...(terms.paymentFraction && {
+          paymentFraction: getPaymentFraction(terms.paymentFraction),
+        }),
       },
     }),
   };

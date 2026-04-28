@@ -1,10 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import type {
-  InsurancesData,
-  UpdateInsuranceRequest,
-} from '@/features/estimate/type/insurance.types';
+import type { InsurancesData } from '@/features/estimate/type/insurance.types';
 import { AddressForm } from './AdditionalDataForm';
 import { FieldGroup } from '@/components/ui/field';
 import { useEffect, useState } from 'react';
@@ -26,7 +23,7 @@ interface AdditionalDataFormWrapperProps {
   insuranceData: InsurancesData;
   insuranceType: InsurancesType;
   onBack: () => void;
-  onSubmit: (data: UpdateInsuranceRequest) => Promise<void>;
+  onSubmit: (data: InsurancesData) => Promise<void>;
   paymentFraction: string | null;
 }
 
@@ -66,13 +63,16 @@ export const AdditionalDataFormWrapper = ({
         ...(paymentFraction && { terms: { paymentFraction } }),
       };
       const updatePayload = formatInsuranceUpdateRequest(completeData);
-      const success = await updateInsurance(insuranceData.id, updatePayload);
+      const { success, data: updateResponse } = await updateInsurance(
+        insuranceData.id,
+        updatePayload
+      );
 
       if (success) {
         reset();
         setAlertMessage(null);
         setTimeout(() => setAlertMessage(null), 5000);
-        onSubmit(updatePayload);
+        onSubmit(updateResponse);
       } else {
         setAlertMessage(
           'No se pudieron guardar los datos. Por favor intenta nuevamente.'

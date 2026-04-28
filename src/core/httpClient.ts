@@ -5,7 +5,7 @@ interface IHttpClient {
   post<T>(url: string, data?: unknown, config?: RequestInit): Promise<KoverResponse<T>>;
 }
 
-interface KoverResponse<T> {
+export interface KoverResponse<T> {
   success: boolean;
   data: T
 }
