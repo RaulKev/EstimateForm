@@ -3,7 +3,7 @@ import { CarForm } from './car/CarForm';
 import { LawInsuranceForm } from './law-insurance/LawInsuranceForm';
 import { AssistantForm } from './Assistant/AssistantForm';
 import { ReplaceCar } from './ReplaceCar';
-import { useForm, type UseFormReturn } from 'react-hook-form';
+import { useForm, useWatch, type UseFormReturn } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   initialValues,
@@ -27,7 +27,7 @@ import { AssistantModal } from './Assistant/AssistantModal';
 import { InsurancesType } from '@/mocks/summary.mock';
 import { updateInsurance } from '../services/insurance.service';
 import { REPLACEMENT_CAR_LABEL, LAW_INSURANCE_LABEL } from '../config/mappers';
-import { ReplacementsCar } from '../type/types';
+import { CarInsurances, ReplacementsCar } from '../type/types';
 
 interface EstimateFormProps {
   onSuccess: (data: InsurancesData) => void;
@@ -53,7 +53,10 @@ export const EstimateForm = ({
     mode: 'onChange',
     reValidateMode: 'onChange',
   });
-
+  const selectedPlan = useWatch({
+    control: form.control,
+    name: 'car.terms.insuranceType',
+  }) as CarInsurances | undefined;
   const {
     formState: { isSubmitting },
   } = form;
@@ -281,14 +284,14 @@ export const EstimateForm = ({
                 )}
 
                 {/* ── Botones step 2 ───────────────── */}
-                <div className="flex gap-4">
+                <div className="flex items-center justify-between gap-4">
                   <Button
                     type="button"
                     onClick={handlePrevStep}
                     variant="outline"
                     className="h-12 px-8 text-lg rounded-md"
                   >
-                    ← ATRÁS
+                    ATRÁS
                   </Button>
                   <Button
                     type="submit"
@@ -302,7 +305,11 @@ export const EstimateForm = ({
           </div>
         </FieldGroup>
       </form>
-      <LawInsuranceModal openLaw={openLaw} setOpenLaw={setOpenLaw} />
+      <LawInsuranceModal
+        openLaw={openLaw}
+        setOpenLaw={setOpenLaw}
+        selectedPlan={selectedPlan}
+      />
       <AssistantModal openAssistant={openAssistant} setOpenAssistant={setOpenAssistant} />
       {/* <form onSubmit={form.handleSubmit(onSubmit, onError)}>
         <FieldGroup>

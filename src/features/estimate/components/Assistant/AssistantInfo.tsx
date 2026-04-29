@@ -7,7 +7,7 @@ export const Assistantinfo = () => {
         Por tan solo
         <br />
         <span className="text-kover-widget-primary font-bold text-lg sm:text-xl md:text-2xl">
-          RD$238/MENSUAL
+          RD$260/MENSUAL
         </span>
       </h4>
 
@@ -34,9 +34,21 @@ export const Assistantinfo = () => {
           <span className="text-kover-widget-primary mr-2 shrink-0">•</span>
           <span>Cerrajería vehicular</span>
         </li>
-        <li className="flex items-start sm:col-span-2">
+        <li className="flex items-start">
           <span className="text-kover-widget-primary mr-2 shrink-0">•</span>
           <span>Envío de combustible</span>
+        </li>
+        <li className="flex items-start ">
+          <span className="text-kover-widget-primary mr-2 shrink-0">•</span>
+          <span>Suministro de energía</span>
+        </li>
+        <li className="flex items-start ">
+          <span className="text-kover-widget-primary mr-2 shrink-0">•</span>
+          <span>Ambulancia</span>
+        </li>
+        <li className="flex items-start">
+          <span className="text-kover-widget-primary mr-2 shrink-0">•</span>
+          <span>Extracción</span>
         </li>
       </ul>
     </div>

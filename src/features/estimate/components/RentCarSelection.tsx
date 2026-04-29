@@ -16,7 +16,7 @@ export const RentCarSelection = ({ options, isLoading, form }: RentCarSelectionP
   if (isLoading) {
     return (
       <div className="mt-4 p-6 border rounded-2xl border-slate-200 bg-slate-50 flex items-center justify-center">
-        <Spinner className='size-8'/> 
+        <Spinner className="size-8" />
       </div>
     );
   }
@@ -109,8 +109,8 @@ export const RentCarSelection = ({ options, isLoading, form }: RentCarSelectionP
                     className={`flex items-center justify-center w-28 h-9 rounded-full border-2 cursor-pointer transition-all ${
                       selectedCodCategoria === opt.codCategoria &&
                       selectedCodDias === opt15.codDias
-                        ? 'bg-[#1a365d] text-white border-[#1a365d] shadow-lg'
-                        : 'border-[#1a365d] text-[#1a365d] bg-white opacity-80 hover:bg-[#1a365d] hover:text-white'
+                        ? 'bg-kover-widget-primary text-white border-kover-widget-primary shadow-lg'
+                        : 'border-kover-widget-primary text-kover-widget-primary bg-white opacity-80 hover:bg-kover-widget-primary hover:text-white'
                     }`}
                   >
                     RD${opt15.prima}
@@ -138,8 +138,8 @@ export const RentCarSelection = ({ options, isLoading, form }: RentCarSelectionP
                     className={`flex items-center justify-center w-28 h-9 rounded-full border-2 cursor-pointer transition-all ${
                       selectedCodCategoria === opt.codCategoria &&
                       selectedCodDias === opt30.codDias
-                        ? 'bg-[#1a365d] text-white border-[#1a365d] shadow-lg'
-                        : 'border-[#1a365d] text-[#1a365d] bg-white opacity-80 hover:bg-[#1a365d] hover:text-white'
+                        ? 'bg-kover-widget-primary text-white border-kover-widget-primary shadow-lg'
+                        : 'border-kover-widget-primary text-kover-widget-primary bg-white opacity-80 hover:bg-kover-widget-primary hover:text-white'
                     }`}
                   >
                     RD${opt30.prima}

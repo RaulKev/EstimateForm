@@ -59,7 +59,7 @@ export const LawInsuranceForm = ({ form }: PlansAccordionProps) => {
           name="car.terms.insuranceType"
           render={({ field, fieldState }) => {
             const isInvalid = fieldState.invalid;
-            const selectedPlan = PLANS.find((p) => String(p.id) === field.value);
+            const planSummary = PLANS.find((p) => String(p.id) === field.value);
 
             return (
               <Field data-invalid={isInvalid}>
@@ -82,12 +82,12 @@ export const LawInsuranceForm = ({ form }: PlansAccordionProps) => {
                     ))}
                   </SelectContent>
                 </Select>
-                {selectedPlan && (
+                {planSummary && (
                   <div className="mt-3 p-3 bg-slate-50 rounded-md border text-sm text-slate-600 animate-in fade-in zoom-in-95 duration-200">
                     <p className="font-semibold text-kover-widget-primary mb-1">
                       Plan de Responsabilidad Civil
                     </p>
-                    <p>{selectedPlan.summary}</p>
+                    <p>{planSummary.summary}</p>
                   </div>
                 )}
 

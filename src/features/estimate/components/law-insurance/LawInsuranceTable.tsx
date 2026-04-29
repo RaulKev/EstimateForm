@@ -12,15 +12,72 @@ import {
   InsurancePlansData,
   InsurancePlansHeader,
 } from '@/mocks/plans-data';
+import { CarInsurances } from '../../type/types';
 
-export const LawInsuranceTable = () => {
+interface LawInsuranceTableProps {
+  selectedPlan?: CarInsurances;
+}
+
+export const LawInsuranceTable = ({ selectedPlan }: LawInsuranceTableProps) => {
+  const SPECIAL_ROWS_COUNT = ESPECIAL_DATA.specialCell.rowspan;
+  const activeHeader: Record<
+    CarInsurances,
+    ('basico' | 'plus' | 'autoExceso' | 'autoExcesoPlus')[]
+  > = {
+    [CarInsurances.BASE]: ['basico'],
+    [CarInsurances.PLUS]: ['plus'],
+    [CarInsurances.AUTO_EXCESO]: ['plus', 'autoExceso'],
+    [CarInsurances.AUTO_EXCESO_PLUS]: ['plus', 'autoExcesoPlus'],
+  };
+  const currentHeader = selectedPlan ? activeHeader[selectedPlan] : null;
+
+  // Por fila: qué celda resaltar según el plan y el index
+  const getActiveCellByRow = (
+    col: 'basico' | 'plus' | 'autoExceso' | 'autoExcesoPlus',
+    index: number
+  ): boolean => {
+    if (!selectedPlan) return false;
+
+    const isSpecialRow = index < SPECIAL_ROWS_COUNT;
+
+    switch (selectedPlan) {
+      case CarInsurances.BASE:
+        return col === 'basico';
+
+      case CarInsurances.PLUS:
+        return col === 'plus';
+
+      case CarInsurances.AUTO_EXCESO:
+        // Primeras 5 filas → resalta Plus, resto → resalta Auto Exceso
+        if (isSpecialRow) return col === 'plus';
+        return col === 'autoExceso';
+
+      case CarInsurances.AUTO_EXCESO_PLUS:
+        // Primeras 5 filas → resalta Plus, resto → resalta Auto Exceso+
+        if (isSpecialRow) return col === 'plus';
+        return col === 'autoExcesoPlus';
+
+      default:
+        return false;
+    }
+  };
+  const activeHeaderCls = 'bg-kover-widget-primary text-white font-semibold';
+  const activeCellCls = 'bg-blue-50 font-medium text-kover-widget-primary';
   return (
     <Table>
       <TableHeader>
         <TableRow>
           <TableHead>Cobertura</TableHead>
-          {InsurancePlansHeader.map((header) => (
-            <TableHead key={header}>{header}</TableHead>
+          {(['basico', 'plus', 'autoExceso', 'autoExcesoPlus'] as const).map((col, i) => (
+            <TableHead
+              key={col}
+              className={cn(
+                'text-center',
+                currentHeader?.includes(col) && activeHeaderCls
+              )}
+            >
+              {InsurancePlansHeader[i]}
+            </TableHead>
           ))}
         </TableRow>
       </TableHeader>
@@ -28,20 +85,26 @@ export const LawInsuranceTable = () => {
         {InsurancePlansData.map((insurance, index) => {
           const isFirstRow = index === 0;
           const isNormalRow = index >= ESPECIAL_DATA.specialCell.rowspan;
-          const isAutoExcesoPlusRow = index >= ESPECIAL_DATA.specialCellAutoExcesoPlus.rowspan;
-          // const isLastBoxRow = index === ESPECIAL_DATA.specialCell.rowspan - 1;
-          // const isInsideBox = index < ESPECIAL_DATA.specialCell.rowspan;
+          const isAutoExcesoPlusRow =
+            index >= ESPECIAL_DATA.specialCellAutoExcesoPlus.rowspan;
+
           return (
             <TableRow key={insurance.coverage} className="hover:bg-gray-50">
               <TableCell className="text-sm font-medium text-gray-700 py-3">
                 {insurance.coverage}
               </TableCell>
-              <TableCell className="text-center text-sm py-3">
+              <TableCell
+                className={cn(
+                  'text-center text-sm py-3',
+                  getActiveCellByRow('basico', index) && activeCellCls
+                )}
+              >
                 {insurance.basico}
               </TableCell>
               <TableCell
                 className={cn(
                   'text-center text-sm py-3',
+                  getActiveCellByRow('plus', index) && activeCellCls
                 )}
               >
                 {insurance.plus}
@@ -51,37 +114,44 @@ export const LawInsuranceTable = () => {
                   rowSpan={ESPECIAL_DATA.specialCell.rowspan}
                   className={cn(
                     'text-center align-middle p-4',
-                    'border-kover-widget-primary border-t-2 border-r-2 border-b-2 border-l-2 '
+                    selectedPlan === CarInsurances.AUTO_EXCESO && activeCellCls
                   )}
                 >
-                  <div className="mx-auto max-w-[220px] whitespace-normal text-sm text-black">
+                  <div className="mx-auto max-w-[220px] whitespace-normal text-sm">
                     {ESPECIAL_DATA.specialCell.text}
                   </div>
                 </TableCell>
               )}
               {isNormalRow && (
-                <TableCell className={cn(
-                    'text-center align-middle p-4 text-black',
-                    'border-kover-widget-primary border-t-2 border-r-2 border-b-2 border-l-2 '
-                  )}>
+                <TableCell
+                  className={cn(
+                    'text-center text-sm py-3',
+                    getActiveCellByRow('autoExceso', index) && activeCellCls
+                  )}
+                >
                   {insurance.autoExceso}
                 </TableCell>
               )}
-               {isFirstRow && (
+              {isFirstRow && (
                 <TableCell
                   rowSpan={ESPECIAL_DATA.specialCellAutoExcesoPlus.rowspan}
                   className={cn(
-                    'bg-gray-50/80 text-center align-middle p-4',
-                    'border-t-2 border-b-2 border-l-2'
+                    'text-center align-middle p-4',
+                    selectedPlan === CarInsurances.AUTO_EXCESO_PLUS && activeCellCls
                   )}
                 >
-                  <div className="mx-auto max-w-[220px] whitespace-normal text-sm text-black">
+                  <div className="mx-auto max-w-[220px] whitespace-normal text-sm">
                     {ESPECIAL_DATA.specialCellAutoExcesoPlus.text}
                   </div>
                 </TableCell>
               )}
               {isAutoExcesoPlusRow && (
-                <TableCell className="text-center text-sm py-3 border-l border-gray-200">
+                <TableCell
+                  className={cn(
+                    'text-center text-sm py-3',
+                    getActiveCellByRow('autoExcesoPlus', index) && activeCellCls
+                  )}
+                >
                   {insurance.autoExcesoPlus}
                 </TableCell>
               )}

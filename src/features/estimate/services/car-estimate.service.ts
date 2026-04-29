@@ -97,7 +97,6 @@ export async function generateQuota(
       },
       ...(data.addons && data.addons.length > 0 && { addons: data.addons }),
     };
-    console.log('requestData', requestData);
     const result = await httpClient.post<InsurancesData>('/insurances', requestData, {
       headers: {
         'Content-Type': 'application/json',

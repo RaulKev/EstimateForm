@@ -85,7 +85,7 @@ export const ComplementsDetailsCar = ({
       </p>
       <div className="my-4 w-full">
         <div className="bg-white border-slate-200 rounded-md p-4 w-full">
-          <div className="flex items-end w-full gap-4">
+          <div className="flex flex-col md:flex-row md:items-end w-full gap-4">
             <div className="flex flex-col justify-between gap-2 flex-1">
               <label htmlFor="">Aditamiento:</label>
               <SelectComplements
@@ -125,13 +125,18 @@ export const ComplementsDetailsCar = ({
               />
             </div>
             <Button
-              size="icon"
+              size="default" // Cambiamos a default para que pueda expandirse en mobile
               type="button"
-              className="h-10 w-10 shrink-0 bg-kover-widget-primary text-white hover:bg-kover-widget-primary-hover cursor-pointer"
+              className="h-10 shrink-0 bg-kover-widget-primary text-white hover:bg-kover-widget-primary-hover cursor-pointer 
+             w-full md:w-10 flex items-center justify-center gap-2"
               disabled={!selectedComplement || !value}
               onClick={handleAddComplement}
             >
-              <Plus className="size-5" />
+              {/* El ícono se mantiene siempre */}
+              <Plus className="size-5 hidden md:block" />
+
+              {/* El texto solo se renderiza/muestra en mobile */}
+              <span className="block md:hidden font-medium">Guardar</span>
             </Button>
           </div>
         </div>
