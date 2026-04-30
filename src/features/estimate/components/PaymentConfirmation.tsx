@@ -18,7 +18,6 @@ export default function PaymentConfirmation({
   const [finishResendingEmail, setFinishResendingEmail] = useState<boolean>(false);
 
   const sendEmail = useCallback(() => {
-    console.log('Enviando email...');
     return sendInspectionEmail(insuranceData.id);
   }, [insuranceData.id]);
 

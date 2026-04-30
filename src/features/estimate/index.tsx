@@ -4,6 +4,7 @@ import '../../index.css';
 import App from '@/App';
 import { ShadowRootContext } from '@/components/ui/select';
 import type { InsurancesType } from '@/mocks/summary.mock';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 function getStoreToken(element: HTMLElement) {
   const token = element.getAttribute('data-store-token');
@@ -20,8 +21,8 @@ function getInsuranceType(element: HTMLElement): InsurancesType {
   }
   return insuranceType as InsurancesType;
 }
-
 function initializaWidget() {
+  const queryClient = new QueryClient();
   try {
     const widgetContainer = document.getElementById('kover');
     if (!widgetContainer) {
@@ -48,7 +49,9 @@ function initializaWidget() {
     const root = createRoot(shadowWidgetContent);
     root.render(
       <ShadowRootContext.Provider value={shadowRoot}>
-        <App storeToken={token} insuranceType={insuranceType} />
+        <QueryClientProvider client={queryClient}>
+          <App storeToken={token} insuranceType={insuranceType} />
+        </QueryClientProvider>
       </ShadowRootContext.Provider>
     );
   } catch (error) {

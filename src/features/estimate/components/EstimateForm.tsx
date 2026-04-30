@@ -126,7 +126,6 @@ export const EstimateForm = ({
         },
       };
       const response = await updateInsurance(insurancesId, completeData);
-      console.log('auto-insurances', response);
       onSuccess(response.data);
     } catch (error) {
       const errorMessage =

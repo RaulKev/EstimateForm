@@ -104,11 +104,9 @@ export const AdditionalDataFormWrapper = ({
   return (
     <>
       {isSubmitting && <LoadingOverlay message="Actualizando datos" />}
-      <div className="px-4 py-6 md:py-10 w-full">
+      <div className="px-4 py-6 md:pb-10 w-full">
         <div className="mb-8 text-center">
-          <h1 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900">
-            Datos adicionales
-          </h1>
+         
           <p className="mt-1 text-slate-500">
             Por favor, completa la siguiente información para continuar con la emisión.
           </p>

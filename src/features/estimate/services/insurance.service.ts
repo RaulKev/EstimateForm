@@ -62,6 +62,5 @@ export const getAditamentos = async (): Promise<Aditamentos[]> => {
   const response = await httpClient.get<Aditamentos[]>(
     '/insurances/addresses/aditamentos'
   );
-  console.log('response.data:', response.data);
   return response.data ?? [];
 };

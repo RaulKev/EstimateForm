@@ -13,7 +13,6 @@ interface PetFormProps {
 
 export const PetDataForm = ({ form }: PetFormProps) => {
   const { pets, isLoading } = usePets();
-  console.log('data', pets);
   const actualYear = new Date().getFullYear();
   const years = Array.from({ length: 9 }, (_, i) => actualYear - i);
   const petAge = Array.from({ length: 9 }, (_, i) => i);

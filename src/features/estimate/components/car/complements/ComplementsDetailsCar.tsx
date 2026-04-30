@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { EllipsisVertical, Plus } from 'lucide-react';
+import { Plus, X } from 'lucide-react';
 import { SelectComplements } from './SelectComplements';
 import { useState, type ChangeEvent } from 'react';
 import { useAditamentos } from '@/features/estimate/hook/useAditamentos';
@@ -166,9 +166,9 @@ export const ComplementsDetailsCar = ({
                     <button
                       type="button"
                       onClick={() => handleRemoveComplement(c.codigo)}
-                      className="text-slate-400 hover:text-red-500 p-1 rounded-full"
+                      className="text-slate-400 hover:text-red-500 p-1 rounded-full cursor-pointer transition-colors"
                     >
-                      <EllipsisVertical className="size-5" />
+                      <X className="size-5" />
                     </button>
                   </div>
                   <span>RD${c.monto.toLocaleString('es-DO')}</span>

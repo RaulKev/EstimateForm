@@ -87,7 +87,6 @@ export const PetInsuranceFlow = ({ storeToken }: PetInsuranceFlowProps) => {
             insuranceData.quotationResponse?.data?.terminos?.planMascota || 'SuperCan'
           }
           onFinish={() => {
-            console.log('Finalizar flujo');
             handleStep('estimate');
             setInsuranceData(null);
           }}
